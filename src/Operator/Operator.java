@@ -1,5 +1,7 @@
 package Operator;
 
-public abstract class Operator {
+import java.util.Iterator;
+
+public abstract class Operator implements Iterator {
 
 }
