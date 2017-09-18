@@ -6,6 +6,4 @@ public class ScanOperator extends Operator {
 		// TODO Auto-generated constructor stub
 	}
 
-	
-
 }
