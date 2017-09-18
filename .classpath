@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Users/benzhangtang/Desktop/cs4321/project 2/jsqlparser/jsqlparser.jar"/>
+	<classpathentry kind="lib" path="/Users/jsqlparser.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
