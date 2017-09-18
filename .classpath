@@ -2,6 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+<<<<<<< HEAD
+=======
 	<classpathentry kind="lib" path="/Users/benzhangtang/Desktop/cs4321/project 2/jsqlparser/jsqlparser.jar"/>
+	<classpathentry kind="lib" path="/Users/jsqlparser.jar"/>
+<<<<<<< HEAD
+>>>>>>> 34e4ef4e4a27aad5d1cc8a41cf99cfac3216c23e
+=======
+>>>>>>> 34e4ef4e4a27aad5d1cc8a41cf99cfac3216c23e
 	<classpathentry kind="output" path="bin"/>
 </classpath>
