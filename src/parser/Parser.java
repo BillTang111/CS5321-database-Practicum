@@ -1,5 +1,7 @@
 package parser;
 import java.io.FileReader;
+
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParser;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -30,6 +32,8 @@ public class Parser {
 				System.out.println("the other selected table " + selectbody.getJoins());
 				System.out.println("condition " + selectbody.getWhere());
 				System.out.println("distinct? " + selectbody.getDistinct());
+				System.out.println("order by " + selectbody.getOrderByElements());
+				Expression condition = selectbody.getWhere();
 			}
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
