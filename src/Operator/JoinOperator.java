@@ -1,9 +1,30 @@
 package Operator;
 
-public class JoinOperator extends Operator {
+import Database_Catalog.Catalog;
+import Tuple.Tuple;
+import net.sf.jsqlparser.statement.select.PlainSelect;
 
-	public JoinOperator() {
+public class JoinOperator extends Operator {
+	
+	Catalog tableCatalog; //Store data schema and file location
+	PlainSelect parseBody; //Store the plainSelect object parsed from query
+	
+	public JoinOperator(Operator left, Operator right, Catalog table, PlainSelect selectBody) {
 		// TODO Auto-generated constructor stub
+		tableCatalog = table;
+		parseBody = selectBody;
+	}
+	
+	@Override
+	public Tuple getNextTuple(Operator inputOperator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
