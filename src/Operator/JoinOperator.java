@@ -27,4 +27,10 @@ public class JoinOperator extends Operator {
 		
 	}
 
+	@Override
+	public void dump() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

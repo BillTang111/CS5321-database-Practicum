@@ -25,4 +25,10 @@ public class ProjectOperator extends Operator {
 		
 	}
 
+	@Override
+	public void dump() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
