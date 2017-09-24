@@ -1,12 +1,18 @@
 package Tuple;
 
-public class Tuple {
-	public final int x; 
-	public final int y; 
-	
-	public Tuple(int x, int y) {
-		this.x = x; 
-	    this.y = y;  
-	}
+import java.util.ArrayList;
 
+public class Tuple {
+	private ArrayList tuple;
+	
+	public Tuple(String input){
+		tuple = new ArrayList();
+		String[] s = input.split(",");
+		for(String ss:s){
+			tuple.add(ss);
+		}
+		
+	}
+	
+	
 }
