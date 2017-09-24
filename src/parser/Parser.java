@@ -17,7 +17,7 @@ import net.sf.jsqlparser.statement.select.Select;
 public class Parser {
 
 	private static final String queriesFile = "queries.sql";
-
+	
 	public static void main(String[] args) {
 		try {
 			CCJSqlParser parser = new CCJSqlParser(new FileReader(queriesFile));
