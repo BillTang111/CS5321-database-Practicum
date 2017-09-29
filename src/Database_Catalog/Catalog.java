@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.Serializable;
 
-class Catalog implements Cloneable, Serializable {
+public class Catalog implements Cloneable, Serializable {
 
 	private static Catalog instance;
 	
