@@ -15,12 +15,15 @@ public class Interpreter {
 		// 1.3 Create a 'Database_Catalog' object to store directory and schema
 		
 		
+		
 		// 2.1 Get query file directory from command line argument,
 		// store the content of the file into a String object
 		
 		// 2.2 Use 'queryParser' to parse the query string into a query plan tree
 		// composed of operators, and store the tree in a 'queryPlan' object 
 		// Each operator has a field to store the corresponding 'PlainSelct' object
+		
+		
 		
 		// 3.1 Create a file in the output directory. Open the file.
 		
