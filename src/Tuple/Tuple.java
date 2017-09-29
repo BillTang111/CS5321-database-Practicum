@@ -11,8 +11,12 @@ public class Tuple {
 		for(String ss:s){
 			tuple.add(ss);
 		}
+	}
+		
+	public ArrayList getTuple(){
+		return this.tuple;
+	}
 		
 	}
 	
 	
-}

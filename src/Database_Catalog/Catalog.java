@@ -65,7 +65,7 @@ public class Catalog implements Cloneable, Serializable {
 		this.outputLocation = output;
 	}
 	
-	public void setoutputLocation(HashMap schema) {
+	public void setSchema(HashMap schema) {
 		this.map = schema;
 	}
 	

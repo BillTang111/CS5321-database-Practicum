@@ -9,7 +9,7 @@ public class DuplicateEliminationOperators extends Operator {
 	Catalog tableCatalog; //Store data schema and file location
 	PlainSelect parseBody; //Store the plainSelect object parsed from query
 	@Override
-	public Tuple getNextTuple(Operator inputOperator) {
+	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
 		return null;
 	}

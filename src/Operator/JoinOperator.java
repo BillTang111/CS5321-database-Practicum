@@ -16,7 +16,7 @@ public class JoinOperator extends Operator {
 	}
 	
 	@Override
-	public Tuple getNextTuple(Operator inputOperator) {
+	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
 		return null;
 	}

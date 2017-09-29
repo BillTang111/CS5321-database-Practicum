@@ -7,7 +7,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public abstract class Operator implements Iterator {
 
-	public abstract Tuple getNextTuple(Operator inputOperator);
+	public abstract Tuple getNextTuple();
 	
 	public abstract void reset();
 
