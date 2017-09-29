@@ -7,41 +7,93 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.Serializable;
 
-public class Catalog {
+class Catalog implements Cloneable, Serializable {
 
-	String inputLocation;
-	String outputLocation;
-	HashMap schemaMap;
+	private static Catalog instance;
 	
-	
-	public Catalog(){
-		String command = System.console().readLine();
-		int start = command.indexOf(".jar")+5;
-		String sub = command.substring(start);
-		int end = sub.indexOf(" ");
-		inputLocation = sub.substring(0, end);
-		outputLocation = sub.substring(end+1);
+	private String inputLocation;
+	private String outputLocation;
+	private HashMap map;
+
+	/* Private Constructor prevents any other class from instantiating */
+	private Catalog() {
 	}
-		//read file 
 
-	//java -jar cs4321 p2.jar inputdir outputdir
-	  public static void main(String[] args) throws IOException {
-		    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-		    String command = reader.readLine();
-		    int start = command.indexOf(".jar")+5;
-		    System.out.println(start);
-			String sub = command.substring(start);
-			System.out.println(sub);
-			int end = sub.indexOf(" ");
-			System.out.println(end);
-			String inputLocation = sub.substring(0, end);
-			String outputLocation = sub.substring(end+1);
-		    System.out.println("input: " + inputLocation);
-		    System.out.println("output: " + outputLocation);
-		  
-		//read file 
-		  
+	public static synchronized Catalog getInstance() {
+
+		/* Lazy initialization, creating object on first use */
+		if (instance == null) {
+			synchronized (Catalog.class) {
+				if (instance == null) {
+					instance = new Catalog();
+				}
+			}
+		}
+
+		return instance;
+	}
+
+	/* Restrict cloning of object */
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
+	}
+
+	public void display() {
+		System.out.println("Hurray! I am display from Singleton!");
+	}
+	
+	public String getInputLocation() {
+		return inputLocation;
+	}
+	
+	public String getOutputLocation() {
+		return outputLocation;
+	}
+	
+	public HashMap getSchema() {
+		return map;
+	}
+	
+	public void setinputLocation(String input) {
+		this.inputLocation = input;
+	}
+	
+	public void setoutputLocation(String output) {
+		this.outputLocation = output;
+	}
+	
+	public void setoutputLocation(HashMap schema) {
+		this.map = schema;
+	}
+	
+	
+}
+//		String command = System.console().readLine();
+//		int start = command.indexOf(".jar")+5;
+//		String sub = command.substring(start);
+//		int end = sub.indexOf(" ");
+//		inputLocation = sub.substring(0, end);
+//		outputLocation = sub.substring(end+1);
+//	}
+//		//read file 
+//
+//	//java -jar cs4321 p2.jar inputdir outputdir
+//	  public static void main(String[] args) throws IOException {
+//		    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//		    String command = reader.readLine();
+//		    int start = command.indexOf(".jar")+5;
+//			String sub = command.substring(start);
+//			int end = sub.indexOf(" ");
+//			String inputLocation = sub.substring(0, end);
+//			String outputLocation = sub.substring(end+1);
+//		    System.out.println("input: " + inputLocation);
+//		    System.out.println("output: " + outputLocation);
+//		  
+//		//read file 
+//		  
 //		  BufferedReader br = new BufferedReader(new FileReader("schema.txt"));
 //		  HashMap<String, ArrayList> map = new HashMap<>();
 //		  try {
@@ -67,7 +119,6 @@ public class Catalog {
 //		      br.close();
 //		      
 //		  }
-			
-		  
-}
-}
+//			
+//		  
+//}
