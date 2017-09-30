@@ -3,6 +3,7 @@ package parser;
 import java.io.IOException;
 
 import Operator.Operator;
+import Operator.ProjectOperator;
 import Operator.ScanOperator;
 import Operator.SelectOperator;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -19,6 +20,10 @@ public class queryPlan {
 		if (selectBody.getWhere()!=null) {
 			SelectOperator select = new SelectOperator(selectBody, root);
 			root = select;
+		}
+		if (selectBody.getSelectItems().get(0)!="*") {
+			ProjectOperator project = new ProjectOperator(selectBody, root);
+			root = project;
 		}
 	}
 	
