@@ -12,6 +12,7 @@ import Operator.ScanOperator;
 import Operator.SelectOperator;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import parser.Parser;
+import parser.queryPlan;
 
 public class Interpreter {
 
@@ -61,6 +62,7 @@ public class Interpreter {
 		
 		// 1.3 Create a 'Database_Catalog' object to store directory and schema
 		 //test java -jar cs4321 p2.jar /Users/tanlini/Desktop/samples/input outputdir
+		 //test java -jar cs4321 p2.jar /Users/LukerRong/Desktop/CS5321/input outputdir
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);
@@ -73,14 +75,13 @@ public class Interpreter {
 		Parser p = new Parser(querypath);
 		PlainSelect s = p.selectBody;
 		//test scan operator
-		SelectOperator select = new SelectOperator(s);
-		ScanOperator scan = new ScanOperator(s);
-		select.dump();
+		
 		
 		// 2.2 Use 'queryParser' to parse the query string into a query plan tree
 		// composed of operators, and store the tree in a 'queryPlan' object 
 		// Each operator has a field to store the corresponding 'PlainSelct' object
-		
+		queryPlan sqlPlan = new queryPlan(s);
+		sqlPlan.getRoot().dump();
 		
 			// 3.1 Create a file in the output directory. Open the file.
 			
@@ -93,5 +94,7 @@ public class Interpreter {
 		
 		// 2.3 Repeat step 3 for the remaining query until reaching the end
 	}
+	
+	
 
 }

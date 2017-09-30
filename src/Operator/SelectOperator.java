@@ -17,49 +17,42 @@ public class SelectOperator extends Operator {
 	
 	PlainSelect select; //Store the plainSelect object parsed from query
 	Expression e;
-	BufferedReader br;
-	FromItem input;
-	String location;
-	ScanOperator scan;
+//	BufferedReader br;
+//	FromItem input;
+//	String location;
+	Operator previousOp;
 	
-	public SelectOperator(PlainSelect selectBody) throws IOException {
+	public SelectOperator(PlainSelect selectBody, Operator op) throws IOException {
 		// TODO Auto-generated constructor stub
-		input = selectBody.getFromItem();
-		location = Catalog.getInstance().getInputLocation();	
-		br = new BufferedReader(new FileReader(location + "/db/data/"+input));  
+//		input = selectBody.getFromItem();
+//		location = Catalog.getInstance().getInputLocation();	
+//		br = new BufferedReader(new FileReader(location + "/db/data/"+input));  
 		select = selectBody;
 		e = selectBody.getWhere();
-		scan = new ScanOperator(select);
+		previousOp = op;
 	}
 
 	@Override
 	public Tuple getNextTuple() {
-		Tuple a = scan.getNextTuple();
+		Tuple a = previousOp.getNextTuple();
 		while(a!=null){
-		visitor v = new visitor(a);
-		if(e==null){ 
-			System.out.println("condition is null");
-			return a;
+			visitor v = new visitor(a);
+//			if(e==null){ 
+//				System.out.println("condition is null");
+//				return a;
+//				}
+			e.accept(v);
+			if(v.getResult()){
+				return a;
 			}
-		e.accept(v);
-		if(v.getResult()){
-			return a;
-		}
-		a = scan.getNextTuple();
+			a = previousOp.getNextTuple();
 		}
 		return null;
 	}	
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-		try {
-			br = new BufferedReader(new FileReader(location + "/db/data/"+input+".txt"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		
+		previousOp.reset();
 	}
 
 	@Override
