@@ -32,7 +32,7 @@ public class Parser {
 				selectBody = selectbody;
 				System.out.println("Select body is " + selectbody);
 				System.out.println("Select from " + selectbody.getFromItem());
-				
+				System.out.println("condition " + selectbody.getWhere());
 			}
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");

@@ -64,6 +64,7 @@ public class ScanOperator extends Operator {
 		Tuple a =new Tuple("");
 		while((a=getNextTuple()) != null){
 			System.out.println(a.getTuple());
+			//System.out.println(a.toString());
 		}
 		
 		

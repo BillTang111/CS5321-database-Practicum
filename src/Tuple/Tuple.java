@@ -2,8 +2,11 @@ package Tuple;
 
 import java.util.ArrayList;
 
+import net.sf.jsqlparser.statement.select.FromItem;
+
 public class Tuple {
 	private ArrayList tuple;
+	
 	
 	public Tuple(String input){
 		tuple = new ArrayList();
@@ -16,6 +19,8 @@ public class Tuple {
 	public ArrayList getTuple(){
 		return this.tuple;
 	}
+	
+
 		
 	}
 	

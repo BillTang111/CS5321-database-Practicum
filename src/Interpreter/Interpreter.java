@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import Database_Catalog.Catalog;
 import Operator.ScanOperator;
+import Operator.SelectOperator;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import parser.Parser;
 
@@ -33,7 +34,7 @@ public class Interpreter {
 		// 1.2 Get the name of the schema file from command line argument,
 		// read the schema file and to store it a Hashmap.
 	    BufferedReader br = new BufferedReader(new FileReader(inputLocation+"/db/schema.txt"));
-		 HashMap<String, ArrayList> map = new HashMap<>();
+		 HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
 		  try {
 		      StringBuilder sb = new StringBuilder();
 		      String line = br.readLine();
@@ -71,8 +72,9 @@ public class Interpreter {
 		Parser p = new Parser(querypath);
 		PlainSelect s = p.selectBody;
 		//test scan operator
+		SelectOperator select = new SelectOperator(s);
 		ScanOperator scan = new ScanOperator(s);
-		scan.dump();
+		select.dump();
 		
 		// 2.2 Use 'queryParser' to parse the query string into a query plan tree
 		// composed of operators, and store the tree in a 'queryPlan' object 

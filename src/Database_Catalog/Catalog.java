@@ -15,7 +15,7 @@ public class Catalog implements Cloneable, Serializable {
 	
 	private String inputLocation;
 	private String outputLocation;
-	private HashMap map;
+	private HashMap<String, ArrayList> map;
 
 	/* Private Constructor prevents any other class from instantiating */
 	private Catalog() {
