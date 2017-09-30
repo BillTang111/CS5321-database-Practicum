@@ -21,7 +21,7 @@ public class ScanOperator extends Operator {
 		// TODO Auto-generated constructor stub
 		input = selectBody.getFromItem();
 		location = Catalog.getInstance().getInputLocation();	
-		br = new BufferedReader(new FileReader(location + "/db/data/"+input));      
+		br = new BufferedReader(new FileReader(location + "/db/data/" + input));      
 		
 		}
 		
