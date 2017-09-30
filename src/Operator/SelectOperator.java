@@ -35,19 +35,20 @@ public class SelectOperator extends Operator {
 	@Override
 	public Tuple getNextTuple() {
 		Tuple a = scan.getNextTuple();
-		if(a!=null){
+		while(a!=null){
 		visitor v = new visitor(a);
 		if(e==null){ 
 			System.out.println("condition is null");
-			return a;}
+			return a;
+			}
 		e.accept(v);
 		if(v.getResult()){
 			return a;
 		}
+		a = scan.getNextTuple();
 		}
 		return null;
-		
-	}
+	}	
 
 	@Override
 	public void reset() {

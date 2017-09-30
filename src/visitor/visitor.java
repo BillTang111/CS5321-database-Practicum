@@ -249,11 +249,14 @@ public class visitor implements ExpressionVisitor {
 		// TODO Auto-generated method stub
 		String t = arg0.getTable().getName();
 		field = (ArrayList) schema.get(t);
-		System.out.println(field.toString());
+	//	System.out.println(field.toString());
 		String c = arg0.getColumnName().toString();
 		int index = field.indexOf(c);
-		System.out.println(index);
-		Integer i = new Integer((int) tuple.get(index));
+	//	System.out.println(index);
+		//System.out.println(tuple.get(index));
+		String s = (String) tuple.get(index);
+		Integer i = Integer.parseInt(s);
+	//	System.out.println(i);
 		TreeStack.push(i.longValue());
 		
 		
