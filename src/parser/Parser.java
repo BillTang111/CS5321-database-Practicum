@@ -38,6 +38,8 @@ public class Parser {
 				System.out.println("Select body is " + selectbody);			
 				System.out.println("condition " + selectbody.getWhere());
 				queryList.add(selectbody);
+				System.out.println("project: " + selectbody.getSelectItems());
+
 			}
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
