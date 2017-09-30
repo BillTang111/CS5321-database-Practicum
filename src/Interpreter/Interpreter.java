@@ -66,6 +66,7 @@ public class Interpreter {
 		catalog.setoutputLocation(outputLocation);
 		catalog.setSchema(map);
 		
+		
 		// 2.1 Get query file directory from command line argument,
 		// store the content of the file into a String object
 		String querypath = inputLocation + "/queries.sql";
@@ -81,14 +82,16 @@ public class Interpreter {
 		// Each operator has a field to store the corresponding 'PlainSelct' object
 		
 		
+			// 3.1 Create a file in the output directory. Open the file.
+			
+			// 3.2 Use a while loop to call the getNextTuple function of the root 
+			// operator, write each output in the file until reaching to the very 
+			// last tuple
+			
+			// 3.3 Close the file.
 		
-		// 3.1 Create a file in the output directory. Open the file.
 		
-		// 3.2 Use a while loop to call the getNextTuple function of the root 
-		// operator, write each output in the file until reaching to the very 
-		// last tuple
-		
-		// 3.3 Close the file.
+		// 2.3 Repeat step 3 for the remaining query until reaching the end
 	}
 
 }
