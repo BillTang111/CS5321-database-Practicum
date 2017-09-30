@@ -1,5 +1,6 @@
 package parser;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParser;
@@ -18,27 +19,35 @@ public class Parser {
 
 //	private static final String queriesFile = "queries.sql";
 	private static String queriesFile;
-	public PlainSelect selectBody;
+	private ArrayList<PlainSelect> queryList;
+	
 	
 	public Parser(String sql){
 		queriesFile = sql;
+		PlainSelect selectbody;
+		queryList = new ArrayList<PlainSelect>();
 		try {
 			CCJSqlParser parser = new CCJSqlParser(new FileReader(queriesFile));
 			Statement statement;
 			while ((statement = parser.Statement()) != null) {
 				System.out.println("Read statement: " + statement);
 				Select select = (Select) statement;
-				PlainSelect selectbody = (PlainSelect) select.getSelectBody();
-				selectBody = selectbody;
-				System.out.println("Select body is " + selectbody);
+				selectbody = (PlainSelect) select.getSelectBody();
+				
 				System.out.println("Select from " + selectbody.getFromItem());
+				System.out.println("Select body is " + selectbody);			
 				System.out.println("condition " + selectbody.getWhere());
+				queryList.add(selectbody);
 			}
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public ArrayList<PlainSelect> getQueryList(){
+		return queryList;
 	}
 	
 //	public static void main(String[] args) {

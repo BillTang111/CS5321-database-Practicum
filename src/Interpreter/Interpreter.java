@@ -72,22 +72,26 @@ public class Interpreter {
 		// 2.1 Get query file directory from command line argument,
 		// store the content of the file into a String object
 		String querypath = inputLocation + "/queries.sql";
+		
+		// 2.2 Use 'queryParser' to parse the query string into a collection of 
+		// query plan trees composed of operators, and store each tree in a 
+		// 'queryPlan' object Each operator has a field to store the 
+		// corresponding 'PlainSelct' object
 		Parser p = new Parser(querypath);
-		PlainSelect s = p.selectBody;
-		//test scan operator
-		
-		
-		// 2.2 Use 'queryParser' to parse the query string into a query plan tree
-		// composed of operators, and store the tree in a 'queryPlan' object 
-		// Each operator has a field to store the corresponding 'PlainSelct' object
-		queryPlan sqlPlan = new queryPlan(s);
-		sqlPlan.getRoot().dump();
+		ArrayList<PlainSelect> queryList = p.getQueryList();
 		
 			// 3.1 Create a file in the output directory. Open the file.
 			
 			// 3.2 Use a while loop to call the getNextTuple function of the root 
 			// operator, write each output in the file until reaching to the very 
 			// last tuple
+			for(PlainSelect eachQuerySelect: queryList){
+				queryPlan plan = new queryPlan(eachQuerySelect);
+				plan.getRoot().dump();
+				System.out.println("Query dumped.");		
+			}
+			
+			
 			
 			// 3.3 Close the file.
 		

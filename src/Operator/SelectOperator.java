@@ -20,7 +20,7 @@ public class SelectOperator extends Operator {
 //	BufferedReader br;
 //	FromItem input;
 //	String location;
-	Operator previousOp;
+	Operator childOp;
 	
 	public SelectOperator(PlainSelect selectBody, Operator op) throws IOException {
 		// TODO Auto-generated constructor stub
@@ -29,12 +29,12 @@ public class SelectOperator extends Operator {
 //		br = new BufferedReader(new FileReader(location + "/db/data/"+input));  
 		select = selectBody;
 		e = selectBody.getWhere();
-		previousOp = op;
+		childOp = op;
 	}
 
 	@Override
 	public Tuple getNextTuple() {
-		Tuple a = previousOp.getNextTuple();
+		Tuple a = childOp.getNextTuple();
 		while(a!=null){
 			visitor v = new visitor(a);
 //			if(e==null){ 
@@ -45,14 +45,14 @@ public class SelectOperator extends Operator {
 			if(v.getResult()){
 				return a;
 			}
-			a = previousOp.getNextTuple();
+			a = childOp.getNextTuple();
 		}
 		return null;
 	}	
 
 	@Override
 	public void reset() {
-		previousOp.reset();
+		childOp.reset();
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class queryPlan {
 		ScanOperator scan =  new ScanOperator(selectBody);
 		root = scan;
 		if (selectBody.getWhere()!=null) {
-			SelectOperator select = new SelectOperator(selectBody, scan);
+			SelectOperator select = new SelectOperator(selectBody, root);
 			root = select;
 		}
 	}
