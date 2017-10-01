@@ -39,6 +39,7 @@ public class Parser {
 				System.out.println("condition " + selectbody.getWhere());
 				queryList.add(selectbody);
 				System.out.println("project: " + selectbody.getSelectItems());
+				System.out.println("join: " + selectbody.getJoins());
 
 			}
 		} catch (Exception e) {

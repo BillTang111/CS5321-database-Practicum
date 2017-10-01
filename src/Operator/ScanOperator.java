@@ -76,7 +76,8 @@ public class ScanOperator extends Operator {
 		// TODO Auto-generated method stub
 		Tuple a =new Tuple("");
 		while((a=getNextTuple()) != null){
-			String oneLineResult = String.join(",", a.getTuple());
+			//String oneLineResult = String.join(",", a.getTuple());
+			String oneLineResult = "haha";
 			bw.write(oneLineResult);
 			bw.newLine();
 		}

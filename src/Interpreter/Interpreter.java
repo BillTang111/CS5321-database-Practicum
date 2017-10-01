@@ -66,7 +66,7 @@ public class Interpreter {
 		  }
 		
 		// 1.3 Create a 'Database_Catalog' object to store directory and schema
-		 //test java -jar cs4321 p2.jar /Users/tanlini/Desktop/samples/input outputdir
+		 //test java -jar cs4321 p2.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output
 		 //test java -jar cs4321 p2.jar /Users/LukerRong/Desktop/CS5321/input /Users/LukerRong/Desktop/CS5321/test_output
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
@@ -105,7 +105,6 @@ public class Interpreter {
 				FileWriter fw = new FileWriter(file);
 				BufferedWriter bw = null;
 				bw = new BufferedWriter(fw);
-				
 				
 				plan.getRoot().writeToFile(bw);
 				
