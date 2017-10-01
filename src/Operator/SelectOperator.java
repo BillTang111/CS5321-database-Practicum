@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
@@ -67,14 +68,14 @@ public class SelectOperator extends Operator {
 	}
 	
 	@Override
-	public void writeToFile(BufferedWriter bw) throws IOException {
+	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
 		Tuple a =new Tuple("");
+		ArrayList<Tuple> result = new ArrayList<Tuple>();
 		while((a=getNextTuple()) != null){
-			String oneLineResult = String.join(",", a.getTuple());
-			bw.write(oneLineResult);
-			bw.newLine();
+			result.add(a);
 		}
+		return result;
 	}
 
 

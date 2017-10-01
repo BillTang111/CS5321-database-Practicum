@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
@@ -72,20 +73,15 @@ public class ScanOperator extends Operator {
 	}
 	
 	@Override
-	public void writeToFile(BufferedWriter bw) throws IOException {
+	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
 		Tuple a =new Tuple("");
+		ArrayList<Tuple> result = new ArrayList<Tuple>();
 		while((a=getNextTuple()) != null){
-			//String oneLineResult = String.join(",", a.getTuple());
-			String oneLineResult = "haha";
-			bw.write(oneLineResult);
-			bw.newLine();
+			result.add(a);
 		}
+		return result;
 	}
-	
-//	 public static void main(String args[])throws Exception{  
-//		 
-//		 }  
 
 
 }
