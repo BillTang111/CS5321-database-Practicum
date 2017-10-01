@@ -1,5 +1,8 @@
 package Operator;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -30,5 +33,15 @@ public class SortOperator extends Operator {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	@Override
+	public void writeToFile(BufferedWriter bw) throws IOException {
+		// TODO Auto-generated method stub
+		Tuple a =new Tuple("");
+		while((a=getNextTuple()) != null){
+			String oneLineResult = String.join(",", a.getTuple());
+			bw.write(oneLineResult);
+			bw.newLine();
+		}
+	}
 }

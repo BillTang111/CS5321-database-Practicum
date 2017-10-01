@@ -1,6 +1,7 @@
 package Operator;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -63,6 +64,17 @@ public class SelectOperator extends Operator {
 			System.out.println(a.getTuple());
 		}
 		
+	}
+	
+	@Override
+	public void writeToFile(BufferedWriter bw) throws IOException {
+		// TODO Auto-generated method stub
+		Tuple a =new Tuple("");
+		while((a=getNextTuple()) != null){
+			String oneLineResult = String.join(",", a.getTuple());
+			bw.write(oneLineResult);
+			bw.newLine();
+		}
 	}
 
 

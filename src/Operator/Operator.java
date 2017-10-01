@@ -1,5 +1,7 @@
 package Operator;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.Iterator;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
@@ -22,6 +24,8 @@ public abstract class Operator implements Iterator {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public abstract void writeToFile(BufferedWriter bw) throws IOException;
 	
 	public abstract void dump();
 	//To Do

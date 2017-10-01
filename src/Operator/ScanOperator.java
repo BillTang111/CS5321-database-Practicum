@@ -1,6 +1,7 @@
 package Operator;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -68,6 +69,17 @@ public class ScanOperator extends Operator {
 		}
 		
 		
+	}
+	
+	@Override
+	public void writeToFile(BufferedWriter bw) throws IOException {
+		// TODO Auto-generated method stub
+		Tuple a =new Tuple("");
+		while((a=getNextTuple()) != null){
+			String oneLineResult = String.join(",", a.getTuple());
+			bw.write(oneLineResult);
+			bw.newLine();
+		}
 	}
 	
 //	 public static void main(String args[])throws Exception{  

@@ -1,15 +1,20 @@
 package Interpreter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import Database_Catalog.Catalog;
+import Operator.Operator;
 import Operator.ScanOperator;
 import Operator.SelectOperator;
+import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import parser.Parser;
 import parser.queryPlan;
@@ -62,7 +67,7 @@ public class Interpreter {
 		
 		// 1.3 Create a 'Database_Catalog' object to store directory and schema
 		 //test java -jar cs4321 p2.jar /Users/tanlini/Desktop/samples/input outputdir
-		 //test java -jar cs4321 p2.jar /Users/LukerRong/Desktop/CS5321/input outputdir
+		 //test java -jar cs4321 p2.jar /Users/LukerRong/Desktop/CS5321/input /Users/LukerRong/Desktop/CS5321/test_output
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);
@@ -82,13 +87,44 @@ public class Interpreter {
 		
 			// 3.1 Create a file in the output directory. Open the file.
 			
-			// 3.2 Use a while loop to call the getNextTuple function of the root 
+			// 3.2 Use a loop to call the getNextTuple function of the root 
 			// operator, write each output in the file until reaching to the very 
 			// last tuple
+			int i = 1; //File number
+			
 			for(PlainSelect eachQuerySelect: queryList){
 				queryPlan plan = new queryPlan(eachQuerySelect);
 				plan.getRoot().dump();
-				System.out.println("Query dumped.");		
+				System.out.println("Results dumped.");
+		
+				File file = new File(outputLocation + "/query" + i);
+				System.out.println(outputLocation + "/query" + i);
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+				FileWriter fw = new FileWriter(file);
+				BufferedWriter bw = null;
+				bw = new BufferedWriter(fw);
+				
+				
+				plan.getRoot().writeToFile(bw);
+				
+//				Operator root = plan.getRoot();
+//				Tuple a = root.getNextTuple();
+//				System.out.println(a.toString());
+//				String oneLineResult = String.join(",", a.getTuple());
+//				bw.write(oneLineResult);
+//				root.writeToFile(bw);
+//				while((root.getNextTuple()) != null){
+//					String oneLineResult = String.join(",", a.getTuple());
+//					bw.write(oneLineResult);
+//				}
+				
+				bw.close();
+				
+				System.out.println("Results wrote in file.");
+				
+				i++;
 			}
 			
 			

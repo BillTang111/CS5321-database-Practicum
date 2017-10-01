@@ -1,5 +1,7 @@
 package Operator;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +70,17 @@ public class ProjectOperator extends Operator {
 		Tuple a =new Tuple("");
 		while((a=getNextTuple()) != null){
 			System.out.println(a.getTuple());
+		}
+	}
+	
+	@Override
+	public void writeToFile(BufferedWriter bw) throws IOException {
+		// TODO Auto-generated method stub
+		Tuple a =new Tuple("");
+		while((a=getNextTuple()) != null){
+			String oneLineResult = String.join(",", a.getTuple());
+//			bw.write(oneLineResult);
+//			bw.newLine();
 		}
 	}
 
