@@ -111,7 +111,14 @@ public class Interpreter {
 				BufferedWriter bw = null;
 				bw = new BufferedWriter(fw);
 				
-
+				for(Tuple oneLine: result){
+					String stringResult = String.join(",", oneLine.getTuple());
+					bw.write(stringResult);
+					bw.newLine();
+				}
+				
+				
+				
 				
 				bw.close();
 				
