@@ -475,25 +475,7 @@ public class joinVisitor implements ExpressionVisitor {
 	
 	 public static void main(String args[])throws Exception{  
 			//long a, equlas e, colum c d g, c=d
-//			LongValue a = new LongValue(3);
-//			EqualsTo e = new EqualsTo();
-//			Column c = new Column();
-//			Table h = new Table();
-//			h.setName("sailor");
-//			c.setTable(h);
-//			Column d = new Column();
-//			d.setTable(h);
-//			Table f = new Table();
-//			f.setName("boat");
-//			Column g = new Column();
-//			g.setTable(f);
-//			e.setLeftExpression(c);
-//			e.setRightExpression(g);
-//			System.out.println(e.toString());
-//			joinVisitor j = new joinVisitor();
-//			e.accept(j);
-//			System.out.println(j.getJoinList().toString());
-//			System.out.println(j.getselectList().toString());
+
 		 
 		 	String querypath = "/Users/LukerRong/Desktop/CS5321/joinTest.sql";
 			Parser p = new Parser(querypath);
@@ -510,6 +492,7 @@ public class joinVisitor implements ExpressionVisitor {
 			System.out.println(j.getJoinExpressionList().toString());
 			System.out.println(j.getJoinTableList().toString());
 			System.out.println(j.getSelectExpressionList().toString());
+
 	 } 
 
 }
