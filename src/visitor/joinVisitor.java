@@ -45,7 +45,9 @@ import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SubSelect;
+import parser.Parser;
 
 public class joinVisitor implements ExpressionVisitor {
 	private ArrayList<Expression> join;
@@ -53,19 +55,28 @@ public class joinVisitor implements ExpressionVisitor {
 	private Boolean hasLong;
 	private Stack<Column> cStack;
 	
+	private ArrayList<String> joinTableName;
+	private HashMap<String, ArrayList<Expression>> hashedSelect;
+	
 	
 	public joinVisitor(){
 		hasLong = false;
 		cStack = new Stack<Column>();
 		select = new ArrayList<Expression>();
 		join = new ArrayList<Expression>();
+		joinTableName = new ArrayList<String>();
+		hashedSelect = new HashMap<String, ArrayList<Expression>>();
 	}
 	
-	public ArrayList getJoinList(){
+	public ArrayList getJoinExpressionList(){
 		return join;
 	}
 	
-	public ArrayList getselectList(){
+	public ArrayList getJoinTableList(){
+		return joinTableName;
+	}
+	
+	public ArrayList getSelectExpressionList(){
 		return select;
 	}
 	
@@ -200,12 +211,18 @@ public class joinVisitor implements ExpressionVisitor {
 			System.out.println("yoy");
 			Column r = cStack.pop();
 			System.out.println("yo");
-			Column l  = cStack.pop();
+			Column l  = cStack.pop();	
 			System.out.println("y");
-			if(r.getTable().getName() == l.getTable().getName()){
+			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
 				join.add(e);
+				if (!joinTableName.contains(l.getTable().getName())){
+					joinTableName.add(l.getTable().getName());
+				}
+				if (!joinTableName.contains(r.getTable().getName())){
+					joinTableName.add(r.getTable().getName());
+				}
 			}
 		}
 		
@@ -227,10 +244,16 @@ public class joinVisitor implements ExpressionVisitor {
 		}else{
 			Column r = cStack.pop();
 			Column l  = cStack.pop();
-			if(r.getTable().getName() == l.getTable().getName()){
+			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
 				join.add(e);
+				if (!joinTableName.contains(l.getTable().getName())){
+					joinTableName.add(l.getTable().getName());
+				}
+				if (!joinTableName.contains(r.getTable().getName())){
+					joinTableName.add(r.getTable().getName());
+				}
 			}
 		}
 	}
@@ -251,10 +274,16 @@ public class joinVisitor implements ExpressionVisitor {
 		}else{
 			Column r = cStack.pop();
 			Column l  = cStack.pop();
-			if(r.getTable().getName() == l.getTable().getName()){
+			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
 				join.add(e);
+				if (!joinTableName.contains(l.getTable().getName())){
+					joinTableName.add(l.getTable().getName());
+				}
+				if (!joinTableName.contains(r.getTable().getName())){
+					joinTableName.add(r.getTable().getName());
+				}
 			}
 		}
 		
@@ -294,10 +323,17 @@ public class joinVisitor implements ExpressionVisitor {
 		}else{
 			Column r = cStack.pop();
 			Column l  = cStack.pop();
-			if(r.getTable().getName() == l.getTable().getName()){
+			if(r.getTable().getName().equals(l.getTable().getName())){
+				System.out.println("hh");
 				select.add(e);
 			}else{
 				join.add(e);
+				if (!joinTableName.contains(l.getTable().getName())){
+					joinTableName.add(l.getTable().getName());
+				}
+				if (!joinTableName.contains(r.getTable().getName())){
+					joinTableName.add(r.getTable().getName());
+				}
 			}
 		}
 		
@@ -319,10 +355,16 @@ public class joinVisitor implements ExpressionVisitor {
 		}else{
 			Column r = cStack.pop();
 			Column l  = cStack.pop();
-			if(r.getTable().getName() == l.getTable().getName()){
+			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
 				join.add(e);
+				if (!joinTableName.contains(l.getTable().getName())){
+					joinTableName.add(l.getTable().getName());
+				}
+				if (!joinTableName.contains(r.getTable().getName())){
+					joinTableName.add(r.getTable().getName());
+				}
 			}
 		}
 		
@@ -344,10 +386,16 @@ public class joinVisitor implements ExpressionVisitor {
 		}else{
 			Column r = cStack.pop();
 			Column l  = cStack.pop();
-			if(r.getTable().getName() == l.getTable().getName()){
+			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
 				join.add(e);
+				if (!joinTableName.contains(l.getTable().getName())){
+					joinTableName.add(l.getTable().getName());
+				}
+				if (!joinTableName.contains(r.getTable().getName())){
+					joinTableName.add(r.getTable().getName());
+				}
 			}
 		}
 		
@@ -427,26 +475,41 @@ public class joinVisitor implements ExpressionVisitor {
 	
 	 public static void main(String args[])throws Exception{  
 			//long a, equlas e, colum c d g, c=d
-			LongValue a = new LongValue(3);
-			EqualsTo e = new EqualsTo();
-			Column c = new Column();
-			Table h = new Table();
-			h.setName("sailor");
-			c.setTable(h);
-			Column d = new Column();
-			d.setTable(h);
-			Table f = new Table();
-			f.setName("boat");
-			Column g = new Column();
-			g.setTable(f);
-			e.setLeftExpression(c);
-			e.setRightExpression(g);
+//			LongValue a = new LongValue(3);
+//			EqualsTo e = new EqualsTo();
+//			Column c = new Column();
+//			Table h = new Table();
+//			h.setName("sailor");
+//			c.setTable(h);
+//			Column d = new Column();
+//			d.setTable(h);
+//			Table f = new Table();
+//			f.setName("boat");
+//			Column g = new Column();
+//			g.setTable(f);
+//			e.setLeftExpression(c);
+//			e.setRightExpression(g);
+//			System.out.println(e.toString());
+//			joinVisitor j = new joinVisitor();
+//			e.accept(j);
+//			System.out.println(j.getJoinList().toString());
+//			System.out.println(j.getselectList().toString());
+		 
+		 	String querypath = "/Users/LukerRong/Desktop/CS5321/joinTest.sql";
+			Parser p = new Parser(querypath);
+			ArrayList<PlainSelect> queryList = p.getQueryList();
+			
+			PlainSelect s = queryList.get(0);
+			System.out.println(s);
+			
+			Expression e = s.getWhere(); 
 			System.out.println(e.toString());
 			joinVisitor j = new joinVisitor();
 			e.accept(j);
-			System.out.println(j.getJoinList().toString());
-			System.out.println(j.getselectList().toString());
-		 
+			
+			System.out.println(j.getJoinExpressionList().toString());
+			System.out.println(j.getJoinTableList().toString());
+			System.out.println(j.getSelectExpressionList().toString());
 	 } 
 
 }
