@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.expression.Expression;
 
 public class JoinOperator extends Operator {
 	
 	Catalog tableCatalog; //Store data schema and file location
 	PlainSelect parseBody; //Store the plainSelect object parsed from query
 	
-	public JoinOperator(Operator left, Operator right, Catalog table, PlainSelect selectBody) {
+	public JoinOperator(Operator left, Operator right, Expression joinExpression) {
 		// TODO Auto-generated constructor stub
 		tableCatalog = table;
 		parseBody = selectBody;
