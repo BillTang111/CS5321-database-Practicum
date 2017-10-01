@@ -17,20 +17,21 @@ import visitor.visitor;
 
 public class SelectOperator extends Operator {
 	
-	PlainSelect select; //Store the plainSelect object parsed from query
+//	PlainSelect select; //Store the plainSelect object parsed from query
 	Expression e;
 //	BufferedReader br;
 //	FromItem input;
 //	String location;
 	Operator childOp;
 	
-	public SelectOperator(PlainSelect selectBody, Operator op) throws IOException {
+	public SelectOperator(Expression singleSelect, Operator op) throws IOException {
 		// TODO Auto-generated constructor stub
 //		input = selectBody.getFromItem();
 //		location = Catalog.getInstance().getInputLocation();	
 //		br = new BufferedReader(new FileReader(location + "/db/data/"+input));  
-		select = selectBody;
-		e = selectBody.getWhere();
+//		select = selectBody;
+//		e = selectBody.getWhere();
+		e = singleSelect;
 		childOp = op;
 	}
 

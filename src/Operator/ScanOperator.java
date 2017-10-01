@@ -19,11 +19,11 @@ public class ScanOperator extends Operator {
 	FromItem input;
 	String location;
 	
-	public ScanOperator(PlainSelect selectBody) throws IOException {
+	public ScanOperator(String tableName) throws IOException {
 		// TODO Auto-generated constructor stub
-		input = selectBody.getFromItem();
+		//input = selectBody.getFromItem();
 		location = Catalog.getInstance().getInputLocation();	
-		br = new BufferedReader(new FileReader(location + "/db/data/" + input));      
+		br = new BufferedReader(new FileReader(location + "/db/data/" + tableName));      
 		
 		}
 		
