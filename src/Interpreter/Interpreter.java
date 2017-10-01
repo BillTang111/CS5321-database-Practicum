@@ -94,9 +94,14 @@ public class Interpreter {
 			
 			for(PlainSelect eachQuerySelect: queryList){
 				queryPlan plan = new queryPlan(eachQuerySelect);
-				plan.getRoot().dump();
-				System.out.println("Results dumped.");
-		
+//				plan.getRoot().dump();
+//				System.out.println("Results dumped.");
+//		
+				
+				ArrayList<Tuple> result = plan.getRoot().writeToFile();
+				
+				
+				
 				File file = new File(outputLocation + "/query" + i);
 				System.out.println(outputLocation + "/query" + i);
 				if (!file.exists()) {
@@ -106,19 +111,12 @@ public class Interpreter {
 				BufferedWriter bw = null;
 				bw = new BufferedWriter(fw);
 				
+				for(Tuple oneLine: result){
+					String stringResult = String.join(",", oneLine.getTuple());
+					bw.write(stringResult);
+					bw.newLine();
+				}
 				
-				plan.getRoot().writeToFile(bw);
-				
-//				Operator root = plan.getRoot();
-//				Tuple a = root.getNextTuple();
-//				System.out.println(a.toString());
-//				String oneLineResult = String.join(",", a.getTuple());
-//				bw.write(oneLineResult);
-//				root.writeToFile(bw);
-//				while((root.getNextTuple()) != null){
-//					String oneLineResult = String.join(",", a.getTuple());
-//					bw.write(oneLineResult);
-//				}
 				
 				bw.close();
 				
