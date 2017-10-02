@@ -16,13 +16,14 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 
 public class ScanOperator extends Operator {
 	BufferedReader br;
-	FromItem input;
+	String input;
 	String location;
 	
 	public ScanOperator(String tableName) throws IOException {
 		// TODO Auto-generated constructor stub
 		//input = selectBody.getFromItem();
 		location = Catalog.getInstance().getInputLocation();	
+		input = tableName;
 		br = new BufferedReader(new FileReader(location + "/db/data/" + tableName));      
 		
 		}
@@ -52,7 +53,7 @@ public class ScanOperator extends Operator {
 	public void reset() {
 		// TODO Auto-generated method stub
 		try {
-			br = new BufferedReader(new FileReader(location + "/db/data/"+input+".txt"));
+			br = new BufferedReader(new FileReader(location + "/db/data/"+input));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

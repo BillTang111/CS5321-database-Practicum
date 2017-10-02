@@ -35,6 +35,7 @@ public class Parser {
 				selectbody = (PlainSelect) select.getSelectBody();
 				
 				System.out.println("Select from " + selectbody.getFromItem());
+				System.out.println("join from " + selectbody.getJoins());
 				System.out.println("Select body is " + selectbody);			
 				System.out.println("condition " + selectbody.getWhere());
 				queryList.add(selectbody);

@@ -6,6 +6,7 @@ import java.util.Stack;
 
 import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
+import net.sf.jsqlparser.expression.BinaryExpression;
 import net.sf.jsqlparser.expression.CaseExpression;
 import net.sf.jsqlparser.expression.DateValue;
 import net.sf.jsqlparser.expression.DoubleValue;
@@ -56,8 +57,9 @@ public class joinVisitor implements ExpressionVisitor {
 	private Stack<Column> cStack;
 	
 	private ArrayList<String> joinTableName;
-	private HashMap<String, ArrayList<Expression>> hashedSelect;
-	
+	private HashMap<String, ArrayList<Expression>> selectConditionMap;
+	private ArrayList<ArrayList<String>> joinPair;
+	private HashMap<ArrayList<String>, Expression> joinConditionMap;
 	
 	public joinVisitor(){
 		hasLong = false;
@@ -65,7 +67,9 @@ public class joinVisitor implements ExpressionVisitor {
 		select = new ArrayList<Expression>();
 		join = new ArrayList<Expression>();
 		joinTableName = new ArrayList<String>();
-		hashedSelect = new HashMap<String, ArrayList<Expression>>();
+		selectConditionMap = new HashMap<String, ArrayList<Expression>>();
+		joinPair = new ArrayList<ArrayList<String>>();
+		joinConditionMap = new HashMap<ArrayList<String>, Expression>();
 	}
 	
 	public ArrayList getJoinExpressionList(){
@@ -76,9 +80,30 @@ public class joinVisitor implements ExpressionVisitor {
 		return joinTableName;
 	}
 	
-	public ArrayList getSelectExpressionList(){
-		return select;
+	public HashMap<String, ArrayList<Expression>> getSelectConditionMap(){
+		for(Expression e: select){
+			int indexDot = e.toString().indexOf(".");
+			String tableName = e.toString().substring(0, indexDot);
+			ArrayList<Expression> updatedCondition = new ArrayList<Expression>();
+			
+			if (selectConditionMap.containsKey(tableName)){
+				updatedCondition = selectConditionMap.get(tableName);	
+			}
+			updatedCondition.add(e);
+			selectConditionMap.put(tableName, updatedCondition);
+		}
+		
+		return selectConditionMap;
 	}
+	
+	public ArrayList getJoinPair(){
+		return joinPair;
+	}
+	
+	public HashMap<ArrayList<String>, Expression> getJoinConditionMap(){
+		return joinConditionMap;
+	}
+	
 	
 	@Override
 	public void visit(NullValue arg0) {
@@ -200,19 +225,19 @@ public class joinVisitor implements ExpressionVisitor {
 		 EqualsTo e = new EqualsTo();
 		 e.setLeftExpression(left);
 		 e.setRightExpression(right);
-		 System.out.println(e.toString());
-		 System.out.println(hasLong);
+//		 System.out.println(e.toString());
+//		 System.out.println(hasLong);
 		if(hasLong == true){
-			 System.out.println("yoyo");	
+//			 System.out.println("yoyo");	
 		 select.add(e);
 		 
 		 hasLong = false;
 		}else{
-			System.out.println("yoy");
+//			System.out.println("yoy");
 			Column r = cStack.pop();
-			System.out.println("yo");
+//			System.out.println("yo");
 			Column l  = cStack.pop();	
-			System.out.println("y");
+//			System.out.println("y");
 			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
@@ -223,6 +248,13 @@ public class joinVisitor implements ExpressionVisitor {
 				if (!joinTableName.contains(r.getTable().getName())){
 					joinTableName.add(r.getTable().getName());
 				}
+				
+				ArrayList<String> newPair = new ArrayList<String>();
+				newPair.add(l.getTable().getName());
+				newPair.add(r.getTable().getName());
+				joinPair.add(newPair);
+				
+				joinConditionMap.put(newPair, e);
 			}
 		}
 		
@@ -254,6 +286,13 @@ public class joinVisitor implements ExpressionVisitor {
 				if (!joinTableName.contains(r.getTable().getName())){
 					joinTableName.add(r.getTable().getName());
 				}
+				
+				ArrayList<String> newPair = new ArrayList<String>();
+				newPair.add(l.getTable().getName());
+				newPair.add(r.getTable().getName());
+				joinPair.add(newPair);
+				
+				joinConditionMap.put(newPair, e);
 			}
 		}
 	}
@@ -284,6 +323,13 @@ public class joinVisitor implements ExpressionVisitor {
 				if (!joinTableName.contains(r.getTable().getName())){
 					joinTableName.add(r.getTable().getName());
 				}
+				
+				ArrayList<String> newPair = new ArrayList<String>();
+				newPair.add(l.getTable().getName());
+				newPair.add(r.getTable().getName());
+				joinPair.add(newPair);
+				
+				joinConditionMap.put(newPair, e);
 			}
 		}
 		
@@ -324,7 +370,7 @@ public class joinVisitor implements ExpressionVisitor {
 			Column r = cStack.pop();
 			Column l  = cStack.pop();
 			if(r.getTable().getName().equals(l.getTable().getName())){
-				System.out.println("hh");
+//				System.out.println("hh");
 				select.add(e);
 			}else{
 				join.add(e);
@@ -334,6 +380,13 @@ public class joinVisitor implements ExpressionVisitor {
 				if (!joinTableName.contains(r.getTable().getName())){
 					joinTableName.add(r.getTable().getName());
 				}
+				
+				ArrayList<String> newPair = new ArrayList<String>();
+				newPair.add(l.getTable().getName());
+				newPair.add(r.getTable().getName());
+				joinPair.add(newPair);
+				
+				joinConditionMap.put(newPair, e);
 			}
 		}
 		
@@ -365,6 +418,13 @@ public class joinVisitor implements ExpressionVisitor {
 				if (!joinTableName.contains(r.getTable().getName())){
 					joinTableName.add(r.getTable().getName());
 				}
+				
+				ArrayList<String> newPair = new ArrayList<String>();
+				newPair.add(l.getTable().getName());
+				newPair.add(r.getTable().getName());
+				joinPair.add(newPair);
+				
+				joinConditionMap.put(newPair, e);
 			}
 		}
 		
@@ -396,6 +456,13 @@ public class joinVisitor implements ExpressionVisitor {
 				if (!joinTableName.contains(r.getTable().getName())){
 					joinTableName.add(r.getTable().getName());
 				}
+				
+				ArrayList<String> newPair = new ArrayList<String>();
+				newPair.add(l.getTable().getName());
+				newPair.add(r.getTable().getName());
+				joinPair.add(newPair);
+				
+				joinConditionMap.put(newPair, e);
 			}
 		}
 		
@@ -491,8 +558,9 @@ public class joinVisitor implements ExpressionVisitor {
 			
 			System.out.println(j.getJoinExpressionList().toString());
 			System.out.println(j.getJoinTableList().toString());
-			System.out.println(j.getSelectExpressionList().toString());
-
+			System.out.println(j.getSelectConditionMap().toString());
+			System.out.println(j.getJoinPair().toString());
+			System.out.println(j.getJoinConditionMap().toString());
 	 } 
 
 }
