@@ -41,10 +41,10 @@ public class Parser {
 				System.out.println("Select body is " + selectbody);			
 				System.out.println("condition " + selectbody.getWhere());
 				queryList.add(selectbody);
-				System.out.println("project: " + selectbody.getSelectItems());
+				System.out.println("project: " + selectbody.getSelectItems().get(0));
 				System.out.println("join: " + selectbody.getJoins());
 				System.out.println("order by: " + selectbody.getOrderByElements());
-
+				System.out.println("distinct : " + selectbody.getDistinct());
 			}
 		} catch (Exception e) {
 			System.err.println("Exception occurred during parsing");

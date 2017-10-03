@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Operator.DuplicateEliminationOperators;
 import Operator.JoinOperator;
 import Operator.Operator;
 import Operator.ProjectOperator;
 import Operator.ScanOperator;
 import Operator.SelectOperator;
+import Operator.SortOperator;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import visitor.joinVisitor;
@@ -124,10 +126,21 @@ public class queryPlan {
 		
 		// add projection node to current tree if there is project condition
 		// TODO ****NEED MODIFY 
-		if (selectBody.getSelectItems().get(0)!="*") {
-			ProjectOperator project = new ProjectOperator(selectBody, root);
-			root = project;
+//		if (selectBody.getSelectItems().get(0)!="*") {
+//			ProjectOperator project = new ProjectOperator(selectBody, root);
+//			root = project;
+//		}
+		
+		if (selectBody.getOrderByElements()!=null) {
+			SortOperator Sort = new SortOperator(root, selectBody);
+			root = Sort;
 		}
+		
+		if (selectBody.getDistinct()!=null) {
+			DuplicateEliminationOperators distinct = new DuplicateEliminationOperators(root);
+			root = distinct;
+		}
+		
 		
 	}
 	
