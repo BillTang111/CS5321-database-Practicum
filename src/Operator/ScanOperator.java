@@ -26,6 +26,7 @@ public class ScanOperator extends Operator {
 		//input = selectBody.getFromItem();
 		Catalog data = Catalog.getInstance();
 		HashMap<String, String> pairAlias = data.getPairAlias();
+		
 		location = Catalog.getInstance().getInputLocation();
 		input = tableName;
 		originName = pairAlias.get(tableName);

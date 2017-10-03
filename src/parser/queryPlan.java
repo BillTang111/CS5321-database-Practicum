@@ -45,9 +45,9 @@ public class queryPlan {
 			e.accept(jVisitor);
 			
 			pairAlias = jVisitor.getPairAlias();
+			
 			Catalog data = Catalog.getInstance();
 			data.setPairAlias(pairAlias);
-			
 			
 			
 			sortedTable = jVisitor.getJoinTableList();
@@ -57,13 +57,19 @@ public class queryPlan {
 			
 			System.out.println(jVisitor.getJoinPair().toString());
 			System.out.println(jVisitor.getJoinConditionMap().toString());
+			System.out.println(jVisitor.getJoinTableList().toString());
+			
 			
 			// If there is no join condition, add the only table name into sortedTable
 			if (sortedTable.isEmpty()){
 				sortedTable.add(selectBody.getFromItem().toString());
 			}	
 		} else {
-			sortedTable.add(selectBody.getFromItem().toString());
+			String onlyTable = selectBody.getFromItem().toString();
+			sortedTable.add(onlyTable);
+			pairAlias.put(onlyTable, onlyTable);
+			Catalog data = Catalog.getInstance();
+			data.setPairAlias(pairAlias);
 		}
 		
 

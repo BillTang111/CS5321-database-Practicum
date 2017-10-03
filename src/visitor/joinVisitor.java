@@ -86,9 +86,11 @@ public class joinVisitor implements ExpressionVisitor {
 		addPair(AliasTruePair, table);
 		
 		List<Join> joinPairs = selectBody.getJoins();
-		for(Join singleJoin: joinPairs){
-			table = singleJoin.toString();
-			addPair(AliasTruePair, table);
+		if (joinPairs!=null){
+			for(Join singleJoin: joinPairs){
+				table = singleJoin.toString();
+				addPair(AliasTruePair, table);
+			}
 		}
 		
 		return AliasTruePair;
