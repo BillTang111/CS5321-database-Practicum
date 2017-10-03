@@ -16,7 +16,7 @@ public class DuplicateEliminationOperators extends Operator {
 	
 	public DuplicateEliminationOperators(Operator op){
 		childOp = op;
-		distinctTuple = new HashSet<Tuple>();
+		distinctTuple = new HashSet();
 		
 	}
 	
@@ -26,9 +26,8 @@ public class DuplicateEliminationOperators extends Operator {
 		Tuple a = childOp.getNextTuple();
 		while(a!=null){
 		//if(distinctTuple.isEmpty()) distinctTuple.add(a);
-		if(!distinctTuple.contains(a)){
-			System.out.println("hh");
-			distinctTuple.add(a);
+		if(!distinctTuple.contains(a.getTuple().toString())){
+			distinctTuple.add(a.getTuple().toString());
 			return a;
 		}
 		a=childOp.getNextTuple();
