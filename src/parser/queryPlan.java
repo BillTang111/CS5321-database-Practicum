@@ -76,7 +76,7 @@ public class queryPlan {
 		}
 		
 		
-		ArrayList<Operator> parentsOfTable = nodeBeforeJoin; // parents nodes of each table
+		ArrayList<Operator> parentsOfTable = (ArrayList<Operator>) nodeBeforeJoin.clone(); // parents nodes of each table
 		
 		
 		// Join all the scanned and selected table together in sequence, set the root node
@@ -92,9 +92,15 @@ public class queryPlan {
 				int leftIndex = sortedTable.indexOf(pairKey.get(0));
 				int rightIndex = sortedTable.indexOf(pairKey.get(1));
 				
+				
 				Operator leftOriginalParent= parentsOfTable.get(leftIndex);
 				Operator rightOriginalParent= parentsOfTable.get(rightIndex);
-				Join = new JoinOperator(leftOriginalParent, rightOriginalParent, joinCondition);
+				
+				if (!rightOriginalParent.equals(nodeBeforeJoin.get(rightIndex))) {
+					Join = new JoinOperator(rightOriginalParent, leftOriginalParent, joinCondition);
+				} else {
+					Join = new JoinOperator(leftOriginalParent, rightOriginalParent, joinCondition);
+				}
 				
 				// substitute parents of all the node belong to left child to current highest join
 				for (int i = 0; i < parentsOfTable.size(); i++) {
