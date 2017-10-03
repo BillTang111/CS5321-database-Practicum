@@ -43,14 +43,18 @@ public class ProjectOperator extends Operator {
 		for(int i =0; i<length; i++){
 			SelectExpressionItem sei = (SelectExpressionItem) project.get(i);
 			String e = sei.getExpression().toString();
+			//System.out.println(e);
+			int index = (int) a.getTupleMap().get(e);
+			//System.out.println(index);
 			int point  = e.indexOf(".");
 			t = e.substring(0, point);
-			ArrayList field = (ArrayList) map.get(t);
-			String cn = e.substring(point+1);
-			//String cn = c.getColumnName().toString();
-			int index = field.indexOf(cn);
+//			ArrayList field = (ArrayList) map.get(t);
+//			String cn = e.substring(point+1);
+//			//String cn = c.getColumnName().toString();
+//			int index = field.indexOf(cn);
 			String ss = (String) aList.get(index);
 			s = s+ss+",";
+			//System.out.println(s);
 		}
 		s = s.substring(0, s.length()-1);
 		ArrayList l = new ArrayList();
@@ -71,23 +75,21 @@ public class ProjectOperator extends Operator {
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
-		ArrayList l = new ArrayList();
-		l.add(t);
-		Tuple a =new Tuple("",l);
-		while((a=getNextTuple()) != null){
+		Tuple a=getNextTuple();
+		while(a != null){
 			System.out.println(a.getTuple());
+			a=getNextTuple();
 		}
 	}
 	
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
-		ArrayList l = new ArrayList();
-		l.add(t);
-		Tuple a =new Tuple("",l);
+		Tuple a=getNextTuple();
 		ArrayList<Tuple> result = new ArrayList<Tuple>();
-		while((a=getNextTuple()) != null){
+		while(a != null){
 			result.add(a);
+			a=getNextTuple();
 		}
 		return result;
 	}
