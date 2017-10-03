@@ -2,6 +2,7 @@ package visitor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
 import net.sf.jsqlparser.expression.AllComparisonExpression;
@@ -46,6 +47,7 @@ import net.sf.jsqlparser.expression.operators.relational.MinorThanEquals;
 import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.select.Join;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SubSelect;
 import parser.Parser;
@@ -60,8 +62,9 @@ public class joinVisitor implements ExpressionVisitor {
 	private HashMap<String, ArrayList<Expression>> selectConditionMap;
 	private ArrayList<ArrayList<String>> joinPair;
 	private HashMap<ArrayList<String>, Expression> joinConditionMap;
+	private HashMap<String, String> pairAlias;
 	
-	public joinVisitor(){
+	public joinVisitor(PlainSelect selectBody){
 		hasLong = false;
 		cStack = new Stack<Column>();
 		select = new ArrayList<Expression>();
@@ -70,6 +73,39 @@ public class joinVisitor implements ExpressionVisitor {
 		selectConditionMap = new HashMap<String, ArrayList<Expression>>();
 		joinPair = new ArrayList<ArrayList<String>>();
 		joinConditionMap = new HashMap<ArrayList<String>, Expression>();
+		pairAlias = buildAliasTruePair(selectBody);
+	}
+	
+	public HashMap<String, String> getPairAlias(){
+		return pairAlias;
+	}
+	
+	public HashMap<String, String> buildAliasTruePair(PlainSelect selectBody){
+		HashMap<String, String> AliasTruePair = new HashMap<String, String>();
+		String table = selectBody.getFromItem().toString();
+		addPair(AliasTruePair, table);
+		
+		List<Join> joinPairs = selectBody.getJoins();
+		for(Join singleJoin: joinPairs){
+			table = singleJoin.toString();
+			addPair(AliasTruePair, table);
+		}
+		
+		return AliasTruePair;
+	}
+	
+	public void addPair(HashMap<String, String> pairSet, String table){
+		int index = table.indexOf(" AS ");
+		if (index!=-1){ // if there is " AS " in the table
+			String original = table.substring(0, index);
+			String alias = table.substring(index + 4, -1);
+			pairSet.put(alias, original); // use to substitute alias to table
+			pairSet.put(original, original); // use to substitute table to table
+		}
+		else {
+			String original = table;
+			pairSet.put(original, original); // use to substitute table to table
+		}
 	}
 	
 	public ArrayList getJoinExpressionList(){
@@ -221,10 +257,10 @@ public class joinVisitor implements ExpressionVisitor {
 		arg0.getLeftExpression().accept(this);
 		arg0.getRightExpression().accept(this);
 		Expression left = arg0.getLeftExpression();
-		 Expression right = arg0.getRightExpression();
-		 EqualsTo e = new EqualsTo();
-		 e.setLeftExpression(left);
-		 e.setRightExpression(right);
+		Expression right = arg0.getRightExpression();
+		EqualsTo e = new EqualsTo();
+		e.setLeftExpression(left);
+		e.setRightExpression(right);
 //		 System.out.println(e.toString());
 //		 System.out.println(hasLong);
 		if(hasLong == true){
@@ -553,7 +589,7 @@ public class joinVisitor implements ExpressionVisitor {
 			
 			Expression e = s.getWhere(); 
 			System.out.println(e.toString());
-			joinVisitor j = new joinVisitor();
+			joinVisitor j = new joinVisitor(s);
 			e.accept(j);
 			
 			System.out.println(j.getJoinExpressionList().toString());

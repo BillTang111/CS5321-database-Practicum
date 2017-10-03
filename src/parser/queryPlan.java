@@ -34,13 +34,16 @@ public class queryPlan {
 		Expression e = selectBody.getWhere();
 		
 		if (selectBody.getWhere() != null){ // if there is WHERE
-			joinVisitor jVisitor = new joinVisitor();
+			joinVisitor jVisitor = new joinVisitor(selectBody);
 			e.accept(jVisitor);
 			
 			sortedTable = jVisitor.getJoinTableList();
 			selectConditionMap = jVisitor.getSelectConditionMap();
 			joinConditionMap = jVisitor.getJoinConditionMap();
 			joinPair = jVisitor.getJoinPair();
+			
+			System.out.println(jVisitor.getJoinPair().toString());
+			System.out.println(jVisitor.getJoinConditionMap().toString());
 			
 			// If there is no join condition, add the only table name into sortedTable
 			if (sortedTable.isEmpty()){
