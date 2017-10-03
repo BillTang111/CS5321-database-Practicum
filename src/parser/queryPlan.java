@@ -55,14 +55,25 @@ public class queryPlan {
 			joinConditionMap = jVisitor.getJoinConditionMap(); // key:original value:might be Alias name
 			joinPair = jVisitor.getJoinPair(); // original name
 			
-			System.out.println(jVisitor.getJoinPair().toString());
-			System.out.println(jVisitor.getJoinConditionMap().toString());
-			System.out.println(jVisitor.getJoinTableList().toString());
-			
+//			System.out.println(jVisitor.getJoinPair().toString());
+//			System.out.println(jVisitor.getJoinConditionMap().toString());
+//			System.out.println(jVisitor.getJoinTableList().toString());
+//			
 			
 			// If there is no join condition, add the only table name into sortedTable
-			if (sortedTable.isEmpty()){
-				sortedTable.add(selectBody.getFromItem().toString());
+			if (sortedTable.isEmpty()){ // only select of one table
+				String onlyTable = selectBody.getFromItem().toString();
+				
+				if (selectBody.getFromItem().getAlias()!=null) {
+					String onlyAlias = selectBody.getFromItem().getAlias().toString();
+					int index = onlyTable.indexOf(" AS ");
+					onlyTable = onlyTable.substring(0, index);
+					pairAlias.put(onlyAlias, onlyTable);
+				}
+				
+				sortedTable.add(onlyTable);
+				pairAlias.put(onlyTable, onlyTable);
+				
 			}	
 		} else {
 			String onlyTable = selectBody.getFromItem().toString();
