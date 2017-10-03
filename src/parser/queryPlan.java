@@ -126,10 +126,10 @@ public class queryPlan {
 		
 		// add projection node to current tree if there is project condition
 		// TODO ****NEED MODIFY 
-//		if (selectBody.getSelectItems().get(0)!="*") {
-//			ProjectOperator project = new ProjectOperator(selectBody, root);
-//			root = project;
-//		}
+		if (selectBody.getSelectItems().get(0)!="*") {
+			ProjectOperator project = new ProjectOperator(selectBody, root);
+			root = project;
+		}
 		
 		if (selectBody.getOrderByElements()!=null) {
 			SortOperator Sort = new SortOperator(root, selectBody);

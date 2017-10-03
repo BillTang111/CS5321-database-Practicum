@@ -27,6 +27,7 @@ public class DuplicateEliminationOperators extends Operator {
 		while(a!=null){
 		//if(distinctTuple.isEmpty()) distinctTuple.add(a);
 		if(!distinctTuple.contains(a)){
+			System.out.println("hh");
 			distinctTuple.add(a);
 			return a;
 		}
