@@ -43,6 +43,7 @@ public class Parser {
 				queryList.add(selectbody);
 				System.out.println("project: " + selectbody.getSelectItems());
 				System.out.println("join: " + selectbody.getJoins());
+				System.out.println("order by: " + selectbody.getOrderByElements());
 
 			}
 		} catch (Exception e) {
