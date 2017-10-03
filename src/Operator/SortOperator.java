@@ -96,7 +96,7 @@ class TupleComparator implements Comparator<Tuple> {
     	HashMap amap = a.getTupleMap();
     	ArrayList alist = a.getTuple();
     	ArrayList blist = b.getTuple();
-    	//HashSet s = new HashSet();
+    	HashSet s = new HashSet<String>();
     	//compare by condition
     	
     	for(int i=0; i<condition.size(); i++){
@@ -109,7 +109,7 @@ class TupleComparator implements Comparator<Tuple> {
     	//	System.out.println("b "+bnum);
     		if(anum < bnum) return -1;
     		if(anum > bnum) return 1;
-    		//s.add(condition.get(i));
+    		s.add(condition.get(i).toString());
     	}
     	ArrayList field = new ArrayList();
     	List table = a.getNameList();
@@ -121,9 +121,9 @@ class TupleComparator implements Comparator<Tuple> {
     			field.add(table.get(j).toString()+"."+tfield.get(i));
     		}
     	}
-    	System.out.println(field.toString());
+    	//System.out.println(field.toString());
     	for(int i=0; i<field.size(); i++){
-    		//if(s.contains(field.get(i))) continue;
+    		if(s.contains(field.get(i).toString())) continue;
     		int index = (int) amap.get(field.get(i));
     		//System.out.println(index);
     		int anum = Integer.parseInt((String) alist.get(index));
