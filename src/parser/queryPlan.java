@@ -50,10 +50,10 @@ public class queryPlan {
 			data.setPairAlias(pairAlias);
 			
 			
-			sortedTable = jVisitor.getJoinTableList();
-			selectConditionMap = jVisitor.getSelectConditionMap();
-			joinConditionMap = jVisitor.getJoinConditionMap();
-			joinPair = jVisitor.getJoinPair();
+			sortedTable = jVisitor.getJoinTableList(); // original name
+			selectConditionMap = jVisitor.getSelectConditionMap(); // key:original value:might be Alias name
+			joinConditionMap = jVisitor.getJoinConditionMap(); // key:original value:might be Alias name
+			joinPair = jVisitor.getJoinPair(); // original name
 			
 			System.out.println(jVisitor.getJoinPair().toString());
 			System.out.println(jVisitor.getJoinConditionMap().toString());
@@ -66,8 +66,17 @@ public class queryPlan {
 			}	
 		} else {
 			String onlyTable = selectBody.getFromItem().toString();
+			
+			if (selectBody.getFromItem().getAlias()!=null) {
+				String onlyAlias = selectBody.getFromItem().getAlias().toString();
+				int index = onlyTable.indexOf(" AS ");
+				onlyTable = onlyTable.substring(0, index);
+				pairAlias.put(onlyAlias, onlyTable);
+			}
+			
 			sortedTable.add(onlyTable);
 			pairAlias.put(onlyTable, onlyTable);
+			
 			Catalog data = Catalog.getInstance();
 			data.setPairAlias(pairAlias);
 		}
@@ -78,7 +87,7 @@ public class queryPlan {
 		
 		// add Scan and Select node, processed subtree stored in nodeBeforeJoin
 		for(int i = 0; i < tableNum; i++) {
-			String tableName = sortedTable.get(i);
+			String tableName = sortedTable.get(i); //original name
 			ScanOperator scan =  new ScanOperator(tableName);
 			root = scan; //First process scan all the time
 			

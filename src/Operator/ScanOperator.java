@@ -18,7 +18,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 public class ScanOperator extends Operator {
 	BufferedReader br;
 	String input;
-	String originName;
+	//String originName;
 	String location;
 	
 	public ScanOperator(String tableName) throws IOException {
@@ -28,9 +28,9 @@ public class ScanOperator extends Operator {
 		HashMap<String, String> pairAlias = data.getPairAlias();
 		
 		location = Catalog.getInstance().getInputLocation();
-		input = tableName;
-		originName = pairAlias.get(tableName);
-		br = new BufferedReader(new FileReader(location + "/db/data/" + originName));      
+		input = tableName; //Original name
+		//originName = pairAlias.get(tableName);
+		br = new BufferedReader(new FileReader(location + "/db/data/" + input));      
 		
 		}
 		
@@ -63,7 +63,7 @@ public class ScanOperator extends Operator {
 	public void reset() {
 		// TODO Auto-generated method stub
 		try {
-			br = new BufferedReader(new FileReader(location + "/db/data/"+originName));
+			br = new BufferedReader(new FileReader(location + "/db/data/"+input));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

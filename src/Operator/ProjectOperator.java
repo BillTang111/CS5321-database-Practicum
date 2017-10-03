@@ -18,7 +18,8 @@ public class ProjectOperator extends Operator {
 	HashMap map;
 	List project;
 	Operator childOp;
-	String t;
+	String table;
+	HashMap<String, String> pairAlias;
 	
 	public ProjectOperator(PlainSelect selectBody, Operator op) {
 		// TODO Auto-generated constructor stub
@@ -26,7 +27,9 @@ public class ProjectOperator extends Operator {
 		project = selectBody.getSelectItems();
 		Catalog c = Catalog.getInstance();
 		map=c.getSchema();
-		t ="";
+		table ="";
+		
+		pairAlias = c.getPairAlias();
 	}
 
 	@Override
@@ -39,27 +42,31 @@ public class ProjectOperator extends Operator {
 		if(project.get(0).getClass()==allColumns.getClass()) return a;
 		int length = project.size();
 		//build new Tuple
-		String s = "";
+		String rowRecord = "";
 		for(int i =0; i<length; i++){
 			SelectExpressionItem sei = (SelectExpressionItem) project.get(i);
 			String e = sei.getExpression().toString();
-			//System.out.println(e);
-			int index = (int) a.getTupleMap().get(e);
+			//System.out.println("sei: " + e);
+			
+			
+			int dotIndex = e.indexOf(".");
+			table = pairAlias.get(e.substring(0, dotIndex)); // original table name
+			//System.out.println(pairAlias.toString());
+			String newColumnField = table + "." + e.substring(dotIndex+1 , e.length());
+			
+			//System.out.println("newColumnField: " + newColumnField);
+			
+			int index = (int) a.getTupleMap().get(newColumnField);
 			//System.out.println(index);
-			int point  = e.indexOf(".");
-			t = e.substring(0, point);
-//			ArrayList field = (ArrayList) map.get(t);
-//			String cn = e.substring(point+1);
-//			//String cn = c.getColumnName().toString();
-//			int index = field.indexOf(cn);
-			String ss = (String) aList.get(index);
-			s = s+ss+",";
+
+			String cellRecord = (String) aList.get(index);
+			rowRecord = rowRecord + cellRecord +",";
 			//System.out.println(s);
 		}
-		s = s.substring(0, s.length()-1);
+		rowRecord = rowRecord.substring(0, rowRecord.length()-1);
 		ArrayList l = new ArrayList();
-		l.add(t);
-		Tuple b = new Tuple(s,l);
+		l.add(table);
+		Tuple b = new Tuple(rowRecord,l);
 		
 		return b;
 		}

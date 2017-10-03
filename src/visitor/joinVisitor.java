@@ -74,6 +74,9 @@ public class joinVisitor implements ExpressionVisitor {
 		joinPair = new ArrayList<ArrayList<String>>();
 		joinConditionMap = new HashMap<ArrayList<String>, Expression>();
 		pairAlias = buildAliasTruePair(selectBody);
+		
+		
+		
 	}
 	
 	public HashMap<String, String> getPairAlias(){
@@ -122,6 +125,7 @@ public class joinVisitor implements ExpressionVisitor {
 		for(Expression e: select){
 			int indexDot = e.toString().indexOf(".");
 			String tableName = e.toString().substring(0, indexDot);
+			tableName = pairAlias.get(tableName);
 			ArrayList<Expression> updatedCondition = new ArrayList<Expression>();
 			
 			if (selectConditionMap.containsKey(tableName)){
@@ -280,16 +284,16 @@ public class joinVisitor implements ExpressionVisitor {
 				select.add(e);
 			}else{
 				join.add(e);
-				if (!joinTableName.contains(l.getTable().getName())){
-					joinTableName.add(l.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
+					joinTableName.add(pairAlias.get(l.getTable().getName()));
 				}
-				if (!joinTableName.contains(r.getTable().getName())){
-					joinTableName.add(r.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(r.getTable().getName()))){
+					joinTableName.add(pairAlias.get(r.getTable().getName()));
 				}
 				
 				ArrayList<String> newPair = new ArrayList<String>();
-				newPair.add(l.getTable().getName());
-				newPair.add(r.getTable().getName());
+				newPair.add(pairAlias.get(l.getTable().getName()));
+				newPair.add(pairAlias.get(r.getTable().getName()));
 				joinPair.add(newPair);
 				
 				joinConditionMap.put(newPair, e);
@@ -318,16 +322,16 @@ public class joinVisitor implements ExpressionVisitor {
 				select.add(e);
 			}else{
 				join.add(e);
-				if (!joinTableName.contains(l.getTable().getName())){
-					joinTableName.add(l.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
+					joinTableName.add(pairAlias.get(l.getTable().getName()));
 				}
-				if (!joinTableName.contains(r.getTable().getName())){
-					joinTableName.add(r.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(r.getTable().getName()))){
+					joinTableName.add(pairAlias.get(r.getTable().getName()));
 				}
 				
 				ArrayList<String> newPair = new ArrayList<String>();
-				newPair.add(l.getTable().getName());
-				newPair.add(r.getTable().getName());
+				newPair.add(pairAlias.get(l.getTable().getName()));
+				newPair.add(pairAlias.get(r.getTable().getName()));
 				joinPair.add(newPair);
 				
 				joinConditionMap.put(newPair, e);
@@ -355,16 +359,16 @@ public class joinVisitor implements ExpressionVisitor {
 				select.add(e);
 			}else{
 				join.add(e);
-				if (!joinTableName.contains(l.getTable().getName())){
-					joinTableName.add(l.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
+					joinTableName.add(pairAlias.get(l.getTable().getName()));
 				}
-				if (!joinTableName.contains(r.getTable().getName())){
-					joinTableName.add(r.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(r.getTable().getName()))){
+					joinTableName.add(pairAlias.get(r.getTable().getName()));
 				}
 				
 				ArrayList<String> newPair = new ArrayList<String>();
-				newPair.add(l.getTable().getName());
-				newPair.add(r.getTable().getName());
+				newPair.add(pairAlias.get(l.getTable().getName()));
+				newPair.add(pairAlias.get(r.getTable().getName()));
 				joinPair.add(newPair);
 				
 				joinConditionMap.put(newPair, e);
@@ -412,16 +416,16 @@ public class joinVisitor implements ExpressionVisitor {
 				select.add(e);
 			}else{
 				join.add(e);
-				if (!joinTableName.contains(l.getTable().getName())){
-					joinTableName.add(l.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
+					joinTableName.add(pairAlias.get(l.getTable().getName()));
 				}
-				if (!joinTableName.contains(r.getTable().getName())){
-					joinTableName.add(r.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(r.getTable().getName()))){
+					joinTableName.add(pairAlias.get(r.getTable().getName()));
 				}
 				
 				ArrayList<String> newPair = new ArrayList<String>();
-				newPair.add(l.getTable().getName());
-				newPair.add(r.getTable().getName());
+				newPair.add(pairAlias.get(l.getTable().getName()));
+				newPair.add(pairAlias.get(r.getTable().getName()));
 				joinPair.add(newPair);
 				
 				joinConditionMap.put(newPair, e);
@@ -450,16 +454,16 @@ public class joinVisitor implements ExpressionVisitor {
 				select.add(e);
 			}else{
 				join.add(e);
-				if (!joinTableName.contains(l.getTable().getName())){
-					joinTableName.add(l.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
+					joinTableName.add(pairAlias.get(l.getTable().getName()));
 				}
-				if (!joinTableName.contains(r.getTable().getName())){
-					joinTableName.add(r.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(r.getTable().getName()))){
+					joinTableName.add(pairAlias.get(r.getTable().getName()));
 				}
 				
 				ArrayList<String> newPair = new ArrayList<String>();
-				newPair.add(l.getTable().getName());
-				newPair.add(r.getTable().getName());
+				newPair.add(pairAlias.get(l.getTable().getName()));
+				newPair.add(pairAlias.get(r.getTable().getName()));
 				joinPair.add(newPair);
 				
 				joinConditionMap.put(newPair, e);
@@ -488,16 +492,16 @@ public class joinVisitor implements ExpressionVisitor {
 				select.add(e);
 			}else{
 				join.add(e);
-				if (!joinTableName.contains(l.getTable().getName())){
-					joinTableName.add(l.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
+					joinTableName.add(pairAlias.get(l.getTable().getName()));
 				}
-				if (!joinTableName.contains(r.getTable().getName())){
-					joinTableName.add(r.getTable().getName());
+				if (!joinTableName.contains(pairAlias.get(r.getTable().getName()))){
+					joinTableName.add(pairAlias.get(r.getTable().getName()));
 				}
 				
 				ArrayList<String> newPair = new ArrayList<String>();
-				newPair.add(l.getTable().getName());
-				newPair.add(r.getTable().getName());
+				newPair.add(pairAlias.get(l.getTable().getName()));
+				newPair.add(pairAlias.get(r.getTable().getName()));
 				joinPair.add(newPair);
 				
 				joinConditionMap.put(newPair, e);

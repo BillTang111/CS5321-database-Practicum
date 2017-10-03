@@ -71,7 +71,7 @@ public class Interpreter {
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);
-		catalog.setSchema(map);
+		catalog.setSchema(map); // Original name + field
 		
 		
 		// 2.1 Get query file directory from command line argument,
