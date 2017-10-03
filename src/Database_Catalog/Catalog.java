@@ -16,6 +16,7 @@ public class Catalog implements Cloneable, Serializable {
 	private String inputLocation;
 	private String outputLocation;
 	private HashMap<String, ArrayList> map;
+	private HashMap<String, String> pairAlias;
 
 	/* Private Constructor prevents any other class from instantiating */
 	private Catalog() {
@@ -67,6 +68,14 @@ public class Catalog implements Cloneable, Serializable {
 	
 	public void setSchema(HashMap schema) {
 		this.map = schema;
+	}
+	
+	public void setPairAlias(HashMap<String, String> Alias) {
+		this.pairAlias = Alias;
+	}
+	
+	public HashMap<String, String> getPairAlias() {
+		return pairAlias;
 	}
 	
 	

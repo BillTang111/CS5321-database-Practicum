@@ -98,7 +98,7 @@ public class joinVisitor implements ExpressionVisitor {
 		int index = table.indexOf(" AS ");
 		if (index!=-1){ // if there is " AS " in the table
 			String original = table.substring(0, index);
-			String alias = table.substring(index + 4, -1);
+			String alias = table.substring(index + 4, table.length());
 			pairSet.put(alias, original); // use to substitute alias to table
 			pairSet.put(original, original); // use to substitute table to table
 		}

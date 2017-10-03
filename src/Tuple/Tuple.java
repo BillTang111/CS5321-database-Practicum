@@ -19,8 +19,10 @@ public class Tuple {
 		ArrayList mapKey = new ArrayList();
 		tuple = new ArrayList();
 		tupleMap = new HashMap<String, Integer>();
+		
+		HashMap<String, String> pairAlias = data.getPairAlias();
 		for(int i=0; i<tableName.size(); i++){
-			ArrayList a = (ArrayList) data.getSchema().get(tableName.get(i));
+			ArrayList a = (ArrayList) data.getSchema().get(pairAlias.get(tableName.get(i)));
 			for (int j=0; j<a.size();j++){
 				mapKey.add(tableName.get(i)+"."+a.get(j));
 			}

@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
@@ -17,14 +18,16 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 public class ScanOperator extends Operator {
 	BufferedReader br;
 	String input;
+	String originName;
 	String location;
 	
-	public ScanOperator(String tableName) throws IOException {
+	public ScanOperator(String tableName, HashMap<String, String> pairAlias) throws IOException {
 		// TODO Auto-generated constructor stub
 		//input = selectBody.getFromItem();
-		location = Catalog.getInstance().getInputLocation();	
+		location = Catalog.getInstance().getInputLocation();
 		input = tableName;
-		br = new BufferedReader(new FileReader(location + "/db/data/" + tableName));      
+		originName = pairAlias.get(tableName);
+		br = new BufferedReader(new FileReader(location + "/db/data/" + originName));      
 		
 		}
 		
@@ -57,7 +60,7 @@ public class ScanOperator extends Operator {
 	public void reset() {
 		// TODO Auto-generated method stub
 		try {
-			br = new BufferedReader(new FileReader(location + "/db/data/"+input));
+			br = new BufferedReader(new FileReader(location + "/db/data/"+originName));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

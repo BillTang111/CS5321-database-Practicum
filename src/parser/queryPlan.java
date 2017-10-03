@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Database_Catalog.Catalog;
 import Operator.DuplicateEliminationOperators;
 import Operator.JoinOperator;
 import Operator.Operator;
@@ -31,13 +32,23 @@ public class queryPlan {
 		// Key: pair of table name, Value: join condition related to tables in the key
 		ArrayList<ArrayList<String>> joinPair = new ArrayList<ArrayList<String>>(); // pair of table name, sorted by appear sequence in join
 		ArrayList<Operator> nodeBeforeJoin = new ArrayList<Operator>(); // to store operator after scan and select
+		HashMap<String, String> pairAlias = new HashMap<String, String>();
+		
 		
 		// TODO use joinVisitor to get the categorized expression we need above
 		Expression e = selectBody.getWhere();
 		
+		
+		
 		if (selectBody.getWhere() != null){ // if there is WHERE
 			joinVisitor jVisitor = new joinVisitor(selectBody);
 			e.accept(jVisitor);
+			
+			pairAlias = jVisitor.getPairAlias();
+			Catalog data = Catalog.getInstance();
+			data.setPairAlias(pairAlias);
+			
+			
 			
 			sortedTable = jVisitor.getJoinTableList();
 			selectConditionMap = jVisitor.getSelectConditionMap();
@@ -62,7 +73,7 @@ public class queryPlan {
 		// add Scan and Select node, processed subtree stored in nodeBeforeJoin
 		for(int i = 0; i < tableNum; i++) {
 			String tableName = sortedTable.get(i);
-			ScanOperator scan =  new ScanOperator(tableName);
+			ScanOperator scan =  new ScanOperator(tableName, pairAlias);
 			root = scan; //First process scan all the time
 			
 			//If there are related select expressions of a table, process each of them 
