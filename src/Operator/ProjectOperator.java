@@ -18,6 +18,7 @@ public class ProjectOperator extends Operator {
 	HashMap map;
 	List project;
 	Operator childOp;
+	String t;
 	
 	public ProjectOperator(PlainSelect selectBody, Operator op) {
 		// TODO Auto-generated constructor stub
@@ -25,6 +26,7 @@ public class ProjectOperator extends Operator {
 		project = selectBody.getSelectItems();
 		Catalog c = Catalog.getInstance();
 		map=c.getSchema();
+		t ="";
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public class ProjectOperator extends Operator {
 			SelectExpressionItem sei = (SelectExpressionItem) project.get(i);
 			String e = sei.getExpression().toString();
 			int point  = e.indexOf(".");
-			String t = e.substring(0, point);
+			t = e.substring(0, point);
 			ArrayList field = (ArrayList) map.get(t);
 			String cn = e.substring(point+1);
 			//String cn = c.getColumnName().toString();
@@ -51,7 +53,9 @@ public class ProjectOperator extends Operator {
 			s = s+ss+",";
 		}
 		s = s.substring(0, s.length()-1);
-		Tuple b = new Tuple(s);
+		ArrayList l = new ArrayList();
+		l.add(t);
+		Tuple b = new Tuple(s,l);
 		
 		return b;
 		}
@@ -67,7 +71,9 @@ public class ProjectOperator extends Operator {
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
-		Tuple a =new Tuple("");
+		ArrayList l = new ArrayList();
+		l.add(t);
+		Tuple a =new Tuple("",l);
 		while((a=getNextTuple()) != null){
 			System.out.println(a.getTuple());
 		}
@@ -76,7 +82,9 @@ public class ProjectOperator extends Operator {
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
-		Tuple a =new Tuple("");
+		ArrayList l = new ArrayList();
+		l.add(t);
+		Tuple a =new Tuple("",l);
 		ArrayList<Tuple> result = new ArrayList<Tuple>();
 		while((a=getNextTuple()) != null){
 			result.add(a);

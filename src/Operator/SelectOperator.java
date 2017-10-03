@@ -61,9 +61,10 @@ public class SelectOperator extends Operator {
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
-		Tuple a =new Tuple("");
-		while((a=getNextTuple()) != null){
+		Tuple a =getNextTuple();
+		while(a != null){
 			System.out.println(a.getTuple());
+			a =getNextTuple();
 		}
 		
 	}
@@ -71,10 +72,11 @@ public class SelectOperator extends Operator {
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
-		Tuple a =new Tuple("");
+		Tuple a =getNextTuple();
 		ArrayList<Tuple> result = new ArrayList<Tuple>();
-		while((a=getNextTuple()) != null){
+		while(a != null){
 			result.add(a);
+			a =getNextTuple();
 		}
 		return result;
 	}

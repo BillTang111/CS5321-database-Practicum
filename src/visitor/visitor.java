@@ -54,6 +54,7 @@ public class visitor implements ExpressionVisitor {
 	ArrayList field;
 	private Stack<Long> TreeStack;
 	ArrayList tuple;
+	HashMap tupleMap;
 	
 	
 	public visitor(Tuple a) {
@@ -61,6 +62,8 @@ public class visitor implements ExpressionVisitor {
 		schema = Catalog.getInstance().getSchema();
 		TreeStack = new Stack<Long>();
 		tuple = a.getTuple();
+		tupleMap = a.getTupleMap();
+		
 	}
 	
 	public Boolean getResult(){
@@ -247,16 +250,10 @@ public class visitor implements ExpressionVisitor {
 	@Override
 	public void visit(Column arg0) {
 		// TODO Auto-generated method stub
-		String t = arg0.getTable().getName();
-		field = (ArrayList) schema.get(t);
-	//	System.out.println(field.toString());
-		String c = arg0.getColumnName().toString();
-		int index = field.indexOf(c);
-	//	System.out.println(index);
-		//System.out.println(tuple.get(index));
+		
+		int index = (int) tupleMap.get(arg0.toString());
 		String s = (String) tuple.get(index);
 		Integer i = Integer.parseInt(s);
-	//	System.out.println(i);
 		TreeStack.push(i.longValue());
 		
 		

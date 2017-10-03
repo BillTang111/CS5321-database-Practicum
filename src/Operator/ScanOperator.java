@@ -37,7 +37,11 @@ public class ScanOperator extends Operator {
 		try {
 			while ((test = br.readLine()) != null) {
 			       // process the line.
-				Tuple tuple = new Tuple(test);
+				ArrayList<String> l = new ArrayList<>();
+				//System.out.println("hh"+input);
+				l.add(input);
+				//System.out.println("yoyo"+l.toString());
+				Tuple tuple = new Tuple(test,l);
 				return tuple;
 		    }
 			 br.close();
@@ -64,7 +68,9 @@ public class ScanOperator extends Operator {
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
-		Tuple a =new Tuple("");
+		ArrayList l = new ArrayList();
+		l.add(input);
+		Tuple a =new Tuple("",l);
 		while((a=getNextTuple()) != null){
 			System.out.println(a.getTuple());
 			//System.out.println(a.toString());
@@ -76,7 +82,9 @@ public class ScanOperator extends Operator {
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
-		Tuple a =new Tuple("");
+		ArrayList l = new ArrayList();
+		l.add(input);
+		Tuple a =new Tuple("",l);
 		ArrayList<Tuple> result = new ArrayList<Tuple>();
 		while((a=getNextTuple()) != null){
 			result.add(a);
