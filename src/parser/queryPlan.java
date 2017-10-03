@@ -73,7 +73,7 @@ public class queryPlan {
 		// add Scan and Select node, processed subtree stored in nodeBeforeJoin
 		for(int i = 0; i < tableNum; i++) {
 			String tableName = sortedTable.get(i);
-			ScanOperator scan =  new ScanOperator(tableName, pairAlias);
+			ScanOperator scan =  new ScanOperator(tableName);
 			root = scan; //First process scan all the time
 			
 			//If there are related select expressions of a table, process each of them 

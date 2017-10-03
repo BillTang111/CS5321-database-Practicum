@@ -21,9 +21,11 @@ public class ScanOperator extends Operator {
 	String originName;
 	String location;
 	
-	public ScanOperator(String tableName, HashMap<String, String> pairAlias) throws IOException {
+	public ScanOperator(String tableName) throws IOException {
 		// TODO Auto-generated constructor stub
 		//input = selectBody.getFromItem();
+		Catalog data = Catalog.getInstance();
+		HashMap<String, String> pairAlias = data.getPairAlias();
 		location = Catalog.getInstance().getInputLocation();
 		input = tableName;
 		originName = pairAlias.get(tableName);
