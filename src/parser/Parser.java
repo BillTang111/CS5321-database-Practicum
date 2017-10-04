@@ -24,7 +24,8 @@ public class Parser {
 	private static String queriesFile;
 	private ArrayList<PlainSelect> queryList;
 	
-	
+	/** Constructor of the Jsql Parser
+	 * @param String sql: a line of sql query text to be parsed.*/
 	public Parser(String sql){
 		queriesFile = sql;
 		PlainSelect selectbody;
