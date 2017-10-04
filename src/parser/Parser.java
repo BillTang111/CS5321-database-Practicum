@@ -9,14 +9,9 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 
 /**
- * Example class for getting started with JSQLParser. Reads SQL statements from
- * a file and prints them to screen; then extracts SelectBody from each query
- * and also prints it to screen.
+ * This class is used to parse sql query.
  * 
- * Update: class using JSQLParser to parse the query text to PlainSelect object
- * to pass on to the query plan builder. 
- * 
- * @author Lucja Kot
+ * @author Hao Rong, hr355
  */
 public class Parser {
 

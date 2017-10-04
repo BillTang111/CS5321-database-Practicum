@@ -11,6 +11,11 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import visitor.visitor;
 import net.sf.jsqlparser.expression.Expression;
 
+/**
+ * This class is used when sql query contains join condition.
+ * 
+ * @author Lini Tan, lt398
+ */
 public class JoinOperator extends Operator {
 	
 	Expression expression;
@@ -26,6 +31,9 @@ public class JoinOperator extends Operator {
 		a = outter.getNextTuple();
 	}
 	
+	/** This method return the satisfied tuple and get next tuple from the child operator.
+	 * @return the next tuple 
+	 * */
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
@@ -72,6 +80,7 @@ public class JoinOperator extends Operator {
 		return null;
 	}
 
+	/**Reset the operator to re-call from the beginning */
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
@@ -79,6 +88,7 @@ public class JoinOperator extends Operator {
 		outter.reset();		
 	}
 
+	/**To print your result. Use for debug */
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
@@ -90,6 +100,9 @@ public class JoinOperator extends Operator {
 		}
 	}
 	
+	/**Write the tuple to the file
+	 * @return a list of tuple
+	 */
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub

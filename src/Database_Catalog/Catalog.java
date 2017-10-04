@@ -9,6 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.io.Serializable;
 
+/**
+ * This class is a data catalog to store the input path and output path and the database 
+ * schema. We use singleton pattern to create this class.
+ * 
+ * @author Lini Tan, lt398
+ */
 public class Catalog implements Cloneable, Serializable {
 
 	private static Catalog instance;
@@ -36,44 +42,77 @@ public class Catalog implements Cloneable, Serializable {
 		return instance;
 	}
 
-	/* Restrict cloning of object */
+	/** Restrict cloning of object */
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		throw new CloneNotSupportedException();
 	}
 
+	/**test the implementation of singleton pattern */
 	public void display() {
 		System.out.println("Hurray! I am display from Singleton!");
 	}
 	
+	/**Get the input directory path
+	 * 
+	 * @return the input path
+	 * */
 	public String getInputLocation() {
 		return inputLocation;
 	}
 	
+	/**Get the output directory path
+	 * 
+	 * @return the output path
+	 * */
 	public String getOutputLocation() {
 		return outputLocation;
 	}
 	
+	/**Get database schema
+	 * 
+	 * @return a hash map of the schema
+	 * */
 	public HashMap getSchema() {
 		return map;
 	}
 	
+	/**set the input directory location
+	 * 
+	 * @param the input path
+	 * */
 	public void setinputLocation(String input) {
 		this.inputLocation = input;
 	}
 	
+	/**set the output directory location
+	 * 
+	 * @param the output path
+	 * */
 	public void setoutputLocation(String output) {
 		this.outputLocation = output;
 	}
 	
+	/**set the table-field schema
+	 * 
+	 * @param a hash map corresponding to the schema
+	 * */
 	public void setSchema(HashMap schema) {
 		this.map = schema;
 	}
 	
+	/**set up the pairAlias hash map
+	 * 
+	 * @param a hash map corresponding to alias-tableName pair
+	 * */
 	public void setPairAlias(HashMap<String, String> Alias) {
 		this.pairAlias = Alias;
 	}
 	
+	/**get the pairAlias hash map
+	 * 
+	 * @return the pairAlias hash map
+	 * */
 	public HashMap<String, String> getPairAlias() {
 		return pairAlias;
 	}

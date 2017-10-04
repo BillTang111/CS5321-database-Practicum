@@ -14,6 +14,11 @@ import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 
+/**
+ * This class is used when sql query contains select condition.
+ * 
+ * @author Lini Tan, lt398
+ */
 public class ProjectOperator extends Operator {
 	HashMap map;
 	List project;
@@ -32,6 +37,9 @@ public class ProjectOperator extends Operator {
 		pairAlias = c.getPairAlias();
 	}
 
+	/** This method return the satisfied tuple and get next tuple from the child operator.
+	 * @return the next tuple 
+	 * */
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
@@ -73,12 +81,14 @@ public class ProjectOperator extends Operator {
 		return null;
 	}
 
+	/**Reset the operator to re-call from the beginning */
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		childOp.reset();
 	}
 
+	/**To print your result. Use for debug */
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
@@ -89,6 +99,9 @@ public class ProjectOperator extends Operator {
 		}
 	}
 	
+	/**Write the tuple to the file
+	 * @return a list of tuple
+	 */
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub

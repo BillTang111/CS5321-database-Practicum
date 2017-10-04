@@ -48,6 +48,11 @@ import net.sf.jsqlparser.expression.operators.relational.NotEqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.SubSelect;
 
+/**
+ * This class is used to visitor expression.
+ * 
+ * @author Lini Tan, lt398
+ */
 public class visitor implements ExpressionVisitor {
 	HashMap schema;
 	Boolean result;
@@ -101,6 +106,9 @@ public class visitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit longValue
+	 * @param longValue that to be visited
+	 * */
 	@Override
 	public void visit(LongValue arg0) {
 		// TODO Auto-generated method stub
@@ -162,6 +170,9 @@ public class visitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit andExpression
+	 * @param andExpression that to be visited
+	 * */
 	@Override
 	public void visit(AndExpression arg0) {
 		// TODO Auto-generated method stub
@@ -181,6 +192,9 @@ public class visitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit EqualsTo Expression
+	 * @param EqualsTo Expression that to be visited
+	 * */
 	@Override
 	public void visit(EqualsTo arg0) {
 		// TODO Auto-generated method stub
@@ -189,6 +203,9 @@ public class visitor implements ExpressionVisitor {
 		result = result && (TreeStack.pop()==TreeStack.pop());	
 	}
 
+	/**This is the method when visit GreaterThan Expression
+	 * @param GreaterThan Expression that to be visited
+	 * */
 	@Override
 	public void visit(GreaterThan arg0) {
 		// TODO Auto-generated method stub
@@ -197,6 +214,9 @@ public class visitor implements ExpressionVisitor {
 		result = result && (TreeStack.pop()>TreeStack.pop());	
 	}
 
+	/**This is the method when visit GreaterThanEquals Expression
+	 * @param GreaterThanEquals Expression that to be visited
+	 * */
 	@Override
 	public void visit(GreaterThanEquals arg0) {
 		// TODO Auto-generated method stub
@@ -224,6 +244,9 @@ public class visitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit MinorThan Expression
+	 * @param MinorThan Expression that to be visited
+	 * */
 	@Override
 	public void visit(MinorThan arg0) {
 		// TODO Auto-generated method stub
@@ -232,7 +255,10 @@ public class visitor implements ExpressionVisitor {
 		result = result && (TreeStack.pop()<TreeStack.pop());	
 		
 	}
-
+	
+	/**This is the method when visit MinorThanEquals Expression
+	 * @param MinorThanEquals Expression that to be visited
+	 * */
 	@Override
 	public void visit(MinorThanEquals arg0) {
 		// TODO Auto-generated method stub
@@ -241,6 +267,9 @@ public class visitor implements ExpressionVisitor {
 		result = result && (TreeStack.pop()<=TreeStack.pop());	
 	}
 
+	/**This is the method when visit NotEqualsTo Expression
+	 * @param NotEqualsTo Expression that to be visited
+	 * */
 	@Override
 	public void visit(NotEqualsTo arg0) {
 		// TODO Auto-generated method stub
@@ -249,6 +278,9 @@ public class visitor implements ExpressionVisitor {
 		result = result && (TreeStack.pop()!=TreeStack.pop());	
 	}
 
+	/**This is the method when visit column Expression
+	 * @param column Expression that to be visited
+	 * */
 	@Override
 	public void visit(Column arg0) {
 		// TODO Auto-generated method stub

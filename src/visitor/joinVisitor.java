@@ -52,6 +52,11 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SubSelect;
 import parser.Parser;
 
+/**
+ * This class is used to extract join expression from where clause.
+ * 
+ * @author Lini Tan, lt398; Hao Rong, hr355
+ */
 public class joinVisitor implements ExpressionVisitor {
 	private ArrayList<Expression> join;
 	private ArrayList<Expression> select;
@@ -73,16 +78,19 @@ public class joinVisitor implements ExpressionVisitor {
 		selectConditionMap = new HashMap<String, ArrayList<Expression>>();
 		joinPair = new ArrayList<ArrayList<String>>();
 		joinConditionMap = new HashMap<ArrayList<String>, Expression>();
-		pairAlias = buildAliasTruePair(selectBody);
-		
-		
-		
+		pairAlias = buildAliasTruePair(selectBody);		
 	}
 	
+	/**This is the method to handle Alias
+	 * @return the alias-table hash map
+	 * */
 	public HashMap<String, String> getPairAlias(){
 		return pairAlias;
 	}
 	
+	/**This is the method to handle Alias
+	 * @return the alias-table pair hash map
+	 * */
 	public HashMap<String, String> buildAliasTruePair(PlainSelect selectBody){
 		HashMap<String, String> AliasTruePair = new HashMap<String, String>();
 		String table = selectBody.getFromItem().toString();
@@ -99,6 +107,9 @@ public class joinVisitor implements ExpressionVisitor {
 		return AliasTruePair;
 	}
 	
+	/**This is the method to find alias-table pair
+	 * @param the pair to be added
+	 * */
 	public void addPair(HashMap<String, String> pairSet, String table){
 		int index = table.indexOf(" AS ");
 		if (index!=-1){ // if there is " AS " in the table
@@ -113,14 +124,23 @@ public class joinVisitor implements ExpressionVisitor {
 		}
 	}
 	
+	/**This is the method to get join expression list
+	 * @return the join list
+	 * */
 	public ArrayList getJoinExpressionList(){
 		return join;
 	}
 	
+	/**This is the method to get join table name list
+	 * @return the join table name
+	 * */
 	public ArrayList getJoinTableList(){
 		return joinTableName;
 	}
 	
+	/**This is the method to change the select expression list to a hash map
+	 * @return the hash map
+	 * */
 	public HashMap<String, ArrayList<Expression>> getSelectConditionMap(){
 		for(Expression e: select){
 			int indexDot = e.toString().indexOf(".");
@@ -138,10 +158,17 @@ public class joinVisitor implements ExpressionVisitor {
 		return selectConditionMap;
 	}
 	
+	/**This is the method to get join table name pair
+	 * @return the list of join pair
+	 * */
 	public ArrayList getJoinPair(){
 		return joinPair;
 	}
 	
+	
+	/**This is the method to get the join condition
+	 * @return the hash map of join condition
+	 * */
 	public HashMap<ArrayList<String>, Expression> getJoinConditionMap(){
 		return joinConditionMap;
 	}
@@ -177,6 +204,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit longValue
+	 * @param longValue that to be visited
+	 * */
 	@Override
 	public void visit(LongValue arg0) {
 		// TODO Auto-generated method stub
@@ -237,6 +267,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit andExpression
+	 * @param andExpression that to be visited
+	 * */
 	@Override
 	public void visit(AndExpression arg0) {
 		// TODO Auto-generated method stub
@@ -257,6 +290,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit EqualsTo Expression
+	 * @param EqualsTo Expression that to be visited
+	 * */
 	@Override
 	public void visit(EqualsTo arg0) {
 		// TODO Auto-generated method stub
@@ -302,6 +338,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit GreaterThan Expression
+	 * @param GreaterThan Expression that to be visited
+	 * */
 	@Override
 	public void visit(GreaterThan arg0) {
 		// TODO Auto-generated method stub
@@ -338,7 +377,10 @@ public class joinVisitor implements ExpressionVisitor {
 			}
 		}
 	}
-
+	
+	/**This is the method when visit GreaterThanEquals Expression
+	 * @param GreaterThanEquals Expression that to be visited
+	 * */
 	@Override
 	public void visit(GreaterThanEquals arg0) {
 		// TODO Auto-generated method stub
@@ -395,6 +437,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit MinorThan Expression
+	 * @param MinorThan Expression that to be visited
+	 * */
 	@Override
 	public void visit(MinorThan arg0) {
 		// TODO Auto-generated method stub
@@ -434,6 +479,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit MinorThanEquals Expression
+	 * @param MinorThanEquals Expression that to be visited
+	 * */
 	@Override
 	public void visit(MinorThanEquals arg0) {
 		// TODO Auto-generated method stub
@@ -472,6 +520,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit NotEqualsTo Expression
+	 * @param NotEqualsTo Expression that to be visited
+	 * */
 	@Override
 	public void visit(NotEqualsTo arg0) {
 		// TODO Auto-generated method stub
@@ -510,6 +561,9 @@ public class joinVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**This is the method when visit column Expression
+	 * @param column Expression that to be visited
+	 * */
 	@Override
 	public void visit(Column arg0) {
 		// TODO Auto-generated method stub

@@ -15,11 +15,17 @@ import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
+/**
+ * This class is used to scan table files to become tuple.
+ * 
+ * @author Lini Tan, lt398
+ */
 public class ScanOperator extends Operator {
 	BufferedReader br;
 	String input;
 	//String originName;
 	String location;
+	
 	
 	public ScanOperator(String tableName) throws IOException {
 		// TODO Auto-generated constructor stub
@@ -35,7 +41,9 @@ public class ScanOperator extends Operator {
 		}
 		
 	
-
+	/** This method return the satisfied tuple and get next tuple from the child operator.
+	 * @return the next tuple 
+	 * */
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
@@ -58,7 +66,7 @@ public class ScanOperator extends Operator {
 		return null;	
 	}
 
-	
+	/**Reset the operator to re-call from the beginning */
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
@@ -71,6 +79,7 @@ public class ScanOperator extends Operator {
 		
 	}
 
+	/**To print your result. Use for debug */
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
@@ -85,6 +94,9 @@ public class ScanOperator extends Operator {
 		
 	}
 	
+	/**Write the tuple to the file
+	 * @return a list of tuple
+	 */
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub

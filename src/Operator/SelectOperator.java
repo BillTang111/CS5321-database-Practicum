@@ -15,6 +15,11 @@ import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import visitor.visitor;
 
+/**
+ * This class is used when sql query contains select condition.
+ * 
+ * @author Lini Tan, lt398
+ */
 public class SelectOperator extends Operator {
 	
 //	PlainSelect select; //Store the plainSelect object parsed from query
@@ -35,6 +40,9 @@ public class SelectOperator extends Operator {
 		childOp = op;
 	}
 
+	/** This method return the satisfied tuple and get next tuple from the child operator.
+	 * @return the next tuple 
+	 * */
 	@Override
 	public Tuple getNextTuple() {
 		Tuple a = childOp.getNextTuple();
@@ -53,11 +61,13 @@ public class SelectOperator extends Operator {
 		return null;
 	}	
 
+	/**Reset the operator to re-call from the beginning */
 	@Override
 	public void reset() {
 		childOp.reset();
 	}
 
+	/**To print your result. Use for debug */
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
@@ -69,6 +79,9 @@ public class SelectOperator extends Operator {
 		
 	}
 	
+	/**Write the tuple to the file
+	 * @return a list of tuple
+	 */
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub

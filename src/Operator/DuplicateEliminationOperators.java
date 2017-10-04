@@ -9,6 +9,12 @@ import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
+/**
+ * This class is used when sql query contains "distinct". It is used to remove duplicate 
+ * tuple. 
+ * 
+ * @author Lini Tan, lt398
+ */
 public class DuplicateEliminationOperators extends Operator {
 	
 	Operator childOp;
@@ -20,6 +26,9 @@ public class DuplicateEliminationOperators extends Operator {
 		
 	}
 	
+	/** This method remove the duplicate tuple and return the non-duplicate one.
+	 * @return the next tuple 
+	 * */
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
@@ -34,11 +43,15 @@ public class DuplicateEliminationOperators extends Operator {
 		}
 		return null;
 	}
+	
+	/**Reset the operator to re-call from the beginning */
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		childOp.reset();
 	}
+	
+	/**To print your result. Use for debug */
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
@@ -49,6 +62,9 @@ public class DuplicateEliminationOperators extends Operator {
 		}
 	}
 	
+	/**Write the tuple to the file
+	 * @return a list of tuple
+	 */
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub

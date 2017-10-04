@@ -15,6 +15,11 @@ import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 
+/**
+ * This class is used when sql query contains order by condition.
+ * 
+ * @author Lini Tan, lt398
+ */
 public class SortOperator extends Operator {
 	
 	Operator childOp;
@@ -31,6 +36,7 @@ public class SortOperator extends Operator {
 		
 	}
 	
+	/**This method grab all tuple from the child operator and add in the list*/
 	public void BuildList(){
 		Tuple a = childOp.getNextTuple();
 		while(a!=null){
@@ -43,6 +49,9 @@ public class SortOperator extends Operator {
 		Collections.sort(sorted, new TupleComparator(order));
 	}
 	
+	/** This method return the satisfied tuple and get next tuples.
+	 * @return the next tuple 
+	 * */
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
@@ -50,14 +59,14 @@ public class SortOperator extends Operator {
 		return null;
 	}
 
+	/**Reset the operator to re-call from the beginning */
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
 		childOp.reset();
-		
-		
 	}
 
+	/**To print your result. Use for debug */
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
@@ -70,6 +79,9 @@ public class SortOperator extends Operator {
 		
 	}
 	
+	/**Write the tuple to the file
+	 * @return a list of tuple
+	 */
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
@@ -84,6 +96,11 @@ public class SortOperator extends Operator {
 	}
 }
 
+/**
+ * This class set up the tuple comparator
+ * 
+ * @author Lini Tan, lt398
+ */
 class TupleComparator implements Comparator<Tuple> {
 	List condition;
 	
@@ -91,6 +108,10 @@ class TupleComparator implements Comparator<Tuple> {
 		condition = order;
 	}
 	
+	/**compare two tuples.
+	 * 
+	 * @param two tuples to be compared
+	 * */
     @Override
     public int compare(Tuple a, Tuple b) {
     	HashMap amap = a.getTupleMap();

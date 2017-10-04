@@ -19,12 +19,18 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import parser.Parser;
 import parser.queryPlan;
 
+/**
+ * This class is the highest-level class to run configuration.
+ * 
+ * @author Hao Rong, hr355
+ */
 public class Interpreter {
 
 	public Interpreter() {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**main function to run*/
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

@@ -7,6 +7,11 @@ import java.util.List;
 import Database_Catalog.Catalog;
 import net.sf.jsqlparser.statement.select.FromItem;
 
+/**
+ * This class is used to initialize the tuple.
+ * 
+ * @author Lini Tan, lt398; Hao Rong, hr355
+ */
 public class Tuple {
 
 	private ArrayList tuple;
@@ -38,15 +43,24 @@ public class Tuple {
 			
 		}
 	}
-		
+	
+	/** This method return tuple list
+	 * @return an array list of tuple
+	 * */
 	public ArrayList getTuple(){
 		return this.tuple;
 	}
 	
+	/** This method return hash map which record the relation between tuple and schema
+	 * @return a hash map of the relationship between tuple and schema
+	 * */
 	public HashMap getTupleMap(){
 		return this.tupleMap;
 	}
 	
+	/** This method return tuple list
+	 * @return a table name list where the tuple comes from 
+	 * */
 	public List getNameList(){
 		return this.nameList;
 	}
