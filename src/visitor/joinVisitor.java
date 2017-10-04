@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import Database_Catalog.Catalog;
 import net.sf.jsqlparser.expression.AllComparisonExpression;
 import net.sf.jsqlparser.expression.AnyComparisonExpression;
 import net.sf.jsqlparser.expression.BinaryExpression;
@@ -319,6 +320,12 @@ public class joinVisitor implements ExpressionVisitor {
 			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
+				if (pairAlias.get(l.getTable().getName()).equals(pairAlias.get(r.getTable().getName()))) {
+					Catalog catalog = Catalog.getInstance();
+					catalog.copy1Schema(pairAlias.get(l.getTable().getName()));
+					pairAlias.replace(r.getTable().getName(), pairAlias.get(r.getTable().getName())+"*");
+				}
+					
 				join.add(e);
 				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
 					joinTableName.add(pairAlias.get(l.getTable().getName()));
@@ -360,6 +367,12 @@ public class joinVisitor implements ExpressionVisitor {
 			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
+				if (pairAlias.get(l.getTable().getName()).equals(pairAlias.get(r.getTable().getName()))) {
+					Catalog catalog = Catalog.getInstance();
+					catalog.copy1Schema(pairAlias.get(l.getTable().getName()));
+					pairAlias.replace(r.getTable().getName(), pairAlias.get(r.getTable().getName())+"*");
+				}
+				
 				join.add(e);
 				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
 					joinTableName.add(pairAlias.get(l.getTable().getName()));
@@ -400,6 +413,12 @@ public class joinVisitor implements ExpressionVisitor {
 			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
+				if (pairAlias.get(l.getTable().getName()).equals(pairAlias.get(r.getTable().getName()))) {
+					Catalog catalog = Catalog.getInstance();
+					catalog.copy1Schema(pairAlias.get(l.getTable().getName()));
+					pairAlias.replace(r.getTable().getName(), pairAlias.get(r.getTable().getName())+"*");
+				}
+				
 				join.add(e);
 				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
 					joinTableName.add(pairAlias.get(l.getTable().getName()));
@@ -457,9 +476,16 @@ public class joinVisitor implements ExpressionVisitor {
 			Column r = cStack.pop();
 			Column l  = cStack.pop();
 			if(r.getTable().getName().equals(l.getTable().getName())){
-//				System.out.println("hh");
 				select.add(e);
 			}else{
+				if (pairAlias.get(l.getTable().getName()).equals(pairAlias.get(r.getTable().getName()))) {
+					Catalog catalog = Catalog.getInstance();
+					catalog.copy1Schema(pairAlias.get(l.getTable().getName()));
+					pairAlias.replace(r.getTable().getName(), pairAlias.get(r.getTable().getName())+"*");
+				}
+				
+				//System.out.println(pairAlias.get(l.getTable().getName()).equals(pairAlias.get(r.getTable().getName())));
+				//System.out.println(pairAlias.get(r.getTable().getName()));
 				join.add(e);
 				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
 					joinTableName.add(pairAlias.get(l.getTable().getName()));
@@ -501,6 +527,12 @@ public class joinVisitor implements ExpressionVisitor {
 			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
+				if (pairAlias.get(l.getTable().getName()).equals(pairAlias.get(r.getTable().getName()))) {
+					Catalog catalog = Catalog.getInstance();
+					catalog.copy1Schema(pairAlias.get(l.getTable().getName()));
+					pairAlias.replace(r.getTable().getName(), pairAlias.get(r.getTable().getName())+"*");
+				}
+				
 				join.add(e);
 				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
 					joinTableName.add(pairAlias.get(l.getTable().getName()));
@@ -542,6 +574,12 @@ public class joinVisitor implements ExpressionVisitor {
 			if(r.getTable().getName().equals(l.getTable().getName())){
 				select.add(e);
 			}else{
+				if (pairAlias.get(l.getTable().getName()).equals(pairAlias.get(r.getTable().getName()))) {
+					Catalog catalog = Catalog.getInstance();
+					catalog.copy1Schema(pairAlias.get(l.getTable().getName()));
+					pairAlias.replace(r.getTable().getName(), pairAlias.get(r.getTable().getName())+"*");
+				}
+				
 				join.add(e);
 				if (!joinTableName.contains(pairAlias.get(l.getTable().getName()))){
 					joinTableName.add(pairAlias.get(l.getTable().getName()));
@@ -549,6 +587,8 @@ public class joinVisitor implements ExpressionVisitor {
 				if (!joinTableName.contains(pairAlias.get(r.getTable().getName()))){
 					joinTableName.add(pairAlias.get(r.getTable().getName()));
 				}
+				
+				System.out.println(joinTableName);
 				
 				ArrayList<String> newPair = new ArrayList<String>();
 				newPair.add(pairAlias.get(l.getTable().getName()));
@@ -637,28 +677,30 @@ public class joinVisitor implements ExpressionVisitor {
 	}
 
 //	
-//	 public static void main(String args[])throws Exception{  
-//			//long a, equlas e, colum c d g, c=d
-//
-//		 
-//		 	String querypath = "/Users/LukerRong/Desktop/CS5321/joinTest.sql";
-//			Parser p = new Parser(querypath);
-//			ArrayList<PlainSelect> queryList = p.getQueryList();
-//			
-//			PlainSelect s = queryList.get(0);
-//			System.out.println(s);
-//			
-//			Expression e = s.getWhere(); 
-//			System.out.println(e.toString());
-//			joinVisitor j = new joinVisitor(s);
-//			e.accept(j);
-//			
-//			System.out.println(j.getJoinExpressionList().toString());
-//			System.out.println(j.getJoinTableList().toString());
-//			System.out.println(j.getSelectConditionMap().toString());
-//			System.out.println(j.getJoinPair().toString());
-//			System.out.println(j.getJoinConditionMap().toString());
-//	 } 
+	 public static void main(String args[])throws Exception{  
+			//long a, equlas e, colum c d g, c=d
+
+		 
+		 	String querypath = "/Users/LukerRong/Desktop/CS5321/joinTest.sql";
+			Parser p = new Parser(querypath);
+			ArrayList<PlainSelect> queryList = p.getQueryList();
+			
+			PlainSelect s = queryList.get(0);
+			System.out.println(s);
+			
+			Expression e = s.getWhere(); 
+			System.out.println(e.toString());
+			joinVisitor j = new joinVisitor(s);
+			e.accept(j);
+			
+			System.out.println(j.getJoinExpressionList().toString());
+			System.out.println(j.getJoinTableList().toString());
+			System.out.println(j.getSelectConditionMap().toString());
+			System.out.println(j.getJoinPair().toString());
+			System.out.println(j.getJoinConditionMap().toString());
+			
+			System.out.println(j.getJoinTableList());
+	 } 
 
 
 }

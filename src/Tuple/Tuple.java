@@ -38,7 +38,7 @@ public class Tuple {
 		for(int i=0; i<s.length; i++){
 			//System.out.println(s[i]);
 			tuple.add(s[i]);
-			//System.out.println(mapKey.get(i));
+			//System.out.println(tupleMap);
 			tupleMap.put(mapKey.get(i), i);
 			
 		}

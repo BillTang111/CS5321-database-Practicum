@@ -21,14 +21,14 @@ public class Catalog implements Cloneable, Serializable {
 	
 	private String inputLocation;
 	private String outputLocation;
-	private HashMap<String, ArrayList> map;
+	private static HashMap<String, ArrayList> map;
 	private HashMap<String, String> pairAlias;
 
 	/* Private Constructor prevents any other class from instantiating */
 	private Catalog() {
 	}
 
-	public static synchronized Catalog getInstance() {
+	public synchronized static Catalog getInstance() {
 
 		/* Lazy initialization, creating object on first use */
 		if (instance == null) {
@@ -115,6 +115,10 @@ public class Catalog implements Cloneable, Serializable {
 	 * */
 	public HashMap<String, String> getPairAlias() {
 		return pairAlias;
+	}
+	
+	public void copy1Schema(String tableName) {
+		this.map.put(tableName+"*", (ArrayList) map.get(tableName).clone());
 	}
 	
 	

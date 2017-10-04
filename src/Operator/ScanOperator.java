@@ -23,6 +23,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 public class ScanOperator extends Operator {
 	BufferedReader br;
 	String input;
+	String inputStar;
 	//String originName;
 	String location;
 	
@@ -35,6 +36,10 @@ public class ScanOperator extends Operator {
 		
 		location = Catalog.getInstance().getInputLocation();
 		input = tableName; //Original name
+		inputStar = tableName;
+		if (input.contains("*")) {
+			input = input.substring(0, input.length()-1);
+		}
 		//originName = pairAlias.get(tableName);
 		br = new BufferedReader(new FileReader(location + "/db/data/" + input));      
 		
@@ -53,7 +58,7 @@ public class ScanOperator extends Operator {
 			       // process the line.
 				ArrayList<String> l = new ArrayList<>();
 				//System.out.println("hh"+input);
-				l.add(input);
+				l.add(inputStar);
 				//System.out.println("yoyo"+l.toString());
 				Tuple tuple = new Tuple(test,l);
 				return tuple;
