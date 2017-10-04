@@ -27,15 +27,17 @@ public class Interpreter {
 
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	    String command = reader.readLine();
-	    int start = command.indexOf(".jar")+5;
-		String sub = command.substring(start);
-		int end = sub.indexOf(" ");
-		String inputLocation = sub.substring(0, end);
-		String outputLocation = sub.substring(end+1);
-	    System.out.println("input: " + inputLocation);
-	    System.out.println("output: " + outputLocation);
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//	    String command = reader.readLine();
+//	    int start = command.indexOf(".jar")+5;
+//		String sub = command.substring(start);
+//		int end = sub.indexOf(" ");
+//		String inputLocation = sub.substring(0, end);
+//		String outputLocation = sub.substring(end+1);
+//	    System.out.println("input: " + inputLocation);
+//	    System.out.println("output: " + outputLocation);
+		String inputLocation = args[0];
+		String outputLocation = args[1];
 		
 		// 1.2 Get the name of the schema file from command line argument,
 		// read the schema file and to store it a Hashmap.

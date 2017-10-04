@@ -581,6 +581,7 @@ public class joinVisitor implements ExpressionVisitor {
 		// TODO Auto-generated method stub
 		
 	}
+
 //	
 //	 public static void main(String args[])throws Exception{  
 //			//long a, equlas e, colum c d g, c=d
@@ -604,5 +605,6 @@ public class joinVisitor implements ExpressionVisitor {
 //			System.out.println(j.getJoinPair().toString());
 //			System.out.println(j.getJoinConditionMap().toString());
 //	 } 
+
 
 }
