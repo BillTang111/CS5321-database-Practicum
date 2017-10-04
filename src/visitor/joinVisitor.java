@@ -581,28 +581,28 @@ public class joinVisitor implements ExpressionVisitor {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	 public static void main(String args[])throws Exception{  
-			//long a, equlas e, colum c d g, c=d
-
-		 
-		 	String querypath = "/Users/LukerRong/Desktop/CS5321/joinTest.sql";
-			Parser p = new Parser(querypath);
-			ArrayList<PlainSelect> queryList = p.getQueryList();
-			
-			PlainSelect s = queryList.get(0);
-			System.out.println(s);
-			
-			Expression e = s.getWhere(); 
-			System.out.println(e.toString());
-			joinVisitor j = new joinVisitor(s);
-			e.accept(j);
-			
-			System.out.println(j.getJoinExpressionList().toString());
-			System.out.println(j.getJoinTableList().toString());
-			System.out.println(j.getSelectConditionMap().toString());
-			System.out.println(j.getJoinPair().toString());
-			System.out.println(j.getJoinConditionMap().toString());
-	 } 
+//	
+//	 public static void main(String args[])throws Exception{  
+//			//long a, equlas e, colum c d g, c=d
+//
+//		 
+//		 	String querypath = "/Users/LukerRong/Desktop/CS5321/joinTest.sql";
+//			Parser p = new Parser(querypath);
+//			ArrayList<PlainSelect> queryList = p.getQueryList();
+//			
+//			PlainSelect s = queryList.get(0);
+//			System.out.println(s);
+//			
+//			Expression e = s.getWhere(); 
+//			System.out.println(e.toString());
+//			joinVisitor j = new joinVisitor(s);
+//			e.accept(j);
+//			
+//			System.out.println(j.getJoinExpressionList().toString());
+//			System.out.println(j.getJoinTableList().toString());
+//			System.out.println(j.getSelectConditionMap().toString());
+//			System.out.println(j.getJoinPair().toString());
+//			System.out.println(j.getJoinConditionMap().toString());
+//	 } 
 
 }

@@ -17,12 +17,14 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import visitor.joinVisitor;
 import net.sf.jsqlparser.expression.Expression;
 
+/** Parser to construct the query plan tree from PlainSelect */
 public class queryPlan {
 	// parse the SQL into a tree structured query plan
 	private Operator root;
 	
 	
-	/** Parser to construct the query plan tree from PlainSelect */
+	/** queryPlan constructor
+	 * @param PlainSelect selectBody: the result parsed from Jsql parser */
 	public queryPlan(PlainSelect selectBody) throws IOException {
 		
 		ArrayList<String> sortedTable = new ArrayList<String>(); // List of table names sorted by sequence appear in Join condtion
@@ -181,7 +183,7 @@ public class queryPlan {
 		
 	}
 	
-	
+	/** @return the root of the entire query plan */
 	public Operator getRoot() {
 		return root;
 	}

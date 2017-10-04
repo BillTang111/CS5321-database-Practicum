@@ -13,6 +13,9 @@ import net.sf.jsqlparser.statement.select.Select;
  * a file and prints them to screen; then extracts SelectBody from each query
  * and also prints it to screen.
  * 
+ * Update: class using JSQLParser to parse the query text to PlainSelect object
+ * to pass on to the query plan builder. 
+ * 
  * @author Lucja Kot
  */
 public class Parser {
@@ -53,6 +56,7 @@ public class Parser {
 		
 	}
 	
+	/** @return A list of PlainSelct object parsed from each line of the query in the file */
 	public ArrayList<PlainSelect> getQueryList(){
 		return queryList;
 	}
