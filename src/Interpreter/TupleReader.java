@@ -8,20 +8,15 @@ import Tuple.Tuple;
 
 public interface TupleReader {
 	
+	//method to read a tuple from the file to channel
+	public Tuple ReadNextTuple ();
+	
+	//method to close this file 
+	public void close();
+	
+	//method to reset the reading pointer location to start of the file page
+	public void reset();
 
-	String input = "readme.txt";
-	//1. read the file into steam	File t = new File("/Users/benzhangtang/Desktop/cs4321/project3/samples/input/db/data/Boats");
-	FileInputStream fis = new FileInputStream(input);
-	
-	
-	//2. // allocate a channel to read file
-	 FileChannel channel = fis.getChannel();
-	 
-	//3. allocate a buffer to read the file in the fixed-size chunks
-	 ByteBuffer buffer = ByteBuffer.allocate( 1024 * 4);
-	 
-	//4. clear buffer for use
-	 //buffer.clear();
 	
 	
 	

@@ -1,5 +1,13 @@
 package Interpreter;
 
-public class HumanTW {
+import Tuple.Tuple;
+
+public class HumanTW implements TupleWriter{
+
+	@Override
+	public Tuple WriteTuple() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
