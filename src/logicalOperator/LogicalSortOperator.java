@@ -23,18 +23,22 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 public class LogicalSortOperator extends LogicalOperator {
 	
 	LogicalOperator childOp;
-	LinkedList<Tuple> sorted;
+//	LinkedList<Tuple> sorted;
 	List order;
 	
 	
 	public LogicalSortOperator(LogicalOperator op, PlainSelect selectBody) {
 		// TODO Auto-generated constructor stub
 		childOp = op;
-		sorted = new LinkedList<Tuple>();
+//		sorted = new LinkedList<Tuple>();
 		order = selectBody.getOrderByElements();
-
-		
 	}
 	
+	public List getSortCondition(){
+		return this.order;
+	}
 	
+	public LogicalOperator getchildOperator(){
+		return this.childOp;
+	}
 }

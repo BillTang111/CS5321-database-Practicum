@@ -20,23 +20,29 @@ import net.sf.jsqlparser.statement.select.SelectExpressionItem;
  * @author Lini Tan, lt398
  */
 public class LogicalProjectOperator extends LogicalOperator {
-	HashMap map;
+//	HashMap map;
 	List project;
 	LogicalOperator childOp;
-	String table;
-	HashMap<String, String> pairAlias;
+//	String table;
+//	HashMap<String, String> pairAlias;
 	
 	public LogicalProjectOperator(PlainSelect selectBody, LogicalOperator op) {
 		// TODO Auto-generated constructor stub
 		childOp = op;
 		project = selectBody.getSelectItems();
-		Catalog c = Catalog.getInstance();
-		map=c.getSchema();
-		table ="";
-		
-		pairAlias = c.getPairAlias();
+//		Catalog c = Catalog.getInstance();
+//		map=c.getSchema();
+//		table ="";
+//		
+//		pairAlias = c.getPairAlias();
 	}
 
+	public List getSelectitem(){
+		return this.project;
+	}
 	
+	public LogicalOperator getchildOperator(){
+		return this.childOp;
+	}
 
 }

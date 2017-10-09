@@ -40,7 +40,13 @@ public class LogicalSelectOperator extends LogicalOperator {
 		childOp = op;
 	}
 
-
-
+	public Expression getSelectCondition(){
+		return this.e;
+	}
+	
+	
+	public LogicalOperator getchildOperator(){
+		return this.childOp;
+	}
 
 }

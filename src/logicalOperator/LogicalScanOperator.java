@@ -21,31 +21,33 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
  * @author Lini Tan, lt398
  */
 public class LogicalScanOperator extends LogicalOperator {
-	BufferedReader br;
+//	BufferedReader br;
 	String input;
 	String inputStar;
 	//String originName;
-	String location;
+//	String location;
 	
 	
 	public LogicalScanOperator(String tableName) throws IOException {
 		// TODO Auto-generated constructor stub
 		//input = selectBody.getFromItem();
-		Catalog data = Catalog.getInstance();
-		HashMap<String, String> pairAlias = data.getPairAlias();
-		
-		location = Catalog.getInstance().getInputLocation();
+//		Catalog data = Catalog.getInstance();
+//		HashMap<String, String> pairAlias = data.getPairAlias();
+//		
+//		location = Catalog.getInstance().getInputLocation();
 		input = tableName; //Original name
 		inputStar = tableName;
-		if (input.contains("*")) {
-			input = input.substring(0, input.length()-1);
-		}
-		//originName = pairAlias.get(tableName);
-		br = new BufferedReader(new FileReader(location + "/db/data/" + input));      
+//		if (input.contains("*")) {
+//			input = input.substring(0, input.length()-1);
+//		}
+//		//originName = pairAlias.get(tableName);
+//		br = new BufferedReader(new FileReader(location + "/db/data/" + input));      
 		
 		}
 		
-	
+	public String getTableName(){
+		return this.input;
+	}
 
 
 }

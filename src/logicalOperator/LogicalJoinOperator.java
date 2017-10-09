@@ -21,7 +21,6 @@ public class LogicalJoinOperator extends LogicalOperator {
 	Expression expression;
 	LogicalOperator outter;
 	LogicalOperator inner;
-	Tuple a;
 	
 	public LogicalJoinOperator(LogicalOperator left, LogicalOperator right, Expression joinExpression) {
 		// TODO Auto-generated constructor stub
@@ -30,6 +29,16 @@ public class LogicalJoinOperator extends LogicalOperator {
 		inner = right;
 	}
 	
+	public Expression getJoinCondition(){
+		return this.expression;
+	}
 	
+	public LogicalOperator getinnerOperator(){
+		return this.inner;
+	}
+	
+	public LogicalOperator getoutterOperator(){
+		return this.outter;
+	}
 
 }
