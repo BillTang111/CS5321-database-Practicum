@@ -1,14 +1,10 @@
 package Interpreter;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.*;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
@@ -42,8 +38,15 @@ public class Interpreter {
 //		String outputLocation = sub.substring(end+1);
 //	    System.out.println("input: " + inputLocation);
 //	    System.out.println("output: " + outputLocation);
+		if (args.length<2) {
+		      System.err.println( "Usage: java FastCopyFile infile outfile" );
+		      System.exit( 1 );
+		    }
+		
 		String inputLocation = args[0];
 		String outputLocation = args[1];
+		FileInputStream fin = new FileInputStream( inputLocation );
+		
 		
 		// 1.2 Get the name of the schema file from command line argument,
 		// read the schema file and to store it a Hashmap.
