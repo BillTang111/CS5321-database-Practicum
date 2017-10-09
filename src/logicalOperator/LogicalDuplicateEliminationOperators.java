@@ -8,6 +8,7 @@ import java.util.HashSet;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import physicalOperator.Operator;
 
 /**
  * This class is used when sql query contains "distinct". It is used to remove duplicate 
@@ -17,10 +18,12 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
  */
 public class LogicalDuplicateEliminationOperators extends LogicalOperator {
 	
+	LogicalOperator childOp;
+	HashSet distinctTuple;
 	
-	
-	public LogicalDuplicateEliminationOperators(){
-		
+	public LogicalDuplicateEliminationOperators(LogicalOperator root){
+		childOp = root;
+		distinctTuple = new HashSet();
 		
 	}
 	
