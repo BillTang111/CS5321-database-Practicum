@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Database_Catalog.Catalog;
-import Operator.Operator;
-import Operator.ScanOperator;
-import Operator.SelectOperator;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import parser.Parser;
 import parser.queryPlan;
+import physicalOperator.Operator;
+import physicalOperator.ScanOperator;
+import physicalOperator.SelectOperator;
 
 /**
  * This class is the highest-level class to run configuration.

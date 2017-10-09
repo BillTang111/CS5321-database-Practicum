@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import Database_Catalog.Catalog;
-import Operator.DuplicateEliminationOperators;
-import Operator.JoinOperator;
-import Operator.Operator;
-import Operator.ProjectOperator;
-import Operator.ScanOperator;
-import Operator.SelectOperator;
-import Operator.SortOperator;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import physicalOperator.DuplicateEliminationOperators;
+import physicalOperator.JoinOperator;
+import physicalOperator.Operator;
+import physicalOperator.ProjectOperator;
+import physicalOperator.ScanOperator;
+import physicalOperator.SelectOperator;
+import physicalOperator.SortOperator;
 import visitor.joinVisitor;
 import net.sf.jsqlparser.expression.Expression;
 
