@@ -1,6 +1,6 @@
 package Interpreter;
 
-import java.io.FileInputStream;
+import java.io.*;
 import java.io.FileNotFoundException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -8,6 +8,9 @@ import java.nio.channels.FileChannel;
 import Tuple.Tuple;
 
 public class BinaryTR implements TupleReader {
+	
+	int Num_Attributes;
+	int Num_on_page;
 	
   public BinaryTR()  {
 	  String input = "readme.txt";
@@ -20,8 +23,12 @@ public class BinaryTR implements TupleReader {
 			 
 			//3. allocate a buffer to read the file in the fixed-size chunks
 			 ByteBuffer buffer = ByteBuffer.allocate( 1024 * 4);
+			 buffer.clear();
 			 
-			//4. 
+			 int[] tuple_array = new int [(int) channel.size()/4];
+			 
+		     //4.  read a page of raw bytes, up to 6k bytes till -1 meaning eof.
+		      int bytesRead = channel.read( buffer );
 			 
 			 
 		} catch (FileNotFoundException e) {
