@@ -1,7 +1,10 @@
 package Interpreter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import Tuple.Tuple;
 
@@ -15,11 +18,24 @@ public class HumanTW implements TupleWriter{
 	private File file;
 	private BufferedReader bw;
 	
-
 	@Override
-	public void WriteTuple(Tuple t) {
+	public void WriteTuple(Tuple t) throws IOException {
 		// TODO Auto-generated method stub
-		
+		this.file = file;
+		FileWriter fw;
+		try {
+			fw = new FileWriter(file);
+	        BufferedWriter bw = new BufferedWriter(fw);
+	        bw.write(t.getTuple().toString());
+	        bw.newLine();
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 	}
 
+	public void close() throws IOException {
+		bw.close();
+	}
+	
 }
