@@ -29,22 +29,22 @@ public class Interpreter {
 	/**main function to run*/
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
-//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-//	    String command = reader.readLine();
-//	    int start = command.indexOf(".jar")+5;
-//		String sub = command.substring(start);
-//		int end = sub.indexOf(" ");
-//		String inputLocation = sub.substring(0, end);
-//		String outputLocation = sub.substring(end+1);
-//	    System.out.println("input: " + inputLocation);
-//	    System.out.println("output: " + outputLocation);
-		if (args.length<2) {
-		      System.err.println( "Usage: java FastCopyFile infile outfile" );
-		      System.exit( 1 );
-		    }
-		
-		String inputLocation = args[0];
-		String outputLocation = args[1];
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	    String command = reader.readLine();
+	    int start = command.indexOf(".jar")+5;
+		String sub = command.substring(start);
+		int end = sub.indexOf(" ");
+		String inputLocation = sub.substring(0, end);
+		String outputLocation = sub.substring(end+1);
+	    System.out.println("input: " + inputLocation);
+	    System.out.println("output: " + outputLocation);
+//		if (args.length<2) {
+//		      System.err.println( "Usage: java FastCopyFile infile outfile" );
+//		      System.exit( 1 );
+//		    }
+//		
+//		String inputLocation = args[0];
+//		String outputLocation = args[1];
 		//FileInputStream fin = new FileInputStream( inputLocation );
 		
 		
@@ -105,31 +105,31 @@ public class Interpreter {
 			
 			for(PlainSelect eachQuerySelect: queryList){
 				queryPlan plan = new queryPlan(eachQuerySelect);
-//				plan.getRoot().dump();
-//				System.out.println("Results dumped.");
+				plan.getRoot().dump();
+				System.out.println("Results dumped.");
 //				
 				
-				ArrayList<Tuple> result = plan.getRoot().writeToFile();
-				
-				File file = new File(outputLocation + "/query" + i);
-				System.out.println(outputLocation + "/query" + i);
-				if (!file.exists()) {
-					file.createNewFile();
-				}
-				
-				FileWriter fw = new FileWriter(file);
-				BufferedWriter bw = null;
-				bw = new BufferedWriter(fw);
-				
-				for(Tuple oneLine: result){
-					String stringResult = String.join(",", oneLine.getTuple());
-					bw.write(stringResult);
-					bw.newLine();
-				}
-				
-				bw.close();
-				System.out.println("Results wrote in file.");
-				i++;
+//				ArrayList<Tuple> result = plan.getRoot().writeToFile();
+//				
+//				File file = new File(outputLocation + "/query" + i);
+//				System.out.println(outputLocation + "/query" + i);
+//				if (!file.exists()) {
+//					file.createNewFile();
+//				}
+//				
+//				FileWriter fw = new FileWriter(file);
+//				BufferedWriter bw = null;
+//				bw = new BufferedWriter(fw);
+//				
+//				for(Tuple oneLine: result){
+//					String stringResult = String.join(",", oneLine.getTuple());
+//					bw.write(stringResult);
+//					bw.newLine();
+//				}
+//				
+//				bw.close();
+//				System.out.println("Results wrote in file.");
+//				i++;
 			}
 			
 			

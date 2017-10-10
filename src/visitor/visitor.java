@@ -200,7 +200,7 @@ public class visitor implements ExpressionVisitor {
 		// TODO Auto-generated method stub
 		arg0.getRightExpression().accept(this);
 		arg0.getLeftExpression().accept(this);
-		result = result && (TreeStack.pop()==TreeStack.pop());	
+		result = result && (TreeStack.pop().equals(TreeStack.pop()));	
 	}
 
 	/**This is the method when visit GreaterThan Expression
@@ -295,7 +295,9 @@ public class visitor implements ExpressionVisitor {
 		//System.out.println(newColumnField);
 		
 		int index = (int) tupleMap.get(newColumnField);
+		
 		String s = (String) tuple.get(index);
+		//System.out.println("compare: "+s);
 		Integer i = Integer.parseInt(s);
 		TreeStack.push(i.longValue());
 		

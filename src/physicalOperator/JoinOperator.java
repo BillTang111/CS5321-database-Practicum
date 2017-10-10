@@ -38,8 +38,10 @@ public class JoinOperator extends Operator {
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
 		while(a !=null){
+			//System.out.println("hehe");
 			//System.out.println("outter "+a.getTuple().toString());
 			Tuple b = inner.getNextTuple();
+			//System.out.println(b.getTuple().toString());
 			
 			while(b!=null){
 				//System.out.println("inner1 "+b.getTuple().toString());
@@ -65,17 +67,26 @@ public class JoinOperator extends Operator {
 					l.add(bb.get(i));
 				}
 				Tuple tt = new Tuple(s,l);
+				//System.out.println(tt.getTuple().toString());
 				// build new visitor
 				visitor v = new visitor(tt);
 				expression.accept(v);
 				if(v.getResult()){
+					//System.out.println("right: "+tt.getTuple().toString());
 					return tt;
 				}
 				b = inner.getNextTuple();
+				//System.out.println(b.getTuple().toString());
+				
 			}
 //inner is null
 			inner.reset();
 			a = outter.getNextTuple();
+			//System.out.println("hh");
+			//System.out.println("hh"+a.getTuple().toString());
+			//System.out.println("hh");
+//			b = inner.getNextTuple();
+//			System.out.println(b.getTuple().toString());
 		}
 		return null;
 	}
