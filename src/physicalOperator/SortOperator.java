@@ -126,6 +126,7 @@ class TupleComparator implements Comparator<Tuple> {
     	HashSet s = new HashSet<String>();
     	//compare by condition
     	
+    	//System.out.println(condition.toString());
     	for(int i=0; i<condition.size(); i++){
     		//System.out.println(condition.get(i).toString());
     		//System.out.println(amap.get(condition.get(i).toString()));

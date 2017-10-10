@@ -176,6 +176,10 @@ public class queryPlan {
 		}
 		
 		if (selectBody.getDistinct()!=null) {
+			if (selectBody.getOrderByElements()==null){
+				SortOperator Sort = new SortOperator(root, selectBody);
+				root = Sort;
+			}
 			DuplicateEliminationOperators distinct = new DuplicateEliminationOperators(root);
 			root = distinct;
 		}
