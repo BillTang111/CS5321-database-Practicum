@@ -108,31 +108,31 @@ public class Interpreter {
 			
 			for(PlainSelect eachQuerySelect: queryList){
 				queryPlan plan = new queryPlan(eachQuerySelect);
-//				plan.getRoot().dump();
-//				System.out.println("Results dumped.");
+				plan.getRoot().dump();
+				System.out.println("Results dumped.");
 //				
 				
-				ArrayList<Tuple> result = plan.getRoot().writeToFile();
-				
-				File file = new File(outputLocation + "/query" + i);
-				System.out.println(outputLocation + "/query" + i);
-				if (!file.exists()) {
-					file.createNewFile();
-				}
-				
-				FileWriter fw = new FileWriter(file);
-				BufferedWriter bw = null;
-				bw = new BufferedWriter(fw);
-				
-				for(Tuple oneLine: result){
-					String stringResult = String.join(",", oneLine.getTuple());
-					bw.write(stringResult);
-					bw.newLine();
-				}
-				
-				bw.close();
-				System.out.println("Results wrote in file.");
-				i++;
+//				ArrayList<Tuple> result = plan.getRoot().writeToFile();
+//				
+//				File file = new File(outputLocation + "/query" + i);
+//				System.out.println(outputLocation + "/query" + i);
+//				if (!file.exists()) {
+//					file.createNewFile();
+//				}
+//				
+//				FileWriter fw = new FileWriter(file);
+//				BufferedWriter bw = null;
+//				bw = new BufferedWriter(fw);
+//				
+//				for(Tuple oneLine: result){
+//					String stringResult = String.join(",", oneLine.getTuple());
+//					bw.write(stringResult);
+//					bw.newLine();
+//				}
+//				
+//				bw.close();
+//				System.out.println("Results wrote in file.");
+//				i++;
 			}
 			
 			

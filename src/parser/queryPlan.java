@@ -3,6 +3,7 @@ package parser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
@@ -177,7 +178,9 @@ public class queryPlan {
 		
 		if (selectBody.getDistinct()!=null) {
 			if (selectBody.getOrderByElements()==null){
-				SortOperator Sort = new SortOperator(root, selectBody);
+				List orderList = selectBody.getSelectItems();
+				SortOperator Sort = new SortOperator(root,selectBody);
+				//System.out.println("hh");
 				root = Sort;
 			}
 			DuplicateEliminationOperators distinct = new DuplicateEliminationOperators(root);

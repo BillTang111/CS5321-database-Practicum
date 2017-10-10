@@ -28,9 +28,10 @@ public class SortOperator extends Operator {
 	List order;
 	HashMap<String,String> PairAlias;
 	
-	
+	//public SortOperator(Operator op, List orderList) {
 	public SortOperator(Operator op, PlainSelect selectBody) {
 		// TODO Auto-generated constructor stub
+		//System.out.println(orderList.toString());
 		childOp = op;
 		sorted = new LinkedList<Tuple>();
 		order = selectBody.getOrderByElements();
@@ -48,7 +49,13 @@ public class SortOperator extends Operator {
 			a=childOp.getNextTuple();
 			//System.out.println(a.getTuple().toString());
 		}
-		
+		if(order.size()==0){
+			Set mapKeySet = a.getTupleMap().keySet();
+			for(Object key: mapKeySet){
+				order.add(key.toString());
+			}
+		}
+		System.out.println("hh"+order.toString());
 		Collections.sort(sorted, new TupleComparator(order));
 	}
 	
@@ -73,6 +80,7 @@ public class SortOperator extends Operator {
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
+		System.out.println("yy");
 		BuildList();
 		Tuple a =getNextTuple();
 		while(a != null){
