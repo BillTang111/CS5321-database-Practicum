@@ -25,6 +25,7 @@ public class SortOperator extends Operator {
 	Operator childOp;
 	LinkedList<Tuple> sorted;
 	List order;
+	HashMap<String,String> PairAlias;
 	
 	
 	public SortOperator(Operator op, PlainSelect selectBody) {
@@ -32,7 +33,8 @@ public class SortOperator extends Operator {
 		childOp = op;
 		sorted = new LinkedList<Tuple>();
 		order = selectBody.getOrderByElements();
-
+		Catalog catalog = Catalog.getInstance();
+		PairAlias = catalog.getPairAlias();
 		
 	}
 	
@@ -103,9 +105,12 @@ public class SortOperator extends Operator {
  */
 class TupleComparator implements Comparator<Tuple> {
 	List condition;
+	HashMap<String,String> PairAlias;
 	
 	public TupleComparator(List order){
 		condition = order;
+		Catalog catalog = Catalog.getInstance();
+		PairAlias = catalog.getPairAlias();
 	}
 	
 	/**compare two tuples.
@@ -121,8 +126,17 @@ class TupleComparator implements Comparator<Tuple> {
     	//compare by condition
     	
     	for(int i=0; i<condition.size(); i++){
+    		//System.out.println(condition.get(i).toString());
     		//System.out.println(amap.get(condition.get(i).toString()));
-    		int index = (int) amap.get(condition.get(i).toString());
+    		
+    		String aliasCondition = condition.get(i).toString();
+    		int dot = aliasCondition.indexOf(".");
+    		String aliasT = aliasCondition.substring(0, dot);
+    		aliasCondition = PairAlias.get(aliasT) + "." + aliasCondition.substring(dot+1, aliasCondition.length());
+    		
+    		
+    		//System.out.println(aliasCondition);
+    		int index = (int) amap.get(aliasCondition);
     		int anum = Integer.parseInt((String) alist.get(index));
     		//System.out.println("a "+anum);
     		
@@ -130,10 +144,13 @@ class TupleComparator implements Comparator<Tuple> {
     	//	System.out.println("b "+bnum);
     		if(anum < bnum) return -1;
     		if(anum > bnum) return 1;
-    		s.add(condition.get(i).toString());
+    		s.add(aliasCondition);
     	}
     	ArrayList field = new ArrayList();
     	List table = a.getNameList();
+    	//System.out.println("a.getNameList()" + table);
+    	
+    	
     	Catalog c = Catalog.getInstance();
     	for(int j=0; j<table.size(); j++){
     		ArrayList tfield = (ArrayList) c.getSchema().get(table.get(j));
@@ -142,8 +159,10 @@ class TupleComparator implements Comparator<Tuple> {
     			field.add(table.get(j).toString()+"."+tfield.get(i));
     		}
     	}
+    	
+    	//System.out.println("amap " + amap);
     	//System.out.println(field.toString());
-    	for(int i=0; i<field.size(); i++){
+    	for(int i=0; i<field.size()-1; i++){
     		if(s.contains(field.get(i).toString())) continue;
     		int index = (int) amap.get(field.get(i));
     		//System.out.println(index);
