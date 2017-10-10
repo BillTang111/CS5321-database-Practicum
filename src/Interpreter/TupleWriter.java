@@ -7,7 +7,7 @@ import Tuple.Tuple;
 public interface TupleWriter {
 
 	//method to write a tuple from a channel
-	public Tuple WriteTuple ();
+	public void WriteTuple (Tuple t);
 	
 	
 }

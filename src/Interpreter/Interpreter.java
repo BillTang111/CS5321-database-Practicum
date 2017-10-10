@@ -45,7 +45,7 @@ public class Interpreter {
 		
 		String inputLocation = args[0];
 		String outputLocation = args[1];
-		FileInputStream fin = new FileInputStream( inputLocation );
+		//FileInputStream fin = new FileInputStream( inputLocation );
 		
 		
 		// 1.2 Get the name of the schema file from command line argument,
@@ -116,6 +116,7 @@ public class Interpreter {
 				if (!file.exists()) {
 					file.createNewFile();
 				}
+				
 				FileWriter fw = new FileWriter(file);
 				BufferedWriter bw = null;
 				bw = new BufferedWriter(fw);
