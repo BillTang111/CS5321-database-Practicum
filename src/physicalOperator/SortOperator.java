@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.Collections;
 
 
@@ -141,29 +142,38 @@ class TupleComparator implements Comparator<Tuple> {
     		//System.out.println("a "+anum);
     		
     		int bnum = Integer.parseInt((String) blist.get(index));
-    	//	System.out.println("b "+bnum);
+    		//System.out.println("b "+bnum);
     		if(anum < bnum) return -1;
     		if(anum > bnum) return 1;
     		s.add(aliasCondition);
     	}
+    	
     	ArrayList field = new ArrayList();
-    	List table = a.getNameList();
-    	//System.out.println("a.getNameList()" + table);
+//    	List table = a.getNameList();
+//    	//System.out.println("a.getNameList()" + table);
+//    	
+//    	
+//    	Catalog c = Catalog.getInstance();
+//    	for(int j=0; j<table.size(); j++){
+//    		ArrayList tfield = (ArrayList) c.getSchema().get(table.get(j));
+//    		for(int i=0; i<tfield.size(); i++){
+//    			
+//    			field.add(table.get(j).toString()+"."+tfield.get(i));
+//    		}
+//    	}
     	
-    	
-    	Catalog c = Catalog.getInstance();
-    	for(int j=0; j<table.size(); j++){
-    		ArrayList tfield = (ArrayList) c.getSchema().get(table.get(j));
-    		for(int i=0; i<tfield.size(); i++){
-    			
-    			field.add(table.get(j).toString()+"."+tfield.get(i));
-    		}
+    	HashMap tuplemap = a.getTupleMap();
+    	Set keySet = tuplemap.keySet();
+    	for(Object key: keySet){
+    		field.add(key.toString());
     	}
     	
     	//System.out.println("amap " + amap);
     	//System.out.println(field.toString());
     	for(int i=0; i<field.size()-1; i++){
     		if(s.contains(field.get(i).toString())) continue;
+    		if(amap.get(field.get(i))==null) continue;
+    		//System.out.println(field.get(i));
     		int index = (int) amap.get(field.get(i));
     		//System.out.println(index);
     		int anum = Integer.parseInt((String) alist.get(index));
@@ -171,7 +181,7 @@ class TupleComparator implements Comparator<Tuple> {
     		int bnum = Integer.parseInt((String) blist.get(index));
     		//System.out.println("b "+bnum);
     		if(anum < bnum) {
-    			System.out.println("haha");
+    			//System.out.println("haha");
     			return -1;}
     		if(anum > bnum) return 1;
     		//s.add(field.get(i));

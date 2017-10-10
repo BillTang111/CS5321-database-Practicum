@@ -47,14 +47,26 @@ public class ProjectOperator extends Operator {
 		while(a!=null){
 		ArrayList aList = a.getTuple();
 		AllColumns allColumns = new AllColumns();
-		if(project.get(0).getClass()==allColumns.getClass()) return a;
+		if(project.get(0).getClass().equals(allColumns.getClass())) return a;
 		int length = project.size();
+		
+		//fix tuplemap
+		ArrayList newName = new ArrayList();
+		for(int i =0; i<length; i++){
+			SelectExpressionItem sei = (SelectExpressionItem) project.get(i);
+			String e = sei.getExpression().toString();
+			int dotIndex = e.indexOf(".");
+			table = pairAlias.get(e.substring(0, dotIndex)); // original table name
+			//System.out.println(pairAlias.toString());
+			String newColumnField = table + "." + e.substring(dotIndex+1 , e.length());
+			newName.add(newColumnField);
+		}
+		
 		//build new Tuple
 		String rowRecord = "";
 		for(int i =0; i<length; i++){
 			SelectExpressionItem sei = (SelectExpressionItem) project.get(i);
 			String e = sei.getExpression().toString();
-			//System.out.println("sei: " + e);
 			
 			
 			int dotIndex = e.indexOf(".");
@@ -75,12 +87,24 @@ public class ProjectOperator extends Operator {
 		ArrayList l = new ArrayList();
 		l.add(table);
 		Tuple b = new Tuple(rowRecord,l);
+		HashMap newmap = setNewTupleMap(b,newName);
+		b.setTupleMap(newmap);
 		
 		return b;
 		}
 		return null;
 	}
 
+	public HashMap setNewTupleMap(Tuple b, ArrayList newName){
+		HashMap newmap = new HashMap();
+		//System.out.println(newName.toString());
+		for(int i=0; i<newName.size(); i++){
+			newmap.put(newName.get(i).toString(), i);
+		}
+		return newmap;	
+	}
+	
+	
 	/**Reset the operator to re-call from the beginning */
 	@Override
 	public void reset() {

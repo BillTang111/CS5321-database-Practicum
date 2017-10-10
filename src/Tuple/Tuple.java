@@ -58,6 +58,13 @@ public class Tuple {
 		return this.tupleMap;
 	}
 	
+	/** This method return hash map which record the relation between tuple and schema
+	 * @param a hash map of the relationship between tuple and schema
+	 * */
+	public void setTupleMap(HashMap newmap){
+		this.tupleMap = newmap;
+	}
+	
 	/** This method return tuple list
 	 * @return a table name list where the tuple comes from 
 	 * */
