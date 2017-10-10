@@ -37,6 +37,7 @@ public class SortOperator extends Operator {
 		order = selectBody.getOrderByElements();
 		Catalog catalog = Catalog.getInstance();
 		PairAlias = catalog.getPairAlias();
+		BuildList();
 		
 	}
 	
@@ -46,15 +47,24 @@ public class SortOperator extends Operator {
 		while(a!=null){
 			//add all tuples into list
 			sorted.add(a);
+			if(order==null){
+				
+				
+				Object[] mapKeySet = a.getTupleMap().keySet().toArray();
+				order = new ArrayList();
+				for(int i=mapKeySet.length-1; i>=0; i--){
+					//System.out.println(key.toString());
+					order.add(mapKeySet[i].toString());
+					
+				}
+				
+				//System.out.println(order);
+			}
 			a=childOp.getNextTuple();
 			//System.out.println(a.getTuple().toString());
+			
 		}
-		if(order.size()==0){
-			Set mapKeySet = a.getTupleMap().keySet();
-			for(Object key: mapKeySet){
-				order.add(key.toString());
-			}
-		}
+		
 		System.out.println("hh"+order.toString());
 		Collections.sort(sorted, new TupleComparator(order));
 	}
@@ -65,6 +75,7 @@ public class SortOperator extends Operator {
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
+		//System.out.println("yy");
 		if(sorted.size()!=0) return (Tuple) sorted.pop();
 		return null;
 	}
@@ -80,8 +91,8 @@ public class SortOperator extends Operator {
 	@Override
 	public void dump() {
 		// TODO Auto-generated method stub
-		System.out.println("yy");
-		BuildList();
+		
+		//BuildList();
 		Tuple a =getNextTuple();
 		while(a != null){
 			System.out.println(a.getTuple());
@@ -96,7 +107,7 @@ public class SortOperator extends Operator {
 	@Override
 	public ArrayList<Tuple> writeToFile() {
 		// TODO Auto-generated method stub
-		BuildList();
+		//BuildList();
 		Tuple a =getNextTuple();
 		ArrayList<Tuple> result = new ArrayList<Tuple>();
 		while(a!= null){
@@ -132,6 +143,8 @@ class TupleComparator implements Comparator<Tuple> {
     	ArrayList alist = a.getTuple();
     	ArrayList blist = b.getTuple();
     	HashSet s = new HashSet<String>();
+    	
+    	
     	//compare by condition
     	
     	//System.out.println(condition.toString());
@@ -157,7 +170,17 @@ class TupleComparator implements Comparator<Tuple> {
     		s.add(aliasCondition);
     	}
     	
-    	ArrayList field = new ArrayList();
+    	//if not condition or condition are the same, compare tuple from left to right.
+    	for(int i=0; i<alist.size(); i++){
+    		if(Integer.parseInt((String)alist.get(i))<Integer.parseInt((String)blist.get(i))){
+    			return -1;
+    		}else if(Integer.parseInt((String)alist.get(i))>Integer.parseInt((String)blist.get(i))){
+    			return 1;
+    		}
+    	}
+    	return 0;
+    	
+  //  	ArrayList field = new ArrayList();
 //    	List table = a.getNameList();
 //    	//System.out.println("a.getNameList()" + table);
 //    	
@@ -171,30 +194,31 @@ class TupleComparator implements Comparator<Tuple> {
 //    		}
 //    	}
     	
-    	HashMap tuplemap = a.getTupleMap();
-    	Set keySet = tuplemap.keySet();
-    	for(Object key: keySet){
-    		field.add(key.toString());
-    	}
-    	
-    	//System.out.println("amap " + amap);
-    	//System.out.println(field.toString());
-    	for(int i=0; i<field.size()-1; i++){
-    		if(s.contains(field.get(i).toString())) continue;
-    		if(amap.get(field.get(i))==null) continue;
-    		//System.out.println(field.get(i));
-    		int index = (int) amap.get(field.get(i));
-    		//System.out.println(index);
-    		int anum = Integer.parseInt((String) alist.get(index));
-    		//System.out.println("a "+anum);
-    		int bnum = Integer.parseInt((String) blist.get(index));
-    		//System.out.println("b "+bnum);
-    		if(anum < bnum) {
-    			//System.out.println("haha");
-    			return -1;}
-    		if(anum > bnum) return 1;
-    		//s.add(field.get(i));
-    	}
-        return 0;
+//    	HashMap tuplemap = a.getTupleMap();
+//    	Object[] keySet = tuplemap.keySet().toArray();
+//    	for(int i = keySet.length-1; i>=0; i-- ){
+//    		field.add(keySet[i]);
+//    	}
+//    	//System.out.println(x);
+//    	
+//    	//System.out.println("amap " + amap);
+//    	//System.out.println(field.toString());
+//    	for(int i=0; i<field.size()-1; i++){
+//    		if(s.contains(field.get(i).toString())) continue;
+//    		if(amap.get(field.get(i))==null) continue;
+//    		//System.out.println(field.get(i));
+//    		int index = (int) amap.get(field.get(i));
+//    		//System.out.println(index);
+//    		int anum = Integer.parseInt((String) alist.get(index));
+//    		//System.out.println("a "+anum);
+//    		int bnum = Integer.parseInt((String) blist.get(index));
+//    		//System.out.println("b "+bnum);
+//    		if(anum < bnum) {
+//    			//System.out.println("haha");
+//    			return -1;}
+//    		if(anum > bnum) return 1;
+//    		//s.add(field.get(i));
+//    	}
+//        return 0;
     }
 }
