@@ -8,6 +8,7 @@ import java.util.List;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.PhysicalPlanBuilder;
 import visitor.visitor;
 import net.sf.jsqlparser.expression.Expression;
 
@@ -39,6 +40,11 @@ public class LogicalJoinOperator extends LogicalOperator {
 	
 	public LogicalOperator getoutterOperator(){
 		return this.outter;
+	}
+
+	@Override
+	public void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException {
+		physicalPlanBuilder.visit(this);
 	}
 
 }

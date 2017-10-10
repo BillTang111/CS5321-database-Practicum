@@ -7,6 +7,7 @@ import java.util.Iterator;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.PhysicalPlanBuilder;
 
 /**
  * This class is the abstract operator class
@@ -28,6 +29,8 @@ public abstract class LogicalOperator implements Iterator {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public abstract void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException;
 	
 
 }

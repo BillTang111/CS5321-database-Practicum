@@ -9,6 +9,7 @@ import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import physicalOperator.Operator;
+import visitor.PhysicalPlanBuilder;
 
 /**
  * This class is used when sql query contains "distinct". It is used to remove duplicate 
@@ -19,12 +20,19 @@ import physicalOperator.Operator;
 public class LogicalDuplicateEliminationOperators extends LogicalOperator {
 	
 	LogicalOperator childOp;
-	HashSet distinctTuple;
+
 	
 	public LogicalDuplicateEliminationOperators(LogicalOperator root){
 		childOp = root;
-		distinctTuple = new HashSet();
-		
+	}
+
+	@Override
+	public void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException {
+		physicalPlanBuilder.visit(this);
+	}
+
+	public LogicalOperator getchildOperator() {
+		return childOp;
 	}
 	
 	

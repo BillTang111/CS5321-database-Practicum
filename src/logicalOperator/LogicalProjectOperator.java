@@ -13,6 +13,7 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import visitor.PhysicalPlanBuilder;
 
 /**
  * This class is used when sql query contains select condition.
@@ -23,6 +24,7 @@ public class LogicalProjectOperator extends LogicalOperator {
 //	HashMap map;
 	List project;
 	LogicalOperator childOp;
+	PlainSelect plainSelectBody;
 //	String table;
 //	HashMap<String, String> pairAlias;
 	
@@ -30,6 +32,7 @@ public class LogicalProjectOperator extends LogicalOperator {
 		// TODO Auto-generated constructor stub
 		childOp = op;
 		project = selectBody.getSelectItems();
+		plainSelectBody = selectBody;
 //		Catalog c = Catalog.getInstance();
 //		map=c.getSchema();
 //		table ="";
@@ -41,8 +44,17 @@ public class LogicalProjectOperator extends LogicalOperator {
 		return this.project;
 	}
 	
+	public PlainSelect getPlainSelect(){
+		return plainSelectBody;
+	}
+	
 	public LogicalOperator getchildOperator(){
 		return this.childOp;
+	}
+
+	@Override
+	public void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException {
+		physicalPlanBuilder.visit(this);
 	}
 
 }

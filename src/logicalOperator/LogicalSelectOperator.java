@@ -13,6 +13,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.ExpressionVisitor;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.PhysicalPlanBuilder;
 import visitor.visitor;
 
 /**
@@ -47,6 +48,12 @@ public class LogicalSelectOperator extends LogicalOperator {
 	
 	public LogicalOperator getchildOperator(){
 		return this.childOp;
+	}
+
+	@Override
+	public void accept(PhysicalPlanBuilder physicalPlanBuilder)
+			throws IOException {
+		physicalPlanBuilder.visit(this);
 	}
 
 }

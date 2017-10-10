@@ -14,13 +14,6 @@ import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
-import physicalOperator.DuplicateEliminationOperators;
-import physicalOperator.JoinOperator;
-import physicalOperator.Operator;
-import physicalOperator.ProjectOperator;
-import physicalOperator.ScanOperator;
-import physicalOperator.SelectOperator;
-import physicalOperator.SortOperator;
 import visitor.joinVisitor;
 
 public class LogicalQueryPlan {

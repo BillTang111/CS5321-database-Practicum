@@ -14,6 +14,7 @@ import java.util.Collections;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.PhysicalPlanBuilder;
 
 /**
  * This class is used when sql query contains order by condition.
@@ -25,6 +26,7 @@ public class LogicalSortOperator extends LogicalOperator {
 	LogicalOperator childOp;
 //	LinkedList<Tuple> sorted;
 	List order;
+	PlainSelect plainSelectBody;
 	
 	
 	public LogicalSortOperator(LogicalOperator op, PlainSelect selectBody) {
@@ -32,6 +34,7 @@ public class LogicalSortOperator extends LogicalOperator {
 		childOp = op;
 //		sorted = new LinkedList<Tuple>();
 		order = selectBody.getOrderByElements();
+		plainSelectBody = selectBody;
 	}
 	
 	public List getSortCondition(){
@@ -40,5 +43,14 @@ public class LogicalSortOperator extends LogicalOperator {
 	
 	public LogicalOperator getchildOperator(){
 		return this.childOp;
+	}
+	
+	public PlainSelect getPlainSelect(){
+		return plainSelectBody;
+	}
+
+	@Override
+	public void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException {
+		physicalPlanBuilder.visit(this);
 	}
 }

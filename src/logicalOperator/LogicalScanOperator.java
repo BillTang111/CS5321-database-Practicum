@@ -14,6 +14,7 @@ import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.PhysicalPlanBuilder;
 
 /**
  * This class is used to scan table files to become tuple.
@@ -47,6 +48,11 @@ public class LogicalScanOperator extends LogicalOperator {
 		
 	public String getTableName(){
 		return this.input;
+	}
+
+	@Override
+	public void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException {
+		physicalPlanBuilder.visit(this);
 	}
 
 
