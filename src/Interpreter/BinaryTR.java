@@ -6,40 +6,52 @@ import java.nio.channels.FileChannel;
 
 import Tuple.Tuple;
 
+/**
+ * @author benzhang tang
+ * 
+ * BinaryTR class offers an efficient way to read tuples from a binary file of tuples 
+ * File format: input file is a sequence of pages of (4*1024) bytes. # of attributes and # of tuples on the page
+ * are two metadata stored in each page. Each field of the tuple is stored as 4 bytes integer. 
+ * Feature: Java NIO is used in this class to increase the speed of I/O
+ */
 public class BinaryTR implements TupleReader {
 
-	// int Num_Attributes;
-	int TupleNum_on_page;
-	ByteBuffer buffer;
+	int Num_Attributes;            // number of attributes in a tuple
+	int TupleNum_on_page;		  // number of tuples in a page
+	private static final int buffer_size = 4*1024; // size of the buffer page
+	private ByteBuffer buffer;     //buffer page
+	private File file;			//file name
 
-	public BinaryTR(int Num_Attributes) throws IOException  {
-		String input = "/Users/benzhangtang/Desktop/cs4321/project3/samples/input/db/data/boat.txt";
+/*
+ * constructor of the class with input parameter of file of table
+ */
+	public BinaryTR(File file) throws IOException  {
+		File input = file;
 		//1. read the file into steam	
 		try {
 			FileInputStream fis = new FileInputStream(input);
 
 			//2. allocate a channel to read file
 			FileChannel channel = fis.getChannel();
-			//			 long fileSize = channel.size(); 
-			//			 System.out.println(fileSize);
 
 			//3. allocate a buffer to read the file in the fixed-size chunks, and initialize it
-			buffer = ByteBuffer.allocate( 1024 * 4);
+			buffer = ByteBuffer.allocate(buffer_size);
 			buffer.clear();
-			buffer.putInt( 0, Num_Attributes);
-			buffer.putInt( 5, TupleNum_on_page);
-			
-			//			 int remind = (1024-2) % Num_Attributes;
-			//			 int total_tuples = (1024-2-remind)/Num_Attributes;
-			//			 int current_tuple = 0;
+//			buffer.putInt( 0, Num_Attributes);
+//			buffer.putInt( 5, TupleNum_on_page);
+
+//			int remind = (1024-2) % Num_Attributes;
+//			int total_tuples = (1024-2-remind)/Num_Attributes;
+//			int current_tuple = 0;
 
 			//initialize a array for tuples to be stored into buffer in a bunch
-			int[] tupleArr = new int [(int)channel.size()/4];
+//			int[] tupleArr = new int [(int)channel.size()/4];
+			int[] tupleArr = new int [Num_Attributes];
 
 			//len is the number of bytes read
 			long len = 0;
 			//The offset within the array of the first byte to be written
-			int offset =  2;
+			int offset =  8;
 
 			//Reads a sequence of bytes from this channel into the given buffer until the channel is empty 
 			while ((len = channel.read(buffer))!= -1) {
@@ -49,9 +61,11 @@ public class BinaryTR implements TupleReader {
 				//transfers bytes from this buffer into the given destination array. 
 				//If there are fewer bytes remaining in the buffer than are required to satisfy the request, 
 				//that is, if length > remaining(), then no bytes are transferred and a BufferUnderflowException is thrown.
-				buffer.asIntBuffer().get(tupleArr,offset,(int)len/4);
+//				buffer.asIntBuffer().get(tupleArr,offset,(int)len/4);
+//				buffer.asIntBuffer().get(tupleArr,offset,Num_Attributes);
+				buffer.getInt(offset);
 				//next position in buffer to start
-				offset += (int)len/4;
+				offset += (int) 4*Num_Attributes;
 				buffer.clear();
 			}
 
