@@ -9,15 +9,13 @@ import Tuple.Tuple;
 public interface TupleReader {
 	
 	//method to read a tuple from the file to channel
-	public Tuple ReadNextTuple ();
+	public String ReadNextTuple () throws IOException;
 	
 	//method to close this file 
-	public void close();
+	public void close() throws IOException;
 	
 	//method to reset the reading pointer location to start of the file page
-	public void reset();
-
-	
+	public void reset() throws IOException;
 	
 	
 }
