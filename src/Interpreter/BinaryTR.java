@@ -92,6 +92,7 @@ public class BinaryTR implements TupleReader {
 //
 //	}
 
+    /**constructor*/
     public BinaryTR(File file) throws IOException  {
     	File input = file;
     	try {
