@@ -38,10 +38,15 @@ public class HumanTR implements TupleReader{
 		return line;
 	}
 
-	@Override
+	
 	// close the reader
-	public void close() throws IOException {
-		br.close(); 
+	public void close() {
+		try {
+			br.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 
 	@Override
@@ -50,6 +55,12 @@ public class HumanTR implements TupleReader{
 			br.close();
 		}
 		br = new BufferedReader(new FileReader(file));
+	}
+
+	@Override
+	public void dump() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

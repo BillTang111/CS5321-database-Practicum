@@ -34,8 +34,13 @@ public class HumanTW implements TupleWriter{
 		}
 	}
 
-	public void close() throws IOException {
-		bw.close();
+	public void close() {
+		try {
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }

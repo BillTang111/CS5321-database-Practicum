@@ -12,10 +12,16 @@ public interface TupleReader {
 	public String ReadNextTuple () throws IOException;
 	
 	//method to close this file 
-	public void close() throws IOException;
+	//public void close() throws IOException;
 	
 	//method to reset the reading pointer location to start of the file page
 	public void reset() throws IOException;
 	
-	
+    /**
+     * For debugging use.
+     * Print all tuples retrieved to Console.
+     */
+    void dump();
+
+	//void close();
 }

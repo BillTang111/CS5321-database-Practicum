@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import Tuple.Tuple;
 
@@ -16,6 +18,8 @@ public class BinaryTW implements TupleWriter{
 	int index;
 	int numAttributes;
 	int numTuples;
+	private ByteBuffer copy;
+    private List<Integer> lastPageTuples = new LinkedList<>();
 	
 	public BinaryTW(String outputLocation){
 	try {
@@ -48,7 +52,7 @@ public class BinaryTW implements TupleWriter{
 		//write tuple data to the buffer page
 		for (int i = 0; i < numAttributes; i++) {
             buffer.putInt((int)tupleList.get(i));
-            //lastPageTuples.add(attributes.get(i));
+            lastPageTuples.add((int)tupleList.get(i));
             index += 4;
         }
 		
@@ -68,16 +72,47 @@ public class BinaryTW implements TupleWriter{
                 } else {
                     buffer.clear();
                 }
+                copy = buffer.duplicate();
                 index = 0;
+                lastPageTuples.clear();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-		
-		
-		
-		
+        }		
     }
 	
-
+	/**
+     * Close the output stream.
+     */
+    @Override
+    public void close() {
+        try {
+            // fill last page
+            if (index != 0) {
+                numTuples = lastPageTuples.size() / numAttributes;
+                copy.putInt(numAttributes);
+                copy.putInt(numTuples);
+                for (Integer n : lastPageTuples) {
+                    copy.putInt(n);
+                }
+                while (index < 1024*4) {
+                    copy.putInt(0);
+                    index += 4;
+                }
+                copy.flip();
+                fc.write(copy);
+                if (copy.hasRemaining()) {
+                    copy.compact();
+                }
+            }
+            if (copy.hasRemaining()) {
+                copy.flip();
+                fc.write(copy);
+            }
+            // close output stream
+            fout.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
