@@ -14,6 +14,7 @@ import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import physicalOperator.SortOperator;
 import visitor.joinVisitor;
 
 public class LogicalQueryPlan {
@@ -165,6 +166,10 @@ public class LogicalQueryPlan {
 		
 		// 5. Add DuplicateElimination node to current tree if there is project condition
 		if (selectBody.getDistinct()!=null) {
+			if (selectBody.getOrderByElements()==null){
+				LogicalSortOperator Sort = new LogicalSortOperator(root, selectBody);
+				root = Sort;
+			}
 			LogicalDuplicateEliminationOperators distinct = new LogicalDuplicateEliminationOperators(root);
 			root = distinct;
 		}
