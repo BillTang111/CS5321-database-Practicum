@@ -82,10 +82,39 @@ public class BinaryTR implements TupleReader {
 
 	}
 
-
+	public Tuple read() throws IOException {
+		while (!endOfFile) {
+			// read a new page into the buffer and set the metadata accordingly
+			if (needNewPage) {
+				try {
+					fetchPage();
+				} catch (EOFException e) {
+					break;
+				}
+				//System.out.println("============ page " + offsets.size() 
+					//	+ "=== tuple " + numOfTuples +" =======");
+			}
+			
+			if (buffer.hasRemaining()) {
+				int [] cols = new int[numOfAttr];
+				for (int i = 0; i < numOfAttr; i++) {
+					cols[i] = buffer.getInt();
+				}
+				currTupleIdx++;
+				return new Tuple(cols);
+			}
+			
+			// does not has remaining
+			eraseBuffer();
+			needNewPage = true;		
+		}
+		
+		return null;	// if reached the end of the file, return null
+	}
 
 	@Override
-	public Tuple ReadNextTuple() {
+	//ReadNextTuple returns the next tuple line from the table file at the current "buffer position"
+	public String ReadNextTuple() {
 		// TODO Auto-generated method stub
 		return null;
 	}
