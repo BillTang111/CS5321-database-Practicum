@@ -9,11 +9,13 @@ import java.nio.channels.*;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import parser.LogicalQueryPlan;
 import parser.Parser;
 import parser.queryPlan;
 import physicalOperator.Operator;
 import physicalOperator.ScanOperator;
 import physicalOperator.SelectOperator;
+import visitor.PhysicalPlanBuilder;
 
 /**
  * This class is the highest-level class to run configuration.
@@ -107,12 +109,17 @@ public class Interpreter {
 			int i = 1; //File number
 			
 			for(PlainSelect eachQuerySelect: queryList){
-				queryPlan plan = new queryPlan(eachQuerySelect);
+				//queryPlan plan = new queryPlan(eachQuerySelect);
+				LogicalQueryPlan logPlan = new LogicalQueryPlan(eachQuerySelect);
+				PhysicalPlanBuilder builder = new PhysicalPlanBuilder();
+				logPlan.getRoot().accept(builder);
+				Operator physicalPlanRoot = builder.getRoot();
+				
 //				plan.getRoot().dump();
 //				System.out.println("Results dumped.");
 //				
 				
-				ArrayList<Tuple> result = plan.getRoot().writeToFile();
+				ArrayList<Tuple> result = physicalPlanRoot.writeToFile();
 				
 				File file = new File(outputLocation + "/query" + i);
 				System.out.println(outputLocation + "/query" + i);

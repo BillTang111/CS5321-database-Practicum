@@ -34,6 +34,7 @@ public class BinaryTR implements TupleReader {
 /*
  * constructor of the class with input parameter of file of table
  */
+
 //	public BinaryTR(File file) throws IOException  {
 //		File input = file;
 //		//1. read the file into steam	
@@ -103,7 +104,7 @@ public class BinaryTR implements TupleReader {
     } 
 
 
-	@Override
+
 	public String ReadNextTuple() {
 		// TODO Auto-generated method stub
 		 String record = "";
