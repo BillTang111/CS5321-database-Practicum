@@ -11,7 +11,8 @@ public interface TupleWriter {
 	
 	/**
      * Close the output stream.
+	 * @throws IOException 
      */
-   public void close();
+   public void close() throws IOException;
 
 }

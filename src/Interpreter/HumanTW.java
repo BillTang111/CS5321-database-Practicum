@@ -18,7 +18,7 @@ import Tuple.Tuple;
  */
 public class HumanTW implements TupleWriter{
 	private File file;
-	private BufferedReader bw;
+	private BufferedWriter bw;
 	
 	// Initializer
 	public HumanTW (File file) throws FileNotFoundException {
@@ -41,13 +41,8 @@ public class HumanTW implements TupleWriter{
 		}
 	}
 
-	public void close() {
-		try {
+	public void close() throws IOException {
 			bw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 }
