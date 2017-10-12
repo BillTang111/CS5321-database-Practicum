@@ -17,6 +17,7 @@ public abstract class Operator implements Iterator {
 
 	/** This method return the satisfied tuple and get next tuple from the child operator.
 	 * @return the next tuple 
+	 * @throws IOException 
 	 * */
 	public abstract Tuple getNextTuple();
 	

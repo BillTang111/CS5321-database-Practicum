@@ -115,10 +115,10 @@ public class Interpreter {
 				logPlan.getRoot().accept(builder);
 				Operator physicalPlanRoot = builder.getRoot();
 				
+			// Option 1: dump result
 //				plan.getRoot().dump();
 //				System.out.println("Results dumped.");
 //				
-				
 				ArrayList<Tuple> result = physicalPlanRoot.writeToFile();
 				
 				File file = new File(outputLocation + "/query" + i);
@@ -127,19 +127,35 @@ public class Interpreter {
 					file.createNewFile();
 				}
 				
-				FileWriter fw = new FileWriter(file);
-				BufferedWriter bw = null;
-				bw = new BufferedWriter(fw);
+			// Option 2: Project 2 Write to file	
+				
+//				FileWriter fw = new FileWriter(file);
+//				BufferedWriter bw = null;
+//				bw = new BufferedWriter(fw);
+//				
+//				for(Tuple oneLine: result){
+//					String stringResult = String.join(",", oneLine.getTuple());
+//					bw.write(stringResult);
+//					bw.newLine();
+//				}
+//				
+//				bw.close();
+				
+			// Option 3: Human TW
+				HumanTW humanWriter = new HumanTW(file);
 				
 				for(Tuple oneLine: result){
-					String stringResult = String.join(",", oneLine.getTuple());
-					bw.write(stringResult);
-					bw.newLine();
+					humanWriter.WriteTuple(oneLine);
 				}
 				
-				bw.close();
+				humanWriter.close();
+				
 				System.out.println("Results wrote in file.");
 				i++;
+				
+				
+				
+				
 			}
 			
 			
