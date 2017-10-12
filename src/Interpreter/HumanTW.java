@@ -21,18 +21,16 @@ public class HumanTW implements TupleWriter{
 	private BufferedWriter bw;
 	
 	// Initializer
-	public HumanTW (File file) throws FileNotFoundException {
+	public HumanTW (File file) throws IOException {
 		this.file=file;
+		bw = new BufferedWriter(new FileWriter(file));
 	}
 	
 	@Override
 	public void WriteTuple(Tuple t) throws IOException {
 		// TODO Auto-generated method stub
-		FileWriter fw;
 		try {
-			fw = new FileWriter(file);
-	        BufferedWriter bw = new BufferedWriter(fw);
-	        bw.write(String.join(",", t.getTuple()));
+	        bw.write(t.getTuple().toString());
 	        bw.newLine();
 		} catch (IOException e) {
 
@@ -41,6 +39,7 @@ public class HumanTW implements TupleWriter{
 	}
 
 	public void close() throws IOException {
+			bw.flush();
 			bw.close();
 	}
 	

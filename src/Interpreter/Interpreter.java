@@ -144,21 +144,21 @@ public class Interpreter {
 				bw.close();
 				
 			// Option 3: Human TW
-//				HumanTW humanWriter = new HumanTW(file);
-//				
-//				for(Tuple oneLine: result){
-//					humanWriter.WriteTuple(oneLine);
-//				}
-//				
-//				humanWriter.close();
-//				
-			// Option 4: Binary TW
-				BinaryTW binaryWriter = new BinaryTW(outputPath);
+				HumanTW humanWriter = new HumanTW(file);
+				
 				for(Tuple oneLine: result){
-					binaryWriter.WriteTuple(oneLine);
+					humanWriter.WriteTuple(oneLine);
 				}
 				
-				binaryWriter.close();
+				humanWriter.close();
+//				
+			// Option 4: Binary TW
+//				BinaryTW binaryWriter = new BinaryTW(outputPath);
+//				for(Tuple oneLine: result){
+//					binaryWriter.WriteTuple(oneLine);
+//				}
+//				
+//				binaryWriter.close();
 				
 				
 				System.out.println("Results wrote in file.");
