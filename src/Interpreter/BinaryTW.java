@@ -51,8 +51,9 @@ public class BinaryTW implements TupleWriter{
 		
 		//write tuple data to the buffer page
 		for (int i = 0; i < numAttributes; i++) {
-            buffer.putInt((int)tupleList.get(i));
-            lastPageTuples.add((int)tupleList.get(i));
+			int entry = Integer.parseInt((String) tupleList.get(i));
+            buffer.putInt(entry);
+            lastPageTuples.add(entry);
             index += 4;
         }
 		

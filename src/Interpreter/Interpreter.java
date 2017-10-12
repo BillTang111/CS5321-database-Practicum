@@ -122,7 +122,8 @@ public class Interpreter {
 //				
 				ArrayList<Tuple> result = physicalPlanRoot.writeToFile();
 				
-				File file = new File(outputLocation + "/query" + i);
+				String outputPath = outputLocation + "/query" + i;
+				File file = new File(outputPath);
 				System.out.println(outputLocation + "/query" + i);
 				if (!file.exists()) {
 					file.createNewFile();
@@ -130,26 +131,35 @@ public class Interpreter {
 				
 			// Option 2: Project 2 Write to file	
 				
-//				FileWriter fw = new FileWriter(file);
-//				BufferedWriter bw = null;
-//				bw = new BufferedWriter(fw);
-//				
-//				for(Tuple oneLine: result){
-//					String stringResult = String.join(",", oneLine.getTuple());
-//					bw.write(stringResult);
-//					bw.newLine();
-//				}
-//				
-//				bw.close();
-				
-			// Option 3: Human TW
-				HumanTW humanWriter = new HumanTW(file);
+				FileWriter fw = new FileWriter(file);
+				BufferedWriter bw = null;
+				bw = new BufferedWriter(fw);
 				
 				for(Tuple oneLine: result){
-					humanWriter.WriteTuple(oneLine);
+					String stringResult = String.join(",", oneLine.getTuple());
+					bw.write(stringResult);
+					bw.newLine();
 				}
 				
-				humanWriter.close();
+				bw.close();
+				
+			// Option 3: Human TW
+//				HumanTW humanWriter = new HumanTW(file);
+//				
+//				for(Tuple oneLine: result){
+//					humanWriter.WriteTuple(oneLine);
+//				}
+//				
+//				humanWriter.close();
+//				
+			// Option 4: Binary TW
+				BinaryTW binaryWriter = new BinaryTW(outputPath);
+				for(Tuple oneLine: result){
+					binaryWriter.WriteTuple(oneLine);
+				}
+				
+				binaryWriter.close();
+				
 				
 				System.out.println("Results wrote in file.");
 				i++;
