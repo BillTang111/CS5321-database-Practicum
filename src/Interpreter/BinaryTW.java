@@ -26,6 +26,7 @@ public class BinaryTW implements TupleWriter{
 		fout = new FileOutputStream( outputLocation );
 		fc = fout.getChannel();
 	    buffer = ByteBuffer.allocate( 1024 * 4);
+	    copy = ByteBuffer.allocate( 1024 * 4);
 	    index=0;
 	    
 	} catch (FileNotFoundException e) {
