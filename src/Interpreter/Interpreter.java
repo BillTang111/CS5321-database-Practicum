@@ -131,17 +131,17 @@ public class Interpreter {
 				
 			// Option 2: Project 2 Write to file	
 				
-				FileWriter fw = new FileWriter(file);
-				BufferedWriter bw = null;
-				bw = new BufferedWriter(fw);
-				
-				for(Tuple oneLine: result){
-					String stringResult = String.join(",", oneLine.getTuple());
-					bw.write(stringResult);
-					bw.newLine();
-				}
-				
-				bw.close();
+//				FileWriter fw = new FileWriter(file);
+//				BufferedWriter bw = null;
+//				bw = new BufferedWriter(fw);
+//				
+//				for(Tuple oneLine: result){
+//					String stringResult = String.join(",", oneLine.getTuple());
+//					bw.write(stringResult);
+//					bw.newLine();
+//				}
+//				
+//				bw.close();
 				
 			// Option 3: Human TW
 				HumanTW humanWriter = new HumanTW(file);
@@ -151,7 +151,8 @@ public class Interpreter {
 				}
 				
 				humanWriter.close();
-//				
+			
+				
 			// Option 4: Binary TW
 //				BinaryTW binaryWriter = new BinaryTW(outputPath);
 //				for(Tuple oneLine: result){

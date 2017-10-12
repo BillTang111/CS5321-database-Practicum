@@ -30,7 +30,8 @@ public class HumanTW implements TupleWriter{
 	public void WriteTuple(Tuple t) throws IOException {
 		// TODO Auto-generated method stub
 		try {
-	        bw.write(t.getTuple().toString());
+			String stringResult = String.join(",", t.getTuple());
+	        bw.write(stringResult);
 	        bw.newLine();
 		} catch (IOException e) {
 
