@@ -17,6 +17,7 @@ import physicalOperator.JoinOperator;
 import physicalOperator.Operator;
 import physicalOperator.ProjectOperator;
 import physicalOperator.ScanOperator;
+import physicalOperator.ScanOperatorBinary;
 import physicalOperator.ScanOperatorHuman;
 import physicalOperator.SelectOperator;
 import physicalOperator.SortOperator;
@@ -86,7 +87,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		// TODO Auto-generated method stub
 		String table = logDistinct.getTableName();
 		//ScanOperator scan = new ScanOperator(table);
-		ScanOperatorHuman scan = new ScanOperatorHuman(table);
+		//ScanOperatorHuman scan = new ScanOperatorHuman(table);
+		ScanOperatorBinary scan = new ScanOperatorBinary(table);
 		stackOp.push(scan);
 	}
 
