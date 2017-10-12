@@ -25,7 +25,6 @@ public class HumanTW implements TupleWriter{
 		this.file=file;
 	}
 	
-	
 	@Override
 	public void WriteTuple(Tuple t) throws IOException {
 		// TODO Auto-generated method stub
