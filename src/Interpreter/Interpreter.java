@@ -80,7 +80,14 @@ public class Interpreter {
 		      
 		  }
 		
-		// 1.3 Create a 'Database_Catalog' object to store directory and schema
+		// 1.3 Get the configuration file to be later set up in physicalPlanBuilder
+		BufferedReader br2 = new BufferedReader(new FileReader(inputLocation+"plan_builder_config.txt"));
+		StringBuilder sb2 = new StringBuilder();
+	    String joinConfigLine = br2.readLine();
+	    String sortConfigLine = br2.readLine();
+	    br2.close();
+		
+		// 1.4 Create a 'Database_Catalog' object to store directory and schema
 		  //test java -jar cs4321 p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output
 		 //test java -jar cs4321 p2.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/CS5321/input /Users/LukerRong/Desktop/CS5321/test_output
@@ -88,6 +95,8 @@ public class Interpreter {
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);
+		catalog.setJoinConfig(joinConfigLine);
+		catalog.setSortConfig(sortConfigLine);
 		catalog.setSchema(map); // Original name + field
 		
 		

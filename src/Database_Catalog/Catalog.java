@@ -23,6 +23,8 @@ public class Catalog implements Cloneable, Serializable {
 	private String outputLocation;
 	private static HashMap<String, ArrayList> map;
 	private HashMap<String, String> pairAlias;
+	private String joinConfig;
+	private String sortConfig;
 
 	/* Private Constructor prevents any other class from instantiating */
 	private Catalog() {
@@ -69,6 +71,22 @@ public class Catalog implements Cloneable, Serializable {
 		return outputLocation;
 	}
 	
+	/**Get the join configuration
+	 * 
+	 * @return the string represents join configuration
+	 * */
+	public String getJoinConfig() {
+		return joinConfig;
+	}
+	
+	/**Get the sort configuration
+	 * 
+	 * @return the string represents sort configuration
+	 * */
+	public String getSortConfig() {
+		return sortConfig;
+	}
+	
 	/**Get database schema
 	 * 
 	 * @return a hash map of the schema
@@ -91,6 +109,22 @@ public class Catalog implements Cloneable, Serializable {
 	 * */
 	public void setoutputLocation(String output) {
 		this.outputLocation = output;
+	}
+	
+	/**Set the join configuration
+	 * 
+	 * @param the string represents join configuration
+	 * */
+	public void setJoinConfig(String jConfig) {
+		this.joinConfig =  jConfig;
+	}
+	
+	/**Set the sort configuration
+	 * 
+	 * @param the string represents sort configuration
+	 * */
+	public void setSortConfig(String sConfig) {
+		this.sortConfig =  sConfig;
 	}
 	
 	/**set the table-field schema

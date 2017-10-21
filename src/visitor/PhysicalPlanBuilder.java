@@ -3,6 +3,7 @@ package visitor;
 import java.io.IOException;
 import java.util.Stack;
 
+import Database_Catalog.Catalog;
 import logicalOperator.LogicalDuplicateEliminationOperators;
 import logicalOperator.LogicalJoinOperator;
 import logicalOperator.LogicalOperator;
@@ -26,9 +27,14 @@ import physicalOperator.SortOperator;
 public class PhysicalPlanBuilder implements PlanVisitor {
 	
 	private Stack<Operator> stackOp;
+	int jMode; //0 for TNLJ, 1 for BNLJ, or 2 for SMJ
+	int jPara; //BNLJ size
+	int sMode; //0 for in-memory sort, 1 for external sort
+	int sPara; //number of buffer pages for external sort
 	
 	public PhysicalPlanBuilder() {
 		stackOp = new Stack<Operator>();
+		interpretConfig();
 	}
 	
 	
@@ -63,9 +69,17 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		
 		Operator leftChild = stackOp.pop();
 		Operator rightChild = stackOp.pop();
-//		JoinOperator join = new JoinOperator(leftChild, rightChild,joinCondition);
-		BNLJOperator join = new BNLJOperator(leftChild, rightChild,joinCondition,100); //size? need to check instruction
-		stackOp.push(join);
+		if (jMode==0){
+			JoinOperator join = new JoinOperator(leftChild, rightChild,joinCondition);
+			stackOp.push(join);
+		}
+		else if (jMode==1){
+			BNLJOperator join = new BNLJOperator(leftChild, rightChild,joinCondition,jPara);
+			stackOp.push(join);
+		}
+		else if (jMode==2){
+			
+		}
 	}
 
 
@@ -120,6 +134,23 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		Operator child = stackOp.pop();
 		SortOperator sort = new SortOperator(child, selectBody);
 		stackOp.push(sort);
+	}
+	
+	
+	public void interpretConfig(){
+		Catalog catalog = Catalog.getInstance();
+		String jConfig = catalog.getJoinConfig();
+		String sConfig = catalog.getSortConfig();
+		jMode = (int)(jConfig.charAt(0));
+		sMode = (int)(sConfig.charAt(0));
+		if (jMode==1){
+			String BNLJsize = jConfig.split(" ")[1];
+			jPara = Integer.parseInt(BNLJsize);
+		}
+		if (sMode==1){
+			String ESortSize = sConfig.split(" ")[1];
+			sPara = Integer.parseInt(ESortSize);
+		}
 	}
 	
 }
