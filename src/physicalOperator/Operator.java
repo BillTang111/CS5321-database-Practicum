@@ -38,7 +38,7 @@ public abstract class Operator implements Iterator {
 	}
 	
 	/**To print your result. Use for debug */
-	public abstract void dump();
+	public abstract void dump(int printOrNot);
 	//To Do
 			// This method repeatedly calls getNextTuple() until the next tuple is null (no more output) 
 			//and writes each tuple to a suitable PrintStream. That way you can dump() the results of any operator 

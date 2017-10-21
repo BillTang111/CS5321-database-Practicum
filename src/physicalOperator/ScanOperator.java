@@ -84,19 +84,24 @@ public class ScanOperator extends Operator {
 		
 	}
 
-	/**To print your result. Use for debug */
+	/**To print your result. Use for debug 
+	 * @param printOrNot: 0: don't print, 1: print*/
 	@Override
-	public void dump() {
+	public void dump(int printOrNot) {
 		// TODO Auto-generated method stub
-		ArrayList l = new ArrayList();
-		l.add(input);
-		Tuple a =new Tuple("",l);
-		while((a=getNextTuple()) != null){
-			System.out.println(a.getTuple());
-			//System.out.println(a.toString());
+		Tuple a =getNextTuple();
+		if (printOrNot==1){
+			while(a != null){
+				System.out.println(a.getTuple());
+				a=getNextTuple();
+				//System.out.println(a.toString());
+			}
+		} 
+		else if (printOrNot==0){
+			while(a != null){
+				a=getNextTuple();
+			}
 		}
-		
-		
 	}
 	
 	/** Get all the result tuple in this operator (For debugging) 

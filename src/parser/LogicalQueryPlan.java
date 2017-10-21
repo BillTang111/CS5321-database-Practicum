@@ -151,9 +151,11 @@ public class LogicalQueryPlan {
 
 		
 		// 4. Add projection node to current tree if there is project condition
-		if (selectBody.getSelectItems().get(0)!="*") {
+		//System.out.println("Project? " + (selectBody.getSelectItems().get(0).equals("*")));
+		if (selectBody.getSelectItems().get(0).equals("*")) {
 			LogicalProjectOperator project = new LogicalProjectOperator(selectBody, root);
 			root = project;
+			//System.out.println("Project! ");
 		}
 		
 		

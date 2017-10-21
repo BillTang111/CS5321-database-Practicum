@@ -99,15 +99,23 @@ public class JoinOperator extends Operator {
 		outter.reset();		
 	}
 
-	/**To print your result. Use for debug */
+	/**To print your result. Use for debug 
+	 * @param printOrNot: 0: don't print, 1: print*/
 	@Override
-	public void dump() {
+	public void dump(int printOrNot) {
 		// TODO Auto-generated method stub
 		Tuple a =getNextTuple();
-		while(a != null){
-			System.out.println(a.getTuple());
-			a=getNextTuple();
-			//System.out.println(a.toString());
+		if (printOrNot==1){
+			while(a != null){
+				System.out.println(a.getTuple());
+				a=getNextTuple();
+				//System.out.println(a.toString());
+			}
+		} 
+		else if (printOrNot==0){
+			while(a != null){
+				a=getNextTuple();
+			}
 		}
 	}
 	

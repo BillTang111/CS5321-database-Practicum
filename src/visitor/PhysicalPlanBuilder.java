@@ -69,16 +69,19 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		
 		Operator leftChild = stackOp.pop();
 		Operator rightChild = stackOp.pop();
+		System.out.println("jMode: " + jMode);
 		if (jMode==0){
+			System.out.println("Using TNLJ");
 			JoinOperator join = new JoinOperator(leftChild, rightChild,joinCondition);
 			stackOp.push(join);
 		}
 		else if (jMode==1){
+			System.out.println("Using BNLJ");
 			BNLJOperator join = new BNLJOperator(leftChild, rightChild,joinCondition,jPara);
 			stackOp.push(join);
 		}
 		else if (jMode==2){
-			
+			System.out.println("Using SMJ");
 		}
 	}
 
@@ -141,8 +144,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		Catalog catalog = Catalog.getInstance();
 		String jConfig = catalog.getJoinConfig();
 		String sConfig = catalog.getSortConfig();
-		jMode = (int)(jConfig.charAt(0));
-		sMode = (int)(sConfig.charAt(0));
+		jMode = Character.getNumericValue((jConfig.charAt(0)));
+		sMode = Character.getNumericValue((sConfig.charAt(0)));
 		if (jMode==1){
 			String BNLJsize = jConfig.split(" ")[1];
 			jPara = Integer.parseInt(BNLJsize);

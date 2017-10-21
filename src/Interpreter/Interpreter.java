@@ -81,7 +81,7 @@ public class Interpreter {
 		  }
 		
 		// 1.3 Get the configuration file to be later set up in physicalPlanBuilder
-		BufferedReader br2 = new BufferedReader(new FileReader(inputLocation+"plan_builder_config.txt"));
+		BufferedReader br2 = new BufferedReader(new FileReader(inputLocation+"/plan_builder_config.txt"));
 		StringBuilder sb2 = new StringBuilder();
 	    String joinConfigLine = br2.readLine();
 	    String sortConfigLine = br2.readLine();
@@ -125,9 +125,17 @@ public class Interpreter {
 				logPlan.getRoot().accept(builder);
 				Operator physicalPlanRoot = builder.getRoot();
 				
-			// Option 1: dump result
-//				plan.getRoot().dump();
-//				System.out.println("Results dumped.");
+			// Option 1: dump result and see benchmark time
+				long timeStart = System.currentTimeMillis();
+				System.out.print("Current Time in milliseconds = ");
+				System.out.println(timeStart);
+				physicalPlanRoot.dump(0); //change to 1 when need to print out result
+				System.out.println("Results dumped.");
+				long timeEnd = System.currentTimeMillis();
+				System.out.print("Current Time in milliseconds = ");
+				System.out.println(timeEnd);
+				System.out.print("Cost time = ");
+				System.out.println(timeEnd - timeStart);
 //				
 				//ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  Out-of-Bond Method
 				
@@ -163,13 +171,13 @@ public class Interpreter {
 			
 				
 			// Option 4: Binary TW
-				BinaryTW binaryWriter = new BinaryTW(outputPath);
-				Tuple resultT = physicalPlanRoot.getNextTuple();
-				while (resultT!=null) {
-					binaryWriter.WriteTuple(resultT);
-					resultT = physicalPlanRoot.getNextTuple();
-				}
-				binaryWriter.close();
+//				BinaryTW binaryWriter = new BinaryTW(outputPath);
+//				Tuple resultT = physicalPlanRoot.getNextTuple();
+//				while (resultT!=null) {
+//					binaryWriter.WriteTuple(resultT);
+//					resultT = physicalPlanRoot.getNextTuple();
+//				}
+//				binaryWriter.close();
 				
 				
 				
