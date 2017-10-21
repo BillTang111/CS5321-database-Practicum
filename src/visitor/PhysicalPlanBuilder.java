@@ -95,7 +95,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 
 	private ExternalSortOperator ExternalSortOperator(Operator leftChild,
-			int sPara2, String column) {
+			int sPara2, Expression joinCondition) {
 		// TODO Auto-generated method stub
 		return null;
 	}

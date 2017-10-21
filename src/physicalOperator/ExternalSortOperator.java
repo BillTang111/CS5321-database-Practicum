@@ -27,7 +27,7 @@ public class ExternalSortOperator extends Operator{
 		Object[] mapKeySet = sample.getTupleMap().keySet().toArray();
 		List order = new ArrayList();
 
-		jSortField = Column;
+		//jSortField = Column;
 	}
 
 	@Override
