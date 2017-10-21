@@ -88,11 +88,11 @@ public class ScanOperatorBinary extends Operator{
 		
 	}
 	
-	/**Write the tuple to the file
+	/** Get all the result tuple in this operator (For debugging) 
 	 * @return a list of tuple
 	 */
 	@Override
-	public ArrayList<Tuple> writeToFile() {
+	public ArrayList<Tuple> getAllTuple() {
 		// TODO Auto-generated method stub
 		ArrayList l = new ArrayList();
 		l.add(input);

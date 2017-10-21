@@ -120,7 +120,7 @@ public class Interpreter {
 //				plan.getRoot().dump();
 //				System.out.println("Results dumped.");
 //				
-				ArrayList<Tuple> result = physicalPlanRoot.writeToFile();
+				//ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  Out-of-Bond Method
 				
 				String outputPath = outputLocation + "/query" + i;
 				File file = new File(outputPath);
@@ -155,11 +155,21 @@ public class Interpreter {
 				
 			// Option 4: Binary TW
 				BinaryTW binaryWriter = new BinaryTW(outputPath);
-				for(Tuple oneLine: result){
-					binaryWriter.WriteTuple(oneLine);
+				Tuple resultT = physicalPlanRoot.getNextTuple();
+				while (resultT!=null) {
+					binaryWriter.WriteTuple(resultT);
+					resultT = physicalPlanRoot.getNextTuple();
 				}
-				
 				binaryWriter.close();
+				
+				
+				
+				
+//				for(Tuple oneLine: result){
+//					binaryWriter.WriteTuple(oneLine);
+//				}
+//				
+				
 				
 				
 				System.out.println("Results wrote in file.");

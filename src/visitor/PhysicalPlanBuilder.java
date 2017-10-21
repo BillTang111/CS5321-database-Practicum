@@ -12,6 +12,7 @@ import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import physicalOperator.BNLJOperator;
 import physicalOperator.DuplicateEliminationOperators;
 import physicalOperator.JoinOperator;
 import physicalOperator.Operator;
@@ -62,7 +63,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		
 		Operator leftChild = stackOp.pop();
 		Operator rightChild = stackOp.pop();
-		JoinOperator join = new JoinOperator(leftChild, rightChild,joinCondition);
+//		JoinOperator join = new JoinOperator(leftChild, rightChild,joinCondition);
+		BNLJOperator join = new BNLJOperator(leftChild, rightChild,joinCondition,100); //size? need to check instruction
 		stackOp.push(join);
 	}
 

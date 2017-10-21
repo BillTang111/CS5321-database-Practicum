@@ -45,11 +45,9 @@ public abstract class Operator implements Iterator {
 			//- including the root of your query plan - to your favorite PrintStream, 
 			//whether it leads to a file or whether it is System.out.
 
-	/**Write the tuple to the file
+
+	/** Get all the result tuple in this operator (For debugging) 
 	 * @return a list of tuple
 	 */
-	public ArrayList<Tuple> writeToFile() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public abstract ArrayList<Tuple> getAllTuple();
 }
