@@ -37,9 +37,13 @@ public class Interpreter {
 		String sub = command.substring(start);
 		int end = sub.indexOf(" ");
 		String inputLocation = sub.substring(0, end);
-		String outputLocation = sub.substring(end+1);
+		String outAndTemp = sub.substring(end+1);
+		end = sub.indexOf(" ");
+		String outputLocation = outAndTemp.substring(0, end+1);
+		String tempLocation = outAndTemp.substring(end+1);
 	    System.out.println("input: " + inputLocation);
 	    System.out.println("output: " + outputLocation);
+	    System.out.println("temp: " + tempLocation);
 
 	    
 //		if (args.length<2) {
@@ -91,10 +95,11 @@ public class Interpreter {
 		  //test java -jar cs4321 p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output
 		 //test java -jar cs4321 p2.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/CS5321/input /Users/LukerRong/Desktop/CS5321/test_output
-		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2copy/input /Users/LukerRong/Desktop/project2copy/output
+		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2copy/input /Users/LukerRong/Desktop/project2copy/output /Users/LukerRong/Desktop/project2copy/temp
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);
+		catalog.settempLocation(tempLocation);
 		catalog.setJoinConfig(joinConfigLine);
 		catalog.setSortConfig(sortConfigLine);
 		catalog.setSchema(map); // Original name + field
@@ -116,9 +121,15 @@ public class Interpreter {
 			// 3.2 Use a loop to call the getNextTuple function of the root 
 			// operator, write each output in the file until reaching to the very 
 			// last tuple
-			int i = 1; //File number
+			File tempFolder = new File(catalog.getTempLocation());
+			catalog.setQueryNumber(1);
+			int i; //File number denoted
+			
 			
 			for(PlainSelect eachQuerySelect: queryList){
+				i = catalog.getQueryNumber();
+				cleanFolder(tempFolder);
+				
 				//queryPlan plan = new queryPlan(eachQuerySelect);
 				LogicalQueryPlan logPlan = new LogicalQueryPlan(eachQuerySelect);
 				PhysicalPlanBuilder builder = new PhysicalPlanBuilder();
@@ -187,22 +198,30 @@ public class Interpreter {
 //				}
 //				
 				
-				
-				
 				System.out.println("Results wrote in file.");
 				i++;
-				
-				
-				
-				
+				catalog.setQueryNumber(i);
 			}
-			
-			
-			
-			// 3.3 Close the file.
-		
+
+			// 3.3 Close the file.		
 		
 		// 2.3 Repeat step 3 for the remaining query until reaching the end
+	}
+	
+	
+	/** Clean up the folder of a directory. */
+	public static void cleanFolder(File folder){
+		File[] files = folder.listFiles();
+		if (files != null) {
+			for (File f : files) {
+				if (f.isDirectory()){
+					cleanFolder(f);
+					f.delete();
+				} else {
+					f.delete();
+				}
+			}
+		}
 	}
 	
 	

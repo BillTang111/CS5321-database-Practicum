@@ -21,10 +21,12 @@ public class Catalog implements Cloneable, Serializable {
 	
 	private String inputLocation;
 	private String outputLocation;
+	private String tempLocation;
 	private static HashMap<String, ArrayList> map;
 	private HashMap<String, String> pairAlias;
 	private String joinConfig;
 	private String sortConfig;
+	private int queryNumber;
 
 	/* Private Constructor prevents any other class from instantiating */
 	private Catalog() {
@@ -71,6 +73,14 @@ public class Catalog implements Cloneable, Serializable {
 		return outputLocation;
 	}
 	
+	/**Get the temp directory path
+	 * 
+	 * @return the temp path
+	 * */
+	public String getTempLocation() {
+		return tempLocation;
+	}
+	
 	/**Get the join configuration
 	 * 
 	 * @return the string represents join configuration
@@ -93,6 +103,14 @@ public class Catalog implements Cloneable, Serializable {
 	 * */
 	public HashMap getSchema() {
 		return map;
+	}
+	
+	/**Get the number key of which query is running now
+	 * 
+	 * @return the number key of which query is running now
+	 * */
+	public int getQueryNumber() {
+		return queryNumber;
 	}
 	
 	/**set the input directory location
@@ -143,6 +161,14 @@ public class Catalog implements Cloneable, Serializable {
 		this.pairAlias = Alias;
 	}
 	
+	/**Set the number key of which query is running now
+	 * 
+	 * @param the number key of which query is running now
+	 * */
+	public void setQueryNumber(int number) {
+		this.queryNumber = number;
+	}
+	
 	/**get the pairAlias hash map
 	 * 
 	 * @return the pairAlias hash map
@@ -153,6 +179,10 @@ public class Catalog implements Cloneable, Serializable {
 	
 	public void copy1Schema(String tableName) {
 		this.map.put(tableName+"*", (ArrayList) map.get(tableName).clone());
+	}
+
+	public void settempLocation(String tempLocation) {
+		this.tempLocation = tempLocation;
 	}
 	
 	

@@ -15,6 +15,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import physicalOperator.BNLJOperator;
 import physicalOperator.DuplicateEliminationOperators;
+import physicalOperator.ExternalSortOperator;
 import physicalOperator.JoinOperator;
 import physicalOperator.Operator;
 import physicalOperator.ProjectOperator;
@@ -70,6 +71,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		Operator leftChild = stackOp.pop();
 		Operator rightChild = stackOp.pop();
 		System.out.println("jMode: " + jMode);
+		//System.out.println("join condition: " + joinCondition.toString());
 		if (jMode==0){
 			System.out.println("Using TNLJ");
 			JoinOperator join = new JoinOperator(leftChild, rightChild,joinCondition);
@@ -77,14 +79,26 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		}
 		else if (jMode==1){
 			System.out.println("Using BNLJ");
+			System.out.println("BNLJ buffer size: " + jPara);
 			BNLJOperator join = new BNLJOperator(leftChild, rightChild,joinCondition,jPara);
 			stackOp.push(join);
 		}
 		else if (jMode==2){
 			System.out.println("Using SMJ");
+			System.out.println("SMJ buffer size: " + sPara);
+			ExternalSortOperator leftSorted = ExternalSortOperator(leftChild, sPara, joinCondition);
+			ExternalSortOperator rightSorted = ExternalSortOperator(rightChild, sPara, joinCondition);
+			//SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
 		}
 	}
 
+
+
+	private ExternalSortOperator ExternalSortOperator(Operator leftChild,
+			int sPara2, String column) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 	@Override
