@@ -31,6 +31,7 @@ public class Interpreter {
 	/**main function to run*/
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
+
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	    String command = reader.readLine();
 	    int start = command.indexOf(".jar")+5;
@@ -44,6 +45,17 @@ public class Interpreter {
 	    System.out.println("input: " + inputLocation);
 	    System.out.println("output: " + outputLocation);
 	    System.out.println("temp: " + tempLocation);
+
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//	    String command = reader.readLine();
+//	    int start = command.indexOf(".jar")+5;
+//		String sub = command.substring(start);
+//		int end = sub.indexOf(" ");
+//		String inputLocation = sub.substring(0, end);
+//		String outputLocation = sub.substring(end+1);
+//	    System.out.println("input: " + inputLocation);
+//	    System.out.println("output: " + outputLocation);
+
 
 	    
 //		if (args.length<2) {

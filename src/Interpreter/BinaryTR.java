@@ -30,67 +30,6 @@ public class BinaryTR implements TupleReader {
 	private int index = 0;
 	private FileInputStream fin;
     private Queue<String> records = new LinkedList<>();
-   
-/*
- * constructor of the class with input parameter of file of table
- */
-
-//	public BinaryTR(File file) throws IOException  {
-//		File input = file;
-//		//1. read the file into steam	
-//		try {
-//			FileInputStream fis = new FileInputStream(input);
-//
-//			//2. allocate a channel to read file
-//			FileChannel channel = fis.getChannel();
-//
-//			//3. allocate a buffer to read the file in the fixed-size chunks, and initialize it
-//			buffer = ByteBuffer.allocate(buffer_size);
-//			buffer.clear();
-////			buffer.putInt( 0, Num_Attributes);
-////			buffer.putInt( 5, TupleNum_on_page);
-//
-////			int remind = (1024-2) % Num_Attributes;
-////			int total_tuples = (1024-2-remind)/Num_Attributes;
-////			int current_tuple = 0;
-//
-//			//initialize a array for tuples to be stored into buffer in a bunch
-////			int[] tupleArr = new int [(int)channel.size()/4];
-//			int[] tupleArr = new int [Num_Attributes];
-//
-//			//len is the number of bytes read
-//			long len = 0;
-//			//The offset within the array of the first byte to be written
-//			int offset =  8;
-//
-//			//Reads a sequence of bytes from this channel into the given buffer until the channel is empty 
-//			while ((len = channel.read(buffer))!= -1) {
-//				//convert the buffer from writing data to buffer from disk to reading mode
-//				buffer.flip();
-//
-//				//transfers bytes from this buffer into the given destination array. 
-//				//If there are fewer bytes remaining in the buffer than are required to satisfy the request, 
-//				//that is, if length > remaining(), then no bytes are transferred and a BufferUnderflowException is thrown.
-////				buffer.asIntBuffer().get(tupleArr,offset,(int)len/4);
-////				buffer.asIntBuffer().get(tupleArr,offset,Num_Attributes);
-//				buffer.getInt(offset);
-//				//next position in buffer to start
-//				offset += (int) 4*Num_Attributes;
-//				buffer.clear();
-//			}
-//
-//			//4.  read a page of raw bytes, up to 6k bytes to buffer till -1 meaning eof.
-//
-//			channel.read( buffer );
-//
-//			//5. 
-//
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//	}
 
     /**constructor*/
     public BinaryTR(File file) throws IOException  {

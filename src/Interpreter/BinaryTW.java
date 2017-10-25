@@ -11,6 +11,11 @@ import java.util.List;
 
 import Tuple.Tuple;
 
+/**
+ * @author Lini Tan
+ * 
+ * BinaryTW class is used to write tuple into file
+ */
 public class BinaryTW implements TupleWriter{
 	FileOutputStream fout;
 	FileChannel fc;
@@ -19,7 +24,7 @@ public class BinaryTW implements TupleWriter{
 	int numAttributes;
 	int numTuples;
 	private ByteBuffer copy;
-    private List<Integer> lastPageTuples = new LinkedList<>();
+    private List<Integer> lastPage = new LinkedList<>();
 	
 	public BinaryTW(String outputLocation){
 	try {
@@ -54,7 +59,7 @@ public class BinaryTW implements TupleWriter{
 		for (int i = 0; i < numAttributes; i++) {
 			int entry = Integer.parseInt((String) tupleList.get(i));
             buffer.putInt(entry);
-            lastPageTuples.add(entry);
+            lastPage.add(entry);
             index += 4;
         }
 		
@@ -76,7 +81,7 @@ public class BinaryTW implements TupleWriter{
                 }
                 copy = buffer.duplicate();
                 index = 0;
-                lastPageTuples.clear();
+                lastPage.clear();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -91,10 +96,10 @@ public class BinaryTW implements TupleWriter{
         try {
             // fill last page
             if (index != 0) {
-                numTuples = lastPageTuples.size() / numAttributes;
+                numTuples = lastPage.size() / numAttributes;
                 copy.putInt(numAttributes);
                 copy.putInt(numTuples);
-                for (Integer n : lastPageTuples) {
+                for (Integer n : lastPage) {
                     copy.putInt(n);
                 }
                 while (index < 1024*4) {
