@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import Tuple.Tuple;
 
 /**
@@ -16,6 +18,7 @@ import Tuple.Tuple;
 public class HumanTR implements TupleReader{
 	private File file;  //file of table to be read
 	private BufferedReader br; // A  buffered reader for the file
+	private String tableName;
 	
 	/**
 	 * constructor for the class returns the object containing file and and buffered reader for the file
@@ -25,6 +28,9 @@ public class HumanTR implements TupleReader{
 	public HumanTR (File file) throws FileNotFoundException {
 		this.file=file;
 		br = new BufferedReader(new FileReader(file));
+		String filePath = file.toString();
+    	int start = filePath.lastIndexOf("/")+1;
+    	tableName = filePath.substring(start);
 	}
 
 	@Override
@@ -36,6 +42,18 @@ public class HumanTR implements TupleReader{
 		String line = br.readLine();
 		if (line == null) return null;
 		return line;
+	}
+	
+	/**
+	 * ReadNextTuple method returns the next "tuple" in form of string in the file if there is one; 
+	 * it returns null if eof.
+	 */
+	public Tuple ReadNextTuple2() throws IOException {
+		String line = br.readLine();
+		if (line == null) return null;
+		ArrayList TableName = new ArrayList();
+        TableName.add(tableName);
+        return new Tuple(line,TableName);
 	}
 
 	
@@ -62,6 +80,37 @@ public class HumanTR implements TupleReader{
 		// TODO Auto-generated method stub
 		
 	}
+	
+    /**
+     * Read the next tuple from readable file 
+     * without changing the elements in the buffered reader.
+     * @return the next tuple
+     */
+    public Tuple peek(){
+    	try {
+    		br.mark(1000);
+            String record = br.readLine();
+            br.reset();
+            if(record == null) {
+                return null;
+            }
+            ArrayList TableName = new ArrayList();
+            TableName.add(tableName);
+            return new Tuple(record,TableName);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * delete the file that is being read
+     * and close the buffer reader
+     * **/
+    public void deleteFile(){	
+  
+    	file.delete();
+    }
 
 	
 }
