@@ -89,7 +89,7 @@ public class ProjectOperator extends Operator {
 		Tuple b = new Tuple(rowRecord,l);
 		HashMap newmap = setNewTupleMap(b,newName);
 		b.setTupleMap(newmap);
-		
+		//System.out.println("tuple: "+b.getTuple().toString());
 		return b;
 		}
 		return null;

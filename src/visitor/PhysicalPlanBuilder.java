@@ -112,6 +112,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 	@Override
 	public void visit(LogicalProjectOperator logProject) throws IOException {
+		System.out.println("haha");
 		PlainSelect selectBody = logProject.getPlainSelect();
 		LogicalOperator logChild = logProject.getchildOperator();
 		logChild.accept(this);

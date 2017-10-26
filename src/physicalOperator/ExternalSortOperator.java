@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -41,7 +42,7 @@ public class ExternalSortOperator extends Operator{
 	private List<Column> schemaList;
 	private int index;
 	private List TableList;
-	
+	private HashMap map;
 //	int bufferSize;
 //	String jSortField; // the column name in the join condition
 	
@@ -90,6 +91,7 @@ public class ExternalSortOperator extends Operator{
 	// TODO Auto-generated method stub
 		Tuple t = childOp.getNextTuple();
 		TableList = t.getNameList();
+		map = t.getTupleMap();
 		if (t != null) {
 		//	schemaList = t.getSchema();
 			int MaxSize = 1024 / t.getTuple().size();
@@ -196,8 +198,11 @@ public class ExternalSortOperator extends Operator{
 		              	public int compare(BinaryTR i, BinaryTR j) {
 		              		String iContent = i.peek();
 		              		String jContent = j.peek();
+		              		//System.out.println(TableList.toString());
 		              		Tuple iTuple = new Tuple(iContent,TableList);
+		              		iTuple.setTupleMap(map);
 		              		Tuple jTuple = new Tuple(jContent,TableList);
+		              		jTuple.setTupleMap(map);
 		              		int res = tcmp.compare(iTuple, jTuple);
 		              		return res;
 		              	}
@@ -222,6 +227,7 @@ public class ExternalSortOperator extends Operator{
 						BinaryTR smallestReader = readerQueue.poll();
 						String sContent = smallestReader.ReadNextTuple();
 						Tuple smallestTuple = new Tuple(sContent,TableList);
+						smallestTuple.setTupleMap(map);
 						btw.WriteTuple(smallestTuple);
 						if(smallestReader.peek()==null){
 							//reader queue is empty, delete the original file
@@ -255,12 +261,12 @@ public class ExternalSortOperator extends Operator{
 				}
 				fileCount++;
 				File outputDir = new File(tempDir+"/"+specialname+"/recursionOutput"+i+fileCount);
-				HumanTW btw = new HumanTW(outputDir);
+				HumanTW htw = new HumanTW(outputDir);
 				try{
 					while(!readerQueue.isEmpty()){
 						HumanTR smallestReader = readerQueue.poll();
 						Tuple smallestTuple = smallestReader.ReadNextTuple2();
-						btw.WriteTuple(smallestTuple);
+						htw.WriteTuple(smallestTuple);
 						if(smallestReader.peek()==null){
 							//reader queue is empty, delete the original file
 							smallestReader.deleteFile();
@@ -269,7 +275,7 @@ public class ExternalSortOperator extends Operator{
 						}
 					}
 				}finally{
-					btw.close();
+					htw.close();
 				}				
 			}
 			
@@ -297,7 +303,8 @@ public class ExternalSortOperator extends Operator{
 		if(isBinary){
 			String tContent = btr.ReadNextTuple();
 			if(tContent == null) return null;
-			Tuple t = new Tuple(tContent,TableList);	
+			Tuple t = new Tuple(tContent,TableList);
+			t.setTupleMap(map);
 			this.index++;
 			return btr==null ? null : t;
 		}else{
