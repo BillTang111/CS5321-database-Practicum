@@ -86,9 +86,17 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		else if (jMode==2){
 			System.out.println("Using SMJ");
 			System.out.println("SMJ buffer size: " + sPara);
-			ExternalSortOperator leftSorted = ExternalSortOperator(leftChild, sPara, joinCondition);
-			ExternalSortOperator rightSorted = ExternalSortOperator(rightChild, sPara, joinCondition);
-			//SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
+			System.out.println("Sort Mode: " + sMode);
+			if (sMode==0) {
+				//SortOperator leftSort = new SortOperator(leftChild, selectBody);
+				//SortOperator rightSort = new SortOperator(leftChild, selectBody);
+				//SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
+			}
+			else if (sMode==1) {
+				ExternalSortOperator leftSorted = ExternalSortOperator(leftChild, sPara, joinCondition);
+				ExternalSortOperator rightSorted = ExternalSortOperator(rightChild, sPara, joinCondition);
+				//SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
+			}
 		}
 	}
 
@@ -103,7 +111,6 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 	@Override
 	public void visit(LogicalProjectOperator logProject) throws IOException {
-		// TODO Auto-generated method stub
 		PlainSelect selectBody = logProject.getPlainSelect();
 		LogicalOperator logChild = logProject.getchildOperator();
 		logChild.accept(this);
@@ -117,7 +124,6 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 	@Override
 	public void visit(LogicalScanOperator logDistinct) throws IOException {
-		// TODO Auto-generated method stub
 		String table = logDistinct.getTableName();
 		//ScanOperator scan = new ScanOperator(table);
 		//ScanOperatorHuman scan = new ScanOperatorHuman(table);
@@ -129,7 +135,6 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 	@Override
 	public void visit(LogicalSelectOperator logSelect) throws IOException {
-		// TODO Auto-generated method stub
 		Expression selectCondition = logSelect.getSelectCondition();
 		LogicalOperator logChild = logSelect.getchildOperator();
 		logChild.accept(this);
@@ -143,14 +148,20 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 	@Override
 	public void visit(LogicalSortOperator logSort) throws IOException {
-		// TODO Auto-generated method stub
 		PlainSelect selectBody = logSort.getPlainSelect();
 		LogicalOperator logChild = logSort.getchildOperator();
 		logChild.accept(this);
 		
 		Operator child = stackOp.pop();
-		SortOperator sort = new SortOperator(child, selectBody);
-		stackOp.push(sort);
+		System.out.println("Sort Mode: " + sMode);
+		if (sMode==0) {
+			SortOperator sort = new SortOperator(child, selectBody);
+			stackOp.push(sort);
+		}
+		else if (sMode==1){
+			ExternalSortOperator sort = new ExternalSortOperator(child, selectBody, sPara);
+			stackOp.push(sort);
+		}
 	}
 	
 	
