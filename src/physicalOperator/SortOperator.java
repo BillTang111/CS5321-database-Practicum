@@ -152,7 +152,7 @@ class TupleComparator implements Comparator<Tuple> {
     	
     	
     	//compare by condition
-    	
+    	if(condition!=null){
     	//System.out.println(condition.toString());
     	for(int i=0; i<condition.size(); i++){
     		//System.out.println(condition.get(i).toString());
@@ -175,7 +175,7 @@ class TupleComparator implements Comparator<Tuple> {
     		if(anum > bnum) return 1;
     		s.add(aliasCondition);
     	}
-    	
+    	}
     	//if not condition or condition are the same, compare tuple from left to right.
     	for(int i=0; i<alist.size(); i++){
     		if(Integer.parseInt((String)alist.get(i))<Integer.parseInt((String)blist.get(i))){

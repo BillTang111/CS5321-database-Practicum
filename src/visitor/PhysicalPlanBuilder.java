@@ -1,6 +1,7 @@
 package visitor;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Stack;
 
 import Database_Catalog.Catalog;
@@ -151,6 +152,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		PlainSelect selectBody = logSort.getPlainSelect();
 		LogicalOperator logChild = logSort.getchildOperator();
 		logChild.accept(this);
+		List selectItem = selectBody.getOrderByElements();
 		
 		Operator child = stackOp.pop();
 		System.out.println("Sort Mode: " + sMode);
@@ -159,7 +161,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			stackOp.push(sort);
 		}
 		else if (sMode==1){
-			ExternalSortOperator sort = new ExternalSortOperator(child, selectBody, sPara);
+			ExternalSortOperator sort = new ExternalSortOperator(child, selectItem, sPara);
 			stackOp.push(sort);
 		}
 	}

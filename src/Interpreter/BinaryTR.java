@@ -31,14 +31,11 @@ public class BinaryTR implements TupleReader {
 	private int index = 0;
 	private FileInputStream fin;
     private Queue<String> records = new LinkedList<>();
-    private String tableName;
 
     /**constructor*/
     public BinaryTR(File file) throws IOException  {
     	input = file;
     	String filePath = file.toString();
-    	int start = filePath.lastIndexOf("/")+1;
-    	tableName = filePath.substring(start);
     	try {
             fin = new FileInputStream(input);
             fc = fin.getChannel();
@@ -84,41 +81,7 @@ public class BinaryTR implements TupleReader {
 		return record;
 	}
 	
-	public Tuple ReadNextTuple2() {
-		// TODO Auto-generated method stub
-		 String record = "";
-	        if (records.isEmpty()) {
-	            try {
-	                buffer.clear();
-	                int r = fc.read(buffer);
-	                if (r == -1) {
-	                    return null;
-	                }
-	                index = 0;
-	                Num_Attributes = buffer.getInt(index);
-	                TupleNum_on_page = buffer.getInt(index + 4);
-	                index += 8;
-	                for (int i = 0; i < TupleNum_on_page; i++) {
-	                    for (int j = 0; j < Num_Attributes; j++) {
-	                        int value = buffer.getInt(index);
-	                        record += Integer.toString(value) + ",";
-	                        index += 4;
-	                    }
-	                    records.add(record);
-	                    record = "";
-	                }
-	                index = 8;
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	            }
-	        }
-	        record = records.poll();
-	        index += 4;
-	        record = record.substring(0, record.length() - 1);
-	        ArrayList TableName = new ArrayList();
-	        TableName.add(tableName);
-		return new Tuple(record,TableName);
-	}
+
 
 //	@Override
 //	public void close() {
@@ -153,7 +116,7 @@ public class BinaryTR implements TupleReader {
      * without changing the elements in the record queue.
      * @return the next tuple
      */
-    public Tuple peek(){
+    public String peek(){
     	String record = "";
         if (records.isEmpty()) {
             try {
@@ -182,9 +145,7 @@ public class BinaryTR implements TupleReader {
         }
 		record = records.peek();
 		record = record.substring(0, record.length() - 1);
-		ArrayList TableName = new ArrayList();
-        TableName.add(tableName);
-        return new Tuple(record,TableName);	
+        return record;	
     }
     
     

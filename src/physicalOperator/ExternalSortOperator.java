@@ -40,14 +40,15 @@ public class ExternalSortOperator extends Operator{
 	private List order;
 	private List<Column> schemaList;
 	private int index;
+	private List TableList;
 	
 //	int bufferSize;
 //	String jSortField; // the column name in the join condition
 	
-	public ExternalSortOperator(Operator op, PlainSelect selectBody, int page) throws IOException{
+	public ExternalSortOperator(Operator op, List orderItem, int page) throws IOException{
 		childOp = op;
 		sorted = new LinkedList<>();
-		order = selectBody.getOrderByElements();
+		order = orderItem;
 		Catalog catalog = Catalog.getInstance();
 		tempDir = catalog.getTempLocation();
 		pagenum = page;
@@ -88,6 +89,7 @@ public class ExternalSortOperator extends Operator{
 	private void pass0() {
 	// TODO Auto-generated method stub
 		Tuple t = childOp.getNextTuple();
+		TableList = t.getNameList();
 		if (t != null) {
 		//	schemaList = t.getSchema();
 			int MaxSize = 1024 / t.getTuple().size();
@@ -192,7 +194,11 @@ public class ExternalSortOperator extends Operator{
 			PriorityQueue<BinaryTR> readerQueue = new PriorityQueue<BinaryTR>(pagenum-1, 
 					new Comparator<BinaryTR>() {
 		              	public int compare(BinaryTR i, BinaryTR j) {
-		              		int res = tcmp.compare(i.peek(), j.peek());
+		              		String iContent = i.peek();
+		              		String jContent = j.peek();
+		              		Tuple iTuple = new Tuple(iContent,TableList);
+		              		Tuple jTuple = new Tuple(jContent,TableList);
+		              		int res = tcmp.compare(iTuple, jTuple);
 		              		return res;
 		              	}
 	            	});
@@ -214,7 +220,8 @@ public class ExternalSortOperator extends Operator{
 				try{
 					while(!readerQueue.isEmpty()){
 						BinaryTR smallestReader = readerQueue.poll();
-						Tuple smallestTuple = smallestReader.ReadNextTuple2();
+						String sContent = smallestReader.ReadNextTuple();
+						Tuple smallestTuple = new Tuple(sContent,TableList);
 						btw.WriteTuple(smallestTuple);
 						if(smallestReader.peek()==null){
 							//reader queue is empty, delete the original file
@@ -288,7 +295,9 @@ public class ExternalSortOperator extends Operator{
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
 		if(isBinary){
-			Tuple t = btr.ReadNextTuple2();	
+			String tContent = btr.ReadNextTuple();
+			if(tContent == null) return null;
+			Tuple t = new Tuple(tContent,TableList);	
 			this.index++;
 			return btr==null ? null : t;
 		}else{
