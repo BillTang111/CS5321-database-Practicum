@@ -155,4 +155,27 @@ public class BinaryTR implements TupleReader {
     public void deleteFile(){	
     	input.delete();
     }
+
+
+    /**
+     * Set the tuple reader at specified index
+     */
+	public void reset(int index2) {
+		// TODO Auto-generated method stub
+		fc = fin.getChannel();
+    	this.records.clear();
+    	int maxPerPage = 1022 / this.Num_Attributes;
+    	int pageNum = index / maxPerPage;
+    	int tupleIdxOfPage = index - pageNum * maxPerPage;
+    	try {
+			fc.position((long)(pageNum*buffer_size));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	buffer = ByteBuffer.allocate(buffer_size);
+    	buffer.clear();
+    	for(int i=0; i<tupleIdxOfPage; i++){
+    		this.ReadNextTuple();
+    	}
+	}
 }

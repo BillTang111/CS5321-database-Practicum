@@ -112,5 +112,13 @@ public class HumanTR implements TupleReader{
     	file.delete();
     }
 
+    /**
+     * Set the tuple reader at specified index
+     */
+	public void reset(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

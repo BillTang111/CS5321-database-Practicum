@@ -86,14 +86,15 @@ public class ExternalSortOperator extends Operator{
 	}
 
 
-
+	 /**
+     * @param this method self-sorted the tuple in a page and prepare for the merge pass.
+     */
 	private void pass0() {
 	// TODO Auto-generated method stub
 		Tuple t = childOp.getNextTuple();
 		TableList = t.getNameList();
 		map = t.getTupleMap();
 		if (t != null) {
-		//	schemaList = t.getSchema();
 			int MaxSize = 1024 / t.getTuple().size();
 			int fileCount = 0 ;
 			while (t != null) {
@@ -168,32 +169,35 @@ public class ExternalSortOperator extends Operator{
 	
 }
 	
+	
+	/**
+	 * @param read all files in the the directory and do B-1 way merge recursively 
+	 * until merge them all to a file
+	 */
 	private void mergePass(int i) throws IOException {
 	// TODO Auto-generated method stub
 		File folder = new File(tempDir+"/"+specialname);
-		//file Array hold all files
-		File[] fileArray = folder.listFiles();
-		if(fileArray.length==1)return;
+		File[] AllfArray = folder.listFiles();
+		// if only one file left, the merge is done
+		if(AllfArray.length==1)return;
 		
-		//store B-1 files in a list(buffer)
-		//store all buffers into another list
-		ArrayList<ArrayList<File>> allFiles = new ArrayList<ArrayList<File>>();
+		
+		ArrayList<ArrayList<File>> wholeFile = new ArrayList<ArrayList<File>>();
 		
 		ArrayList<File> fileList = new ArrayList<File>();
-		for (int j = 0; j < fileArray.length; j++){
-			fileList.add(fileArray[j]);
-			if(fileList.size() == pagenum-1 || j == fileArray.length-1){
-				allFiles.add(fileList);
+		for (int j = 0; j < AllfArray.length; j++){
+			fileList.add(AllfArray[j]);
+			if(fileList.size() == pagenum-1 || j == AllfArray.length-1){
+				wholeFile.add(fileList);
 				fileList = new ArrayList<File>();
 			}
 		}
 		
-		//put a buffer into a priority queue
-		//poll the queue until it is empty and move on to the next buffer
-		TupleComparator tcmp = new TupleComparator(order);
+
+		TupleComparator tCompare = new TupleComparator(order);
 		
 		if(isBinary){
-			PriorityQueue<BinaryTR> readerQueue = new PriorityQueue<BinaryTR>(pagenum-1, 
+			PriorityQueue<BinaryTR> rQueue = new PriorityQueue<BinaryTR>(pagenum-1, 
 					new Comparator<BinaryTR>() {
 		              	public int compare(BinaryTR i, BinaryTR j) {
 		              		String iContent = i.peek();
@@ -203,37 +207,35 @@ public class ExternalSortOperator extends Operator{
 		              		iTuple.setTupleMap(map);
 		              		Tuple jTuple = new Tuple(jContent,TableList);
 		              		jTuple.setTupleMap(map);
-		              		int res = tcmp.compare(iTuple, jTuple);
+		              		int res = tCompare.compare(iTuple, jTuple);
 		              		return res;
 		              	}
 	            	});
 			
-			int fileCount = 0;
-			for (ArrayList<File> fileBuffer : allFiles){
-				//add all pages of a buffer into the queue
+			int fileNum = 0;
+			for (ArrayList<File> fileBuffer : wholeFile){
 				for (File f : fileBuffer){
 					try {
-						readerQueue.add(new BinaryTR(f));
+						rQueue.add(new BinaryTR(f));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				fileCount++;
-				String outputDir = tempDir+"/"+specialname+"/recursionOutput"+i+fileCount;
+				fileNum++;
+				String outputDir = tempDir+"/"+specialname+"/recursionOutput"+i+fileNum;
 				BinaryTW btw = new BinaryTW(outputDir);
 				try{
-					while(!readerQueue.isEmpty()){
-						BinaryTR smallestReader = readerQueue.poll();
-						String sContent = smallestReader.ReadNextTuple();
-						Tuple smallestTuple = new Tuple(sContent,TableList);
-						smallestTuple.setTupleMap(map);
-						btw.WriteTuple(smallestTuple);
-						if(smallestReader.peek()==null){
-							//reader queue is empty, delete the original file
-							smallestReader.deleteFile();
+					while(!rQueue.isEmpty()){
+						BinaryTR minReader = rQueue.poll();
+						String sContent = minReader.ReadNextTuple();
+						Tuple minTuple = new Tuple(sContent,TableList);
+						minTuple.setTupleMap(map);
+						btw.WriteTuple(minTuple);
+						if(minReader.peek()==null){
+							minReader.deleteFile();
 						}else{
-							readerQueue.add(smallestReader);
+							rQueue.add(minReader);
 						}
 					}
 				}finally{
@@ -245,33 +247,32 @@ public class ExternalSortOperator extends Operator{
 			mergePass(i+1);
 			
 		}else{
-			PriorityQueue<HumanTR> readerQueue = new PriorityQueue<HumanTR>(pagenum-1, 
+			PriorityQueue<HumanTR> rQueue = new PriorityQueue<HumanTR>(pagenum-1, 
 					new Comparator<HumanTR>() {
 		              	public int compare(HumanTR i, HumanTR j) {
-		              		int res = tcmp.compare(i.peek(), j.peek());
+		              		int res = tCompare.compare(i.peek(), j.peek());
 		              		return res;
 		              	}
 	            	});
 			
-			int fileCount = 0;
-			for (ArrayList<File> fileBuffer : allFiles){
-				//add all pages of a buffer into the queue
+			int fileNum = 0;
+			for (ArrayList<File> fileBuffer : wholeFile){
 				for (File f : fileBuffer){
-					readerQueue.add(new HumanTR(f));
+					rQueue.add(new HumanTR(f));
 				}
-				fileCount++;
-				File outputDir = new File(tempDir+"/"+specialname+"/recursionOutput"+i+fileCount);
+				fileNum++;
+				File outputDir = new File(tempDir+"/"+specialname+"/recursionOutput"+i+fileNum);
 				HumanTW htw = new HumanTW(outputDir);
 				try{
-					while(!readerQueue.isEmpty()){
-						HumanTR smallestReader = readerQueue.poll();
-						Tuple smallestTuple = smallestReader.ReadNextTuple2();
-						htw.WriteTuple(smallestTuple);
-						if(smallestReader.peek()==null){
-							//reader queue is empty, delete the original file
-							smallestReader.deleteFile();
+					while(!rQueue.isEmpty()){
+						HumanTR minReader = rQueue.poll();
+						Tuple minTuple = minReader.ReadNextTuple2();
+						htw.WriteTuple(minTuple);
+						if(minReader.peek()==null){
+							
+							minReader.deleteFile();
 						}else{
-							readerQueue.add(smallestReader);
+							rQueue.add(minReader);
 						}
 					}
 				}finally{
@@ -279,7 +280,6 @@ public class ExternalSortOperator extends Operator{
 				}				
 			}
 			
-			//call itself recursively	
 				mergePass(i+1);
 
 
@@ -289,7 +289,7 @@ public class ExternalSortOperator extends Operator{
 }
 	
 	/**
-	 * delete the sorted file in the file system
+	 * @param this method deletes the sorted file in the file system
 	 * 
 	 * **/
 	public void deleteFileFolder(){
@@ -297,6 +297,11 @@ public class ExternalSortOperator extends Operator{
 		folder.delete();
 	}
 
+	
+	/**
+	 * @return this method returns the next tuple
+	 * 
+	 * **/
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
@@ -306,7 +311,7 @@ public class ExternalSortOperator extends Operator{
 			Tuple t = new Tuple(tContent,TableList);
 			t.setTupleMap(map);
 			this.index++;
-			return btr==null ? null : t;
+			return t;
 		}else{
 			Tuple t;
 			try {
@@ -321,6 +326,10 @@ public class ExternalSortOperator extends Operator{
 		}
 	}
 
+	/**
+	 * @param this method reset the operator
+	 * 
+	 * **/
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
@@ -339,6 +348,10 @@ public class ExternalSortOperator extends Operator{
 		
 	}
 
+	/**
+	 * @param this method recursively call get next tuple
+	 * 
+	 * **/
 	@Override
 	public void dump(int printOrNot) {
 		// TODO Auto-generated method stub
@@ -357,6 +370,10 @@ public class ExternalSortOperator extends Operator{
 		}
 	}
 
+	/**
+	 * @return this method return all the tuple and store in a list.
+	 * 
+	 * **/
 	@Override
 	public ArrayList<Tuple> getAllTuple() {
 		// TODO Auto-generated method stub
@@ -369,4 +386,23 @@ public class ExternalSortOperator extends Operator{
 		return result;
 	}
 
+	/**
+	 * @param this method resets the tuple reader to a specified index
+	 */
+	public void reset(int index) {
+		if(isBinary){
+			this.index = index;
+			btr.reset(index);
+		}else{
+			this.index = index;
+			htr.reset(index);
+		}
+	}
+	
+	/**
+	 * @return this method returns the current index
+	 */
+	public int getIndex() {
+		return this.index;
+	}
 }

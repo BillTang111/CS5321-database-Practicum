@@ -17,12 +17,14 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
  */
 public class DuplicateEliminationOperators extends Operator {
 	
-	Operator childOp;
-	HashSet distinctTuple;
+	private Operator childOp;
+	//HashSet distinctTuple;
+	private Tuple last; 
 	
 	public DuplicateEliminationOperators(Operator op){
 		childOp = op;
-		distinctTuple = new HashSet();
+		last = null;
+		//distinctTuple = new HashSet();
 		
 	}
 	
@@ -32,14 +34,23 @@ public class DuplicateEliminationOperators extends Operator {
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
+//		Tuple a = childOp.getNextTuple();
+//		while(a!=null){
+//		if(!distinctTuple.contains(a.getTuple().toString())){
+//			distinctTuple.add(a.getTuple().toString());
+//			return a;
+//		}
+//		a=childOp.getNextTuple();
+//		}
+//		return null;
+		
 		Tuple a = childOp.getNextTuple();
-		while(a!=null){
-		//if(distinctTuple.isEmpty()) distinctTuple.add(a);
-		if(!distinctTuple.contains(a.getTuple().toString())){
-			distinctTuple.add(a.getTuple().toString());
-			return a;
-		}
-		a=childOp.getNextTuple();
+		while(a != null){
+			if(last == null || !last.getTuple().toString().equals(a.getTuple().toString())){
+				last = a;
+				return a;
+			}
+			a = childOp.getNextTuple();
 		}
 		return null;
 	}
@@ -48,6 +59,7 @@ public class DuplicateEliminationOperators extends Operator {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
+		last = null;
 		childOp.reset();
 	}
 	
