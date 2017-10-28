@@ -2,8 +2,10 @@ package physicalOperator;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
+import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.schema.Column;
@@ -75,11 +77,11 @@ public class SMJOperator extends Operator {
 				Tleft=leftOp.getNextTuple();
 				if(Tleft==null) return null;
 				if(leftCompare.compare(Tleft, lastLeftTuple)==0) {
-					System.out.println("last Part index: "+this.lastPartiIndex);
+					//System.out.println("last Part index: "+this.lastPartiIndex);
 					rightOp.reset(this.lastPartiIndex);
 					
 					Tright=rightOp.getNextTuple();
-					System.out.println("Last Part" + Tright.getTuple().toString());
+					//System.out.println("Last Part" + Tright.getTuple().toString());
 					lastLeftTuple=Tleft;
 					return combineTuples(Tleft,Tright);
 				}else {
@@ -91,7 +93,7 @@ public class SMJOperator extends Operator {
 		currentPartiTuple=Tright;
 		
 		this.lastPartiIndex=rightOp.getIndex()-1;
-		System.out.println("last Part index now: "+lastPartiIndex);
+		//System.out.println("last Part index now: "+lastPartiIndex);
 		while(Tleft!=null&&currentPartiTuple!=null) {
 			while(joinCompare.compare(Tleft, currentPartiTuple)<0) {
 				Tleft=leftOp.getNextTuple();
@@ -181,11 +183,14 @@ public class SMJOperator extends Operator {
 class EqulJoinTupleComparator implements Comparator<Tuple> {
 	private List leftAttr;
 	private List rightAttr;
+	private HashMap<String,String> getPairAlias;
 
 	// constructor of the class creates a comparator
 	public EqulJoinTupleComparator(List joinAttLeft, List joinAttRight) {
 		this.leftAttr = joinAttLeft;
 		this.rightAttr = joinAttRight;
+		Catalog cata = Catalog.getInstance();
+		getPairAlias = cata.getPairAlias();
 	}
 
 	/** Return 0 when t1=t2, return difference(t1.cValue-t2.cValue) when t1!=t2.*/
@@ -202,8 +207,14 @@ class EqulJoinTupleComparator implements Comparator<Tuple> {
 		for (int i = 0; i < leftAttr.size(); i++) {
 			String leftC = (String) leftAttr.get(i);
 			String rightC = (String) rightAttr.get(i);
+			int leftDotInx = leftC.indexOf(".");
+			int rightDotInx = rightC.indexOf(".");
+			
+			leftC = getPairAlias.get(leftC.substring(0, leftDotInx))+"."+leftC.substring(leftDotInx+1, leftC.length());
+			rightC = getPairAlias.get(rightC.substring(0, rightDotInx))+"."+rightC.substring(rightDotInx+1, rightC.length());
 			
 			//System.out.println("I am left index: "+leftC);
+			//System.out.println(t1.getTupleMap());
 			int indexL = (int) t1.getTupleMap().get(leftC);
 			//System.out.println("I am left index: "+);
 			int indexR = (int) t2.getTupleMap().get(rightC);
