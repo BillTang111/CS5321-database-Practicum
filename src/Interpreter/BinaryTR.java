@@ -165,8 +165,8 @@ public class BinaryTR implements TupleReader {
 		fc = fin.getChannel();
     	this.records.clear();
     	int maxPerPage = 1022 / this.Num_Attributes;
-    	int pageNum = index / maxPerPage;
-    	int tupleIdxOfPage = index - pageNum * maxPerPage;
+    	int pageNum = index2 / maxPerPage;
+    	int tupleIdxOfPage = index2 - pageNum * maxPerPage;
     	try {
 			fc.position((long)(pageNum*buffer_size));
 		} catch (IOException e) {
