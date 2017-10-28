@@ -160,7 +160,8 @@ public class Interpreter {
 				System.out.println(timeEnd);
 				System.out.print("Cost time = ");
 				System.out.println(timeEnd - timeStart);
-//				
+
+			
 				//ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  Out-of-Bond Method
 				
 				String outputPath = outputLocation + "/query" + i;
@@ -195,13 +196,13 @@ public class Interpreter {
 			
 				
 			// Option 4: Binary TW
-//				BinaryTW binaryWriter = new BinaryTW(outputPath);
-//				Tuple resultT = physicalPlanRoot.getNextTuple();
-//				while (resultT!=null) {
-//					binaryWriter.WriteTuple(resultT);
-//					resultT = physicalPlanRoot.getNextTuple();
-//				}
-//				binaryWriter.close();
+				BinaryTW binaryWriter = new BinaryTW(outputPath);
+				Tuple resultT = physicalPlanRoot.getNextTuple();
+				while (resultT!=null) {
+					binaryWriter.WriteTuple(resultT);
+					resultT = physicalPlanRoot.getNextTuple();
+				}
+				binaryWriter.close();
 				
 				
 				
