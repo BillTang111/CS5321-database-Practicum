@@ -91,9 +91,12 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			System.out.println("SMJ buffer size: " + sPara);
 			System.out.println("Sort Mode: " + sMode);
 			if (sMode==0) {
-//				SortOperator leftSort = new SortOperator(leftChild, selectBody);
-//				SortOperator rightSort = new SortOperator(leftChild, selectBody);
-//				SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
+				JoinAttributeVisitor visitor = new JoinAttributeVisitor();
+	        	joinCondition.accept(visitor);
+				SortOperator leftSort = new SortOperator(leftChild, visitor.getLeftAttr());
+				SortOperator rightSort = new SortOperator(leftChild, visitor.getRightAttr());
+				SMJOperator join = new SMJOperator(leftSort, rightSort, joinCondition);
+				stackOp.push(join);
 			}
 			else if (sMode==1) {
 	        	JoinAttributeVisitor visitor = new JoinAttributeVisitor();

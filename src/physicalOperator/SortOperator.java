@@ -41,6 +41,19 @@ public class SortOperator extends Operator {
 		
 	}
 	
+	/**constructor for sort operator which take in orderlist as input*/
+	public SortOperator(Operator op, List orderList) {
+		// TODO Auto-generated constructor stub
+		//System.out.println(orderList.toString());
+		childOp = op;
+		sorted = new LinkedList<Tuple>();
+		order = orderList;
+		Catalog catalog = Catalog.getInstance();
+		PairAlias = catalog.getPairAlias();
+		BuildList();
+		
+	}
+	
 	/**This method grab all tuple from the child operator and add in the list*/
 	public void BuildList(){
 		Tuple a = childOp.getNextTuple();
