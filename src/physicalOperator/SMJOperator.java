@@ -69,12 +69,14 @@ public class SMJOperator extends Operator {
 		if(currentPartiTuple!=null) {
 			if(Tright!=null && rightCompare.compare(Tright,currentPartiTuple)==0) {
 				lastLeftTuple = Tleft;
+				//System.out.println("new Tuple: "+combineTuples(Tleft,Tright).getTuple().toString());
 				return combineTuples(Tleft,Tright);
 			}else {
 				Tleft=leftOp.getNextTuple();
 				if(Tleft==null) return null;
 				if(leftCompare.compare(Tleft, lastLeftTuple)==0) {
-					rightOp.reset(lastPartiIndex);
+					System.out.println("last Part index: "+this.lastPartiIndex);
+					rightOp.reset(this.lastPartiIndex);
 					Tright=rightOp.getNextTuple();
 					lastLeftTuple=Tleft;
 					return combineTuples(Tleft,Tright);
@@ -85,17 +87,19 @@ public class SMJOperator extends Operator {
 		}
 		//start current partition on the right table's attributes
 		currentPartiTuple=Tright;
-		lastPartiIndex=rightOp.getIndex()-1;
+		
+		this.lastPartiIndex=rightOp.getIndex()-1;
+		System.out.println("last Part index now: "+lastPartiIndex);
 		while(Tleft!=null&&currentPartiTuple!=null) {
 			while(joinCompare.compare(Tleft, currentPartiTuple)<0) {
 				Tleft=leftOp.getNextTuple();
 			}
 			while(joinCompare.compare(Tleft, currentPartiTuple)>0) {
 				currentPartiTuple = rightOp.getNextTuple();
-				lastPartiIndex++;
+				this.lastPartiIndex++;
 			}
 			Tright=currentPartiTuple;
-			if(joinCompare.compare(Tleft, Tright)>0) {
+			if(joinCompare.compare(Tleft, Tright)==0) {
 				lastLeftTuple=Tleft;
 				return combineTuples(Tleft,Tright);
 			}
@@ -105,7 +109,7 @@ public class SMJOperator extends Operator {
 
 	// combines two tuples into one tuple
 	public Tuple combineTuples(Tuple a, Tuple b) {
-
+		if(a==null || b== null) return null;
 		ArrayList alist = a.getTuple();
 		ArrayList blist = b.getTuple();
 		String s = "";
@@ -128,7 +132,9 @@ public class SMJOperator extends Operator {
 				continue;
 			l.add(bb.get(i));
 		}
+		//System.out.println("new filds: "+l.toString());
 		Tuple tt = new Tuple(s, l);
+		//System.out.println("new tuple: "+tt.getTuple().toString());
 
 		return tt;
 	}
@@ -185,9 +191,9 @@ class EqulJoinTupleComparator implements Comparator<Tuple> {
 		// TODO Auto-generated method stub
 		
 		ArrayList t1List = t1.getTuple();
-		System.out.println(t1List.toString());
+		//System.out.println(t1List.toString());
 		ArrayList t2List = t2.getTuple();
-		System.out.println(t2List.toString());
+		//System.out.println(t2List.toString());
 		if(t1==null||t2==null){
 			System.out.println("---");
 		}
