@@ -77,7 +77,9 @@ public class SMJOperator extends Operator {
 				if(leftCompare.compare(Tleft, lastLeftTuple)==0) {
 					System.out.println("last Part index: "+this.lastPartiIndex);
 					rightOp.reset(this.lastPartiIndex);
+					
 					Tright=rightOp.getNextTuple();
+					System.out.println("Last Part" + Tright.getTuple().toString());
 					lastLeftTuple=Tleft;
 					return combineTuples(Tleft,Tright);
 				}else {
@@ -107,7 +109,7 @@ public class SMJOperator extends Operator {
 				return null;
 	}
 
-	// combines two tuples into one tuple
+	/** combines two tuples into one tuple */
 	public Tuple combineTuples(Tuple a, Tuple b) {
 		if(a==null || b== null) return null;
 		ArrayList alist = a.getTuple();
@@ -186,10 +188,9 @@ class EqulJoinTupleComparator implements Comparator<Tuple> {
 		this.rightAttr = joinAttRight;
 	}
 
+	/** Return 0 when t1=t2, return difference(t1.cValue-t2.cValue) when t1!=t2.*/
 	@Override
 	public int compare(Tuple t1, Tuple t2) {
-		// TODO Auto-generated method stub
-		
 		ArrayList t1List = t1.getTuple();
 		//System.out.println(t1List.toString());
 		ArrayList t2List = t2.getTuple();
