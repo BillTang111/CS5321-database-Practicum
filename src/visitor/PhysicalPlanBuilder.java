@@ -20,6 +20,7 @@ import physicalOperator.ExternalSortOperator;
 import physicalOperator.JoinOperator;
 import physicalOperator.Operator;
 import physicalOperator.ProjectOperator;
+import physicalOperator.SMJOperator;
 import physicalOperator.ScanOperator;
 import physicalOperator.ScanOperatorBinary;
 import physicalOperator.ScanOperatorHuman;
@@ -63,6 +64,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	@Override
 	public void visit(LogicalJoinOperator logJoin) throws IOException {
 		// TODO Auto-generated method stub
+//		PlainSelect selectBody = logJoin.getinnerOperator().;
 		Expression joinCondition = logJoin.getJoinCondition();
 		LogicalOperator logLeftChild = logJoin.getoutterOperator();
 		LogicalOperator logRightChild = logJoin.getinnerOperator();
@@ -89,14 +91,15 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			System.out.println("SMJ buffer size: " + sPara);
 			System.out.println("Sort Mode: " + sMode);
 			if (sMode==0) {
-				//SortOperator leftSort = new SortOperator(leftChild, selectBody);
-				//SortOperator rightSort = new SortOperator(leftChild, selectBody);
-				//SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
+//				SortOperator leftSort = new SortOperator(leftChild, selectBody);
+//				SortOperator rightSort = new SortOperator(leftChild, selectBody);
+//				SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
 			}
 			else if (sMode==1) {
-				ExternalSortOperator leftSorted = ExternalSortOperator(leftChild, sPara, joinCondition);
-				ExternalSortOperator rightSorted = ExternalSortOperator(rightChild, sPara, joinCondition);
-				//SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
+				//ExternalSortOperator leftSorted = ExternalSortOperator(leftChild, sPara, joinCondition);
+				//ExternalSortOperator rightSorted = ExternalSortOperator(rightChild, sPara, joinCondition);
+				SMJOperator join = new SMJOperator(leftChild, rightChild, joinCondition);
+				stackOp.push(join);
 			}
 		}
 	}

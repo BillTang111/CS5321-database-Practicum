@@ -51,7 +51,20 @@ public class SMJOperator extends Operator {
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
-		Tuple Tleft= lastLeftTuple != null ? lastLeftTuple : (lastLeftTuple=leftOp.getNextTuple());
+		Tuple Tleft = lastLeftTuple;
+		if(Tleft != null){
+			return lastLeftTuple;
+		}else{
+			lastLeftTuple=leftOp.getNextTuple();
+		}
+//		Tuple Tleft = null;
+//		if (lastLeftTuple != null){
+//			Tleft=lastLeftTuple;
+//		}else{
+//			lastLeftTuple=leftOp.getNextTuple();
+//		}
+		
+//		Tuple Tleft= lastLeftTuple != null ? lastLeftTuple : (lastLeftTuple=leftOp.getNextTuple());
 		Tuple Tright = rightOp.getNextTuple();
 		if(currentPartiTuple!=null) {
 			if(Tright!=null && rightCompare.compare(Tright,currentPartiTuple)==0) {
