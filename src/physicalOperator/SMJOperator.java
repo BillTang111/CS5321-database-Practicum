@@ -29,9 +29,9 @@ public class SMJOperator extends Operator {
 	private Tuple lastLeftTuple;
 	private Tuple currentPartiTuple;
 	private int lastPartiIndex;
-	private EqulJoinTupleComparator joinCompare;
-	private EqulJoinTupleComparator leftCompare;
-	private EqulJoinTupleComparator rightCompare;
+	private Comparator<Tuple> joinCompare;
+	private Comparator<Tuple>  leftCompare;
+	private Comparator<Tuple>  rightCompare;
 
 	public SMJOperator(Operator leftOp, Operator rightOp, Expression joinExpr) {
 		this.leftOp = leftOp;
@@ -56,7 +56,6 @@ public class SMJOperator extends Operator {
 		if(currentPartiTuple!=null) {
 			if(Tright!=null && rightCompare.compare(Tright,currentPartiTuple)==0) {
 				lastLeftTuple = Tleft;
-
 				return combineTuples(Tleft,Tright);
 			}else {
 				Tleft=leftOp.getNextTuple();
@@ -171,12 +170,16 @@ class EqulJoinTupleComparator implements Comparator<Tuple> {
 	@Override
 	public int compare(Tuple t1, Tuple t2) {
 		// TODO Auto-generated method stub
-
+		
+		if(t1==null||t2==null){
+			System.out.println("---");
+		}
+		
 		for (int i = 0; i < leftAttr.size(); i++) {
 			Column leftC = leftAttr.get(i);
 			Column rightC = rightAttr.get(i);
 			int vL = (int) t1.getTupleMap().get(leftC);
-			int vR = (int) t1.getTupleMap().get(rightC);
+			int vR = (int) t2.getTupleMap().get(rightC);
 			if (vL != vR) {
 				return vL - vR;
 			}
