@@ -150,19 +150,19 @@ public class Interpreter {
 				Operator physicalPlanRoot = builder.getRoot();
 				
 			// Option 1: dump result and see benchmark time
-				long timeStart = System.currentTimeMillis();
-				System.out.print("Current Time in milliseconds = ");
-				System.out.println(timeStart);
-				physicalPlanRoot.dump(1); //change to 1 when need to print out result
-				System.out.println("Results dumped.");
-				long timeEnd = System.currentTimeMillis();
-				System.out.print("Current Time in milliseconds = ");
-				System.out.println(timeEnd);
-				System.out.print("Cost time = ");
-				System.out.println(timeEnd - timeStart);
+//				long timeStart = System.currentTimeMillis();
+//				System.out.print("Current Time in milliseconds = ");
+//				System.out.println(timeStart);
+//				physicalPlanRoot.dump(1); //change to 1 when need to print out result
+//				System.out.println("Results dumped.");
+//				long timeEnd = System.currentTimeMillis();
+//				System.out.print("Current Time in milliseconds = ");
+//				System.out.println(timeEnd);
+//				System.out.print("Cost time = ");
+//				System.out.println(timeEnd - timeStart);
 
 			
-				//ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  Out-of-Bond Method
+				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
 				
 				String outputPath = outputLocation + "/query" + i;
 				File file = new File(outputPath);
@@ -186,23 +186,23 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-//				HumanTW humanWriter = new HumanTW(file);
-//				
-//				for(Tuple oneLine: result){
-//					humanWriter.WriteTuple(oneLine);
-//				}
-//				
-//				humanWriter.close();
+				HumanTW humanWriter = new HumanTW(file);
+				
+				for(Tuple oneLine: result){
+					humanWriter.WriteTuple(oneLine);
+				}
+				
+				humanWriter.close();
 			
 				
 			// Option 4: Binary TW
-				BinaryTW binaryWriter = new BinaryTW(outputPath);
-				Tuple resultT = physicalPlanRoot.getNextTuple();
-				while (resultT!=null) {
-					binaryWriter.WriteTuple(resultT);
-					resultT = physicalPlanRoot.getNextTuple();
-				}
-				binaryWriter.close();
+//				BinaryTW binaryWriter = new BinaryTW(outputPath);
+//				Tuple resultT = physicalPlanRoot.getNextTuple();
+//				while (resultT!=null) {
+//					binaryWriter.WriteTuple(resultT);
+//					resultT = physicalPlanRoot.getNextTuple();
+//				}
+//				binaryWriter.close();
 				
 				
 				

@@ -247,10 +247,18 @@ public class ExternalSortOperator extends Operator{
 			mergePass(i+1);
 			
 		}else{
+			
 			PriorityQueue<HumanTR> rQueue = new PriorityQueue<HumanTR>(pagenum-1, 
 					new Comparator<HumanTR>() {
 		              	public int compare(HumanTR i, HumanTR j) {
-		              		int res = tCompare.compare(i.peek(), j.peek());
+		              		Tuple iTuple = i.peek();
+		              		Tuple jTuple = j.peek();
+		              		//System.out.println(TableList.toString());
+//		              		Tuple iTuple = new Tuple(iContent,TableList);
+//		              		iTuple.setTupleMap(map);
+//		              		Tuple jTuple = new Tuple(jContent,TableList);
+//		              		jTuple.setTupleMap(map);
+		              		int res = tCompare.compare(iTuple, jTuple);
 		              		return res;
 		              	}
 	            	});
@@ -258,18 +266,24 @@ public class ExternalSortOperator extends Operator{
 			int fileNum = 0;
 			for (ArrayList<File> fileBuffer : wholeFile){
 				for (File f : fileBuffer){
-					rQueue.add(new HumanTR(f));
+					try {
+						rQueue.add(new HumanTR(f));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				fileNum++;
-				File outputDir = new File(tempDir+"/"+specialname+"/recursionOutput"+i+fileNum);
-				HumanTW htw = new HumanTW(outputDir);
+				String outputDir = tempDir+"/"+specialname+"/recursionOutput"+i+fileNum;
+				HumanTW htw = new HumanTW(new File(outputDir));
 				try{
 					while(!rQueue.isEmpty()){
 						HumanTR minReader = rQueue.poll();
-						Tuple minTuple = minReader.ReadNextTuple2();
+						String sContent = minReader.ReadNextTuple();
+						Tuple minTuple = new Tuple(sContent,TableList);
+						minTuple.setTupleMap(map);
 						htw.WriteTuple(minTuple);
 						if(minReader.peek()==null){
-							
 							minReader.deleteFile();
 						}else{
 							rQueue.add(minReader);
@@ -280,7 +294,8 @@ public class ExternalSortOperator extends Operator{
 				}				
 			}
 			
-				mergePass(i+1);
+			//call itself recursively
+			mergePass(i+1);
 
 
 			
@@ -315,9 +330,12 @@ public class ExternalSortOperator extends Operator{
 		}else{
 			Tuple t;
 			try {
-				t = htr.ReadNextTuple2();
+				String tContent = htr.ReadNextTuple();
+				if(tContent == null) return null;
+				t = new Tuple(tContent,TableList);
+				t.setTupleMap(map);
 				this.index++;
-				return htr==null ? null : t;
+				return t;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
