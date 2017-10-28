@@ -27,6 +27,7 @@ public class SortOperator extends Operator {
 	LinkedList<Tuple> sorted;
 	List order;
 	HashMap<String,String> PairAlias;
+	int index;
 	
 	//public SortOperator(Operator op, List orderList) {
 	public SortOperator(Operator op, PlainSelect selectBody) {
@@ -37,6 +38,7 @@ public class SortOperator extends Operator {
 		order = selectBody.getOrderByElements();
 		Catalog catalog = Catalog.getInstance();
 		PairAlias = catalog.getPairAlias();
+		index = 0;
 		BuildList();
 		
 	}
@@ -50,6 +52,7 @@ public class SortOperator extends Operator {
 		order = orderList;
 		Catalog catalog = Catalog.getInstance();
 		PairAlias = catalog.getPairAlias();
+		index = 0;
 		BuildList();
 		
 	}
@@ -78,7 +81,7 @@ public class SortOperator extends Operator {
 			
 		}
 		
-		System.out.println("hh"+order.toString());
+		//System.out.println("hh"+order.toString());
 		Collections.sort(sorted, new TupleComparator(order));
 	}
 	
@@ -89,7 +92,11 @@ public class SortOperator extends Operator {
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
 		//System.out.println("yy");
-		if(sorted.size()!=0) return (Tuple) sorted.pop();
+		if(sorted.size()!=0){ 
+			index ++;
+			if(index-1<sorted.size()) return sorted.get(index-1);
+			//return (Tuple) sorted.pop();
+		}
 		return null;
 	}
 
@@ -97,6 +104,7 @@ public class SortOperator extends Operator {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
+		index = 0;
 		childOp.reset();
 	}
 
@@ -139,13 +147,14 @@ public class SortOperator extends Operator {
 	@Override
 	public void reset(int index) {
 		// TODO Auto-generated method stub
+		this.index = index;
 		
 	}
 
 	@Override
 	public int getIndex() {
 		// TODO Auto-generated method stub
-		return 0;
+		return index;
 	}
 }
 
