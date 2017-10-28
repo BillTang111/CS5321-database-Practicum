@@ -163,7 +163,7 @@ public class Interpreter {
 //				System.out.println(timeEnd - timeStart);
 
 			
-				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
+				//ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
 				
 				String outputPath = outputLocation + "/query" + i;
 				File file = new File(outputPath);
