@@ -32,19 +32,19 @@ public class Interpreter {
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	    String command = reader.readLine();
-	    int start = command.indexOf(".jar")+5;
-		String sub = command.substring(start);
-		int end = sub.indexOf(" ");
-		String inputLocation = sub.substring(0, end);
-		String outAndTemp = sub.substring(end+1);
-		end = outAndTemp.indexOf(" ");
-		String outputLocation = outAndTemp.substring(0, end);
-		String tempLocation = outAndTemp.substring(end+1);
-	    System.out.println("input: " + inputLocation);
-	    System.out.println("output: " + outputLocation);
-	    System.out.println("temp: " + tempLocation);
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//	    String command = reader.readLine();
+//	    int start = command.indexOf(".jar")+5;
+//		String sub = command.substring(start);
+//		int end = sub.indexOf(" ");
+//		String inputLocation = sub.substring(0, end);
+//		String outAndTemp = sub.substring(end+1);
+//		end = outAndTemp.indexOf(" ");
+//		String outputLocation = outAndTemp.substring(0, end);
+//		String tempLocation = outAndTemp.substring(end+1);
+//	    System.out.println("input: " + inputLocation);
+//	    System.out.println("output: " + outputLocation);
+//	    System.out.println("temp: " + tempLocation);
 
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 //	    String command = reader.readLine();
@@ -62,8 +62,9 @@ public class Interpreter {
 //		      System.err.println( "Usage: java FastCopyFile infile outfile" );
 //		      System.exit( 1 );
 //		    }
-//		String inputLocation = args[0];
-//		String outputLocation = args[1];
+		String inputLocation = args[0];
+		String outputLocation = args[1];
+		String tempLocation = args[2];
 
 		//FileInputStream fin = new FileInputStream( inputLocation );
 		
@@ -186,23 +187,23 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-				HumanTW humanWriter = new HumanTW(file);
-				
-				for(Tuple oneLine: result){
-					humanWriter.WriteTuple(oneLine);
-				}
-				
-				humanWriter.close();
+//				HumanTW humanWriter = new HumanTW(file);
+//				
+//				for(Tuple oneLine: result){
+//					humanWriter.WriteTuple(oneLine);
+//				}
+//				
+//				humanWriter.close();
 			
 				
 			// Option 4: Binary TW
-//				BinaryTW binaryWriter = new BinaryTW(outputPath);
-//				Tuple resultT = physicalPlanRoot.getNextTuple();
-//				while (resultT!=null) {
-//					binaryWriter.WriteTuple(resultT);
-//					resultT = physicalPlanRoot.getNextTuple();
-//				}
-//				binaryWriter.close();
+				BinaryTW binaryWriter = new BinaryTW(outputPath);
+				Tuple resultT = physicalPlanRoot.getNextTuple();
+				while (resultT!=null) {
+					binaryWriter.WriteTuple(resultT);
+					resultT = physicalPlanRoot.getNextTuple();
+				}
+				binaryWriter.close();
 				
 				
 				
