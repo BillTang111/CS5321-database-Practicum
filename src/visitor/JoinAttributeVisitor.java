@@ -53,22 +53,24 @@ import net.sf.jsqlparser.statement.select.SubSelect;
 
 public class JoinAttributeVisitor implements ExpressionVisitor {
 
-	private List<Column> leftAttr;
-	private List<Column> rightAttr;
+	private List leftAttr;
+	private List rightAttr;
 	
 	//The constructor of this class
 	public JoinAttributeVisitor() {
-		this.leftAttr = new ArrayList<Column>();
-		this.rightAttr = new ArrayList<Column>();
+		this.leftAttr = new ArrayList();
+		this.rightAttr = new ArrayList();
 	}
 	
 	//Get method for join's columns in left table
-	public List<Column> getLeftAttr(){
+	public List getLeftAttr(){
+		//System.out.println("left: "+leftAttr.toString());
 		return leftAttr;
 	}
 	
 	//Get method for join's columns in right table
-	public List<Column> getRightAttr(){
+	public List getRightAttr(){
+		//System.out.println("right: "+rightAttr.toString());
 		return rightAttr;
 	}
 	
@@ -190,8 +192,8 @@ public class JoinAttributeVisitor implements ExpressionVisitor {
 		// TODO Auto-generated method stub
 		Column leftC = (Column) arg0.getLeftExpression();
 		Column rightC = (Column) arg0.getRightExpression();
-		this.leftAttr.add(leftC);
-		this.rightAttr.add(rightC);
+		this.leftAttr.add(leftC.toString());
+		this.rightAttr.add(rightC.toString());
 	}
 
 	@Override

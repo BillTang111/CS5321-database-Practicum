@@ -96,9 +96,11 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 //				SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
 			}
 			else if (sMode==1) {
-				//ExternalSortOperator leftSorted = ExternalSortOperator(leftChild, sPara, joinCondition);
-				//ExternalSortOperator rightSorted = ExternalSortOperator(rightChild, sPara, joinCondition);
-				SMJOperator join = new SMJOperator(leftChild, rightChild, joinCondition);
+	        	JoinAttributeVisitor visitor = new JoinAttributeVisitor();
+	        	joinCondition.accept(visitor);
+				ExternalSortOperator leftSorted = new ExternalSortOperator(leftChild, visitor.getLeftAttr(), sPara);
+				ExternalSortOperator rightSorted = new ExternalSortOperator(rightChild,visitor.getRightAttr(),sPara);
+				SMJOperator join = new SMJOperator(leftSorted, rightSorted, joinCondition);
 				stackOp.push(join);
 			}
 		}
@@ -106,16 +108,16 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 
 
-	private ExternalSortOperator ExternalSortOperator(Operator leftChild,
-			int sPara2, Expression joinCondition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	private ExternalSortOperator ExternalSortOperator(Operator leftChild,
+//			int sPara2, Expression joinCondition) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 
 	@Override
 	public void visit(LogicalProjectOperator logProject) throws IOException {
-		System.out.println("haha");
+		//System.out.println("haha");
 		PlainSelect selectBody = logProject.getPlainSelect();
 		LogicalOperator logChild = logProject.getchildOperator();
 		logChild.accept(this);

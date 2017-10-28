@@ -51,12 +51,12 @@ public class SMJOperator extends Operator {
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
-		Tuple Tleft = lastLeftTuple;
-		if(Tleft != null){
-			return lastLeftTuple;
-		}else{
-			lastLeftTuple=leftOp.getNextTuple();
-		}
+//		Tuple Tleft = lastLeftTuple;
+//		if(Tleft != null){
+//			return lastLeftTuple;
+//		}else{
+//			lastLeftTuple=leftOp.getNextTuple();
+//		}
 //		Tuple Tleft = null;
 //		if (lastLeftTuple != null){
 //			Tleft=lastLeftTuple;
@@ -64,7 +64,7 @@ public class SMJOperator extends Operator {
 //			lastLeftTuple=leftOp.getNextTuple();
 //		}
 		
-//		Tuple Tleft= lastLeftTuple != null ? lastLeftTuple : (lastLeftTuple=leftOp.getNextTuple());
+		Tuple Tleft= lastLeftTuple != null ? lastLeftTuple : (lastLeftTuple=leftOp.getNextTuple());
 		Tuple Tright = rightOp.getNextTuple();
 		if(currentPartiTuple!=null) {
 			if(Tright!=null && rightCompare.compare(Tright,currentPartiTuple)==0) {
@@ -171,11 +171,11 @@ public class SMJOperator extends Operator {
  */
 
 class EqulJoinTupleComparator implements Comparator<Tuple> {
-	private List<Column> leftAttr;
-	private List<Column> rightAttr;
+	private List leftAttr;
+	private List rightAttr;
 
 	// constructor of the class creates a comparator
-	public EqulJoinTupleComparator(List<Column> joinAttLeft, List<Column> joinAttRight) {
+	public EqulJoinTupleComparator(List joinAttLeft, List joinAttRight) {
 		this.leftAttr = joinAttLeft;
 		this.rightAttr = joinAttRight;
 	}
@@ -184,15 +184,26 @@ class EqulJoinTupleComparator implements Comparator<Tuple> {
 	public int compare(Tuple t1, Tuple t2) {
 		// TODO Auto-generated method stub
 		
+		ArrayList t1List = t1.getTuple();
+		System.out.println(t1List.toString());
+		ArrayList t2List = t2.getTuple();
+		System.out.println(t2List.toString());
 		if(t1==null||t2==null){
 			System.out.println("---");
 		}
 		
 		for (int i = 0; i < leftAttr.size(); i++) {
-			Column leftC = leftAttr.get(i);
-			Column rightC = rightAttr.get(i);
-			int vL = (int) t1.getTupleMap().get(leftC);
-			int vR = (int) t2.getTupleMap().get(rightC);
+			String leftC = (String) leftAttr.get(i);
+			String rightC = (String) rightAttr.get(i);
+			
+			//System.out.println("I am left index: "+leftC);
+			int indexL = (int) t1.getTupleMap().get(leftC);
+			//System.out.println("I am left index: "+);
+			int indexR = (int) t2.getTupleMap().get(rightC);
+			int vL = Integer.parseInt((String) t1List.get(indexL)) ;
+			//System.out.println("I am left index: "+vL);
+			int vR = Integer.parseInt((String) t2List.get(indexR)) ;
+			//System.out.println("I am right index: "+vR);
 			if (vL != vR) {
 				return vL - vR;
 			}
