@@ -94,7 +94,7 @@ public class BinaryTR implements TupleReader {
 		// TODO Auto-generated method stub
 		try {
             fin.close();
-            FileInputStream fin = new FileInputStream(input);
+            fin = new FileInputStream(input);
             fc = fin.getChannel();
             buffer = ByteBuffer.allocate(buffer_size);
         } catch (IOException e) {

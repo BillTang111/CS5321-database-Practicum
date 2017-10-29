@@ -63,14 +63,7 @@ public class ScanOperatorBinary extends Operator{
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		try {
-			binaryReader = new BinaryTR(inputFile);
-		} 
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		
+		binaryReader.reset();
 	}
 
 	/**To print your result. Use for debug 

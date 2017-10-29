@@ -2,7 +2,6 @@ package physicalOperator;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import Tuple.Tuple;
 import net.sf.jsqlparser.expression.Expression;
 import visitor.visitor;
@@ -13,6 +12,8 @@ import visitor.visitor;
  */
 public class BNLJOperator extends Operator{
 	
+	int numberOfIteration;
+	
 	Expression expression;
 	Operator outter;
 	Operator inner;
@@ -20,12 +21,16 @@ public class BNLJOperator extends Operator{
 	ArrayList<Tuple> block = new ArrayList<Tuple>(); // True buffer to store the data (tuple), need to be filled when one iteration on block is done.
 	int maxTupleAmount; // Maximum number of tuple can store in one block.
 	int currentTupleAmount; // Current number of tuple in the block.
-	boolean finishOuter;
+	boolean Lastload;
 	int nextIndex; // Current index in reading the block
 	int finalLoadSize; // The number of tuple in final load of buffer block
 	
 	Tuple outT; // Tuple in outer relationship, to be loaded in the buffer block
 	Tuple outMatch; // Tuple in outer relationship, to be matched with inner relation
+	Tuple inMatch;
+	
+	boolean finishAllBlock;
+	boolean finishOneBlock;
 	
 	public BNLJOperator(Operator left, Operator right, Expression joinExpression, int size) {
 		// TODO Auto-generated constructor stub
@@ -33,18 +38,24 @@ public class BNLJOperator extends Operator{
 		outter = left;
 		inner = right;
 		bufferSize = size;
-		finishOuter = false;
+		Lastload = false;
 		nextIndex = 0;
+		finishAllBlock = false;
+		finishOneBlock = false;
+		
+		numberOfIteration = 0;
 		
 		
 		outT = outter.getNextTuple(); // help to know the size of outer tuple 
 		currentTupleAmount = 0;
 		
 		maxTupleAmount = (int) Math.floor(bufferSize * 4096 / ((outT.getTuple().size())*4));
+		//System.out.println("max amount of tuple in the buffer " + maxTupleAmount);
 		//Page size is 4096 bytes. Each tuple has size 4 the number of attributes.
 		
 		fillBlock(); // fill the buffer block in initialization
-		outMatch = getOuterTuple();
+		outMatch = nextOuterTuple();
+		inMatch = inner.getNextTuple();
 	}
 
 	
@@ -53,17 +64,23 @@ public class BNLJOperator extends Operator{
 	 * @return false when we have finish reading all the outer relation*/
 	public void fillBlock() {
 		clearBlock();
-		while ((currentTupleAmount < maxTupleAmount) || (outT!=null)) {
+		while ((currentTupleAmount < maxTupleAmount) && (outT!=null)) {
 			block.add(outT);
 			currentTupleAmount++;
 			outT = outter.getNextTuple();
+			if (outT!=null) {
+			//System.out.println("Tuple filling: " + currentTupleAmount + " " + outT.getTuple().toString());
+			}
 		}
+		//System.out.println("Filled one load of data! Max: " + maxTupleAmount);
+		
 		
 		if (outT==null) {
-			finishOuter = true;
+			//System.out.println("Last one load of data!");
+			Lastload = true; // finishOuter: whether last load of data.
 			finalLoadSize = block.size();
 		} else {
-			finishOuter = false;
+			Lastload = false;
 		}
 	}
 	
@@ -76,26 +93,19 @@ public class BNLJOperator extends Operator{
 	
 	
 	/** Get outer tuple from the block buffer (Our cache with record).*/
-	public Tuple getOuterTuple() {
-		// Examine if we have empty the block, fill the block when we still have data to process
-		if (!finishOuter && (nextIndex > maxTupleAmount-1)){
-			fillBlock();
-			nextIndex = 0;
-		}
-		
+	public Tuple nextOuterTuple() {
 		// when our block is NOT the LAST load of outer relation
-		if (!finishOuter) {
+		if (!Lastload && (nextIndex < maxTupleAmount-1)) {
 			nextIndex++;
-			return block.get(nextIndex-1);
-		} 
+			return block.get(nextIndex);
+		}
 		
 		// when our block is the LAST load of outer relation
-		if (nextIndex <= finalLoadSize-1) {
+		if (Lastload && nextIndex < finalLoadSize-1) {
 			nextIndex++;
-			return block.get(nextIndex-1);
+			return block.get(nextIndex);
 		}
 		
-		// when we have no data to read in the last load
 		return null;
 	}
 	
@@ -105,44 +115,60 @@ public class BNLJOperator extends Operator{
 	 * */
 	@Override
 	public Tuple getNextTuple() {
-		
-		while(outMatch !=null){
-			Tuple inMatch = inner.getNextTuple();
-			while(inMatch!=null){
-				ArrayList outList = outMatch.getTuple();
-				ArrayList inList = inMatch.getTuple();
-				String s = "";
-				for(int i=0; i<outList.size(); i++){
-					s=s+outList.get(i)+",";
-				}
-				for(int j=0; j<inList.size(); j++){
-					s=s+inList.get(j)+",";
-				}
-				s = s.substring(0, s.length()-1);
-				ArrayList newTableList = new ArrayList();
-				List outTableList = outMatch.getNameList();
-				List inTableList = inMatch.getNameList();
-				for(int i =0; i<outTableList.size(); i++){
-					newTableList.add(outTableList.get(i));
-				}
-				//System.out.println("1.Table List: " + newTableList);
-				//System.out.println("Inner List: " + inTableList);
-				for(int i =0; i<inTableList.size(); i++){
-					if (newTableList.contains(inTableList.get(i))) continue;
-					newTableList.add(inTableList.get(i));
-				}
-				//System.out.println("2.Table List: " + newTableList);
-				Tuple newTuple = new Tuple(s,newTableList);
-				visitor v = new visitor(newTuple);
-				expression.accept(v);
-				if(v.getResult()){
-					return newTuple;
-				}
-				inMatch = inner.getNextTuple();		
+		while(!finishAllBlock){
+			while(inMatch!=null){ //finish one block
+				while(outMatch != null){
+					ArrayList outList = outMatch.getTuple();
+					ArrayList inList = inMatch.getTuple();
+					String s = "";
+					for(int i=0; i<outList.size(); i++){
+						s=s+outList.get(i)+",";
+					}
+					for(int j=0; j<inList.size(); j++){
+						s=s+inList.get(j)+",";
+					}
+					s = s.substring(0, s.length()-1);
+					ArrayList newTableList = new ArrayList();
+					List outTableList = outMatch.getNameList();
+					List inTableList = inMatch.getNameList();
+					for(int i =0; i<outTableList.size(); i++){
+						newTableList.add(outTableList.get(i));
+					}
+					for(int i =0; i<inTableList.size(); i++){
+						if (newTableList.contains(inTableList.get(i))) continue;
+						newTableList.add(inTableList.get(i));
+					}
+					Tuple newTuple = new Tuple(s,newTableList);
+					visitor v = new visitor(newTuple);
+					//numberOfIteration++;
+					expression.accept(v);
+					if(v.getResult()){
+						//System.out.println("#Iteration: " + newTuple.getTuple().toString());
+						outMatch = nextOuterTuple();
+						return newTuple;
+					}
+					outMatch = nextOuterTuple();
+				} 
+				// finish one round of outer block
+				//System.out.println("Go to next tuple");
+				nextIndex = -1;
+				outMatch = nextOuterTuple();
+				inMatch = inner.getNextTuple();//inMatch == null
+			} // finally finish one block
+			if (Lastload) {
+				finishAllBlock = true;
 			}
-			inner.reset();
-			outMatch = getOuterTuple();
-		}
+			
+			if(!Lastload){
+				inner.reset();
+				inMatch = inner.getNextTuple();
+				fillBlock();
+				nextIndex = -1;
+				outMatch = nextOuterTuple();
+			}
+			
+			//System.out.println("Another block");
+		}// finish all blocks
 		return null;
 	}
 	
