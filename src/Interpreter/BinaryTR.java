@@ -31,6 +31,8 @@ public class BinaryTR implements TupleReader {
 	private int index = 0;
 	private FileInputStream fin;
     private Queue<String> records = new LinkedList<>();
+    private int pageId = -1;
+	private int tupleId = -1;
 
     /**constructor*/
     public BinaryTR(File file) throws IOException  {
@@ -60,6 +62,8 @@ public class BinaryTR implements TupleReader {
 	                index = 0;
 	                Num_Attributes = buffer.getInt(index);
 	                TupleNum_on_page = buffer.getInt(index + 4);
+	                pageId += 1;
+					tupleId = -1;
 	                index += 8;
 	                for (int i = 0; i < TupleNum_on_page; i++) {
 	                    for (int j = 0; j < Num_Attributes; j++) {
@@ -77,6 +81,7 @@ public class BinaryTR implements TupleReader {
 	        }
 	        record = records.poll();
 	        index += 4;
+	        tupleId += 1;
 	        record = record.substring(0, record.length() - 1);
 		return record;
 	}
@@ -177,5 +182,21 @@ public class BinaryTR implements TupleReader {
     	for(int i=0; i<tupleIdxOfPage; i++){
     		this.ReadNextTuple();
     	}
+	}
+	
+	/**
+	 * Get page ID for this binary file.
+	 * @return pageId
+     */
+	public int getPageId() {
+		return pageId;
+	}
+
+	/**
+	 * Get tuple ID for this binary file.
+	 * @return tupleId
+     */
+	public int getTupleId() {
+		return tupleId;
 	}
 }

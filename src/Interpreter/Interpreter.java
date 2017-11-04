@@ -8,6 +8,8 @@ import java.nio.channels.*;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
+import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import parser.LogicalQueryPlan;
 import parser.Parser;
@@ -16,11 +18,12 @@ import physicalOperator.Operator;
 import physicalOperator.ScanOperator;
 import physicalOperator.SelectOperator;
 import visitor.PhysicalPlanBuilder;
+import BPlusTree.BPlusTree;
 
 /**
  * This class is the highest-level class to run configuration.
  * 
- * @author Hao Rong, hr355
+ * @author Hao Rong, hr355; Lini Tan lt398
  */
 public class Interpreter {
 
@@ -32,6 +35,12 @@ public class Interpreter {
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
 
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+	    String command = reader.readLine();
+	    int start = command.indexOf(".jar")+5;
+		String configLocation = command.substring(start);
+
+		
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 //	    String command = reader.readLine();
 //	    int start = command.indexOf(".jar")+5;
@@ -45,7 +54,8 @@ public class Interpreter {
 //	    System.out.println("input: " + inputLocation);
 //	    System.out.println("output: " + outputLocation);
 //	    System.out.println("temp: " + tempLocation);
-
+		
+		
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 //	    String command = reader.readLine();
 //	    int start = command.indexOf(".jar")+5;
@@ -62,10 +72,39 @@ public class Interpreter {
 //		      System.err.println( "Usage: java FastCopyFile infile outfile" );
 //		      System.exit( 1 );
 //		    }
-		String inputLocation = args[0];
-		String outputLocation = args[1];
-		String tempLocation = args[2];
+		
+		
+//		String inputLocation = args[0];
+//		String outputLocation = args[1];
+//		String tempLocation = args[2];
 
+		// submission start here
+//			String configLocation = args[0];
+
+			BufferedReader configReader = new BufferedReader(new FileReader(configLocation));
+			String inputLocation = configReader.readLine();
+			String outputLocation = configReader.readLine();
+			String tempLocation = configReader.readLine();
+			//whether the interpreter should build indexes
+			boolean buildIndex = false;
+			if(Integer.parseInt(configReader.readLine())==1){
+				buildIndex = true;
+			}
+			//whether the interpreter should actually evaluate the SQL queries
+			boolean evaluateOrNot = false;
+			if(Integer.parseInt(configReader.readLine())==1){
+				evaluateOrNot = true;
+			}
+			configReader.close();
+			
+			if(buildIndex){
+				System.out.println("need to build index");
+				buildIndex(inputLocation);
+			}
+			
+
+
+			
 		//FileInputStream fin = new FileInputStream( inputLocation );
 		
 		
@@ -106,8 +145,8 @@ public class Interpreter {
 		
 		// 1.4 Create a 'Database_Catalog' object to store directory and schema
 		  //test java -jar cs4321 p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output
-		 //test java -jar cs4321 p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output /Users/benzhangtang/Desktop/samples/temp
-		 //test java -jar cs4321 p2.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output /Users/tanlini/Desktop/samples/temp
+		 //test java -jar cs4321_p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output /Users/benzhangtang/Desktop/samples/temp
+		 //test java -jar cs4321_p3.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output /Users/tanlini/Desktop/samples/temp
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/CS5321/input /Users/LukerRong/Desktop/CS5321/test_output
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2copy/input /Users/LukerRong/Desktop/project2copy/output /Users/LukerRong/Desktop/project2copy/temp
 		Catalog catalog = Catalog.getInstance();
@@ -118,6 +157,8 @@ public class Interpreter {
 		catalog.setSortConfig(sortConfigLine);
 		catalog.setSchema(map); // Original name + field
 		
+		// if we want to actually evaluate the SQL queries
+		if(evaluateOrNot){
 		
 		// 2.1 Get query file directory from command line argument,
 		// store the content of the file into a String object
@@ -151,16 +192,16 @@ public class Interpreter {
 				Operator physicalPlanRoot = builder.getRoot();
 				
 			// Option 1: dump result and see benchmark time
-				long timeStart = System.currentTimeMillis();
-				System.out.print("Current Time in milliseconds = ");
-				System.out.println(timeStart);
-				physicalPlanRoot.dump(0); //change to 1 when need to print out result
-				System.out.println("Results dumped.");
-				long timeEnd = System.currentTimeMillis();
-				System.out.print("Current Time in milliseconds = ");
-				System.out.println(timeEnd);
-				System.out.print("Cost time = ");
-				System.out.println(timeEnd - timeStart);
+//				long timeStart = System.currentTimeMillis();
+//				System.out.print("Current Time in milliseconds = ");
+//				System.out.println(timeStart);
+//				physicalPlanRoot.dump(0); //change to 1 when need to print out result
+//				System.out.println("Results dumped.");
+//				long timeEnd = System.currentTimeMillis();
+//				System.out.print("Current Time in milliseconds = ");
+//				System.out.println(timeEnd);
+//				System.out.print("Cost time = ");
+//				System.out.println(timeEnd - timeStart);
 
 			
 				
@@ -218,7 +259,8 @@ public class Interpreter {
 				i++;
 				catalog.setQueryNumber(i);
 			}
-
+		}// end of evaluation
+		
 			// 3.3 Close the file.		
 		
 		// 2.3 Repeat step 3 for the remaining query until reaching the end
@@ -237,6 +279,21 @@ public class Interpreter {
 					f.delete();
 				}
 			}
+		}
+	}
+	
+	/** Build index for a special column. */
+	public static void buildIndex(String input) throws IOException {
+		BufferedReader indexReader = new BufferedReader(new FileReader(input + "/db/index_info.txt"));
+		String config;
+		while((config = indexReader.readLine()) != null){
+			//split each line and build corresponding b+ tree
+			String[] configs = config.split("\\s+");
+			String tableName = configs[0];
+			String columnName = configs[1];
+			boolean clusterOrNot = configs[2].equals("1");
+			int order = Integer.parseInt(configs[3]);
+			BPlusTree indexTree = new BPlusTree(clusterOrNot, tableName, columnName, order, input + "/db/");
 		}
 	}
 	
