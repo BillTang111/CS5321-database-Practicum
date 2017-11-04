@@ -38,6 +38,8 @@ public class Interpreter {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	    String command = reader.readLine();
 	    int start = command.indexOf(".jar")+5;
+
+
 		String configLocation = command.substring(start);
 
 		
@@ -56,6 +58,19 @@ public class Interpreter {
 //	    System.out.println("temp: " + tempLocation);
 		
 		
+
+//		String sub = command.substring(start);
+//		int end = sub.indexOf(" ");
+//		String inputLocation = sub.substring(0, end);
+//		String outAndTemp = sub.substring(end+1);
+//		end = outAndTemp.indexOf(" ");
+//		String outputLocation = outAndTemp.substring(0, end);
+//		String tempLocation = outAndTemp.substring(end+1);
+//	    System.out.println("input: " + inputLocation);
+//	    System.out.println("output: " + outputLocation);
+//	    System.out.println("temp: " + tempLocation);
+
+	    
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 //	    String command = reader.readLine();
 //	    int start = command.indexOf(".jar")+5;
@@ -66,7 +81,6 @@ public class Interpreter {
 //	    System.out.println("input: " + inputLocation);
 //	    System.out.println("output: " + outputLocation);
 
-
 	    
 //		if (args.length<2) {
 //		      System.err.println( "Usage: java FastCopyFile infile outfile" );
@@ -74,12 +88,11 @@ public class Interpreter {
 //		    }
 		
 		
+	// submission start here
+//		String configLocation = args[0];
 //		String inputLocation = args[0];
 //		String outputLocation = args[1];
 //		String tempLocation = args[2];
-
-		// submission start here
-//			String configLocation = args[0];
 
 			BufferedReader configReader = new BufferedReader(new FileReader(configLocation));
 			String inputLocation = configReader.readLine();
@@ -239,13 +252,13 @@ public class Interpreter {
 			
 				
 			// Option 4: Binary TW
-				BinaryTW binaryWriter = new BinaryTW(outputPath);
-				Tuple resultT = physicalPlanRoot.getNextTuple();
-				while (resultT!=null) {
-					binaryWriter.WriteTuple(resultT);
-					resultT = physicalPlanRoot.getNextTuple();
-				}
-				binaryWriter.close();
+//				BinaryTW binaryWriter = new BinaryTW(outputPath);
+//				Tuple resultT = physicalPlanRoot.getNextTuple();
+//				while (resultT!=null) {
+//					binaryWriter.WriteTuple(resultT);
+//					resultT = physicalPlanRoot.getNextTuple();
+//				}
+//				binaryWriter.close();
 				
 				
 				
