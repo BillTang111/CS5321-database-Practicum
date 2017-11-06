@@ -38,11 +38,11 @@ public class BPlusTree {
 			String inputPath = location+"data/"+tableName;
 			cluster(column, inputPath, tableName);
 		}
-	//	leafList = buildLeafLayer(tableName, column);
-		//root = buildIndexLayers();
-//		serializer.writeNextNode(root);
-//		serializer.writeHeadPage(size, leafNodes.size(), D);
-//		serializer.close();
+		leafList = buildLeafLayer(tableName, column);
+		root = buildIndexLayers();
+		serializer.writeNextNode(root);
+		serializer.writeHeadPage(countSize, leafList.size(), order);
+		serializer.close();
 	}
 	
 	private void cluster(String column, String inputPath, String tableName){
@@ -138,7 +138,7 @@ public class BPlusTree {
 								countSize++;
 								LeafNode leaf = new LeafNode(leafMap, countSize);
 								leafList.add(leaf);
-								//serializer.writeNextNode(leaf);
+								serializer.writeNextNode(leaf);
 								leafMap = new TreeMap<>();
 								leafMap.put(entry.getKey(), entry.getValue());
 								remainder++;
@@ -151,7 +151,7 @@ public class BPlusTree {
 									countSize++;
 									LeafNode leaf = new LeafNode(leafMap, countSize);
 									leafList.add(leaf);
-									//serializer.writeNextNode(leaf);
+									serializer.writeNextNode(leaf);
 								}
 							}
 						}else{
@@ -164,7 +164,7 @@ public class BPlusTree {
 						countSize++;
 						LeafNode leaf = new LeafNode(leafMap, countSize);
 						leafList.add(leaf);
-						//serializer.writeNextNode(leaf);
+						serializer.writeNextNode(leaf);
 						leafMap = new TreeMap<>();
 						leafMap.put(entry.getKey(), entry.getValue());
 						dataEntryNum++;
@@ -182,14 +182,14 @@ public class BPlusTree {
 								countSize++;
 								LeafNode leaf = new LeafNode(leafMap, countSize);
 								leafList.add(leaf);
-								//serializer.writeNextNode(leaf);
+								serializer.writeNextNode(leaf);
 								}
 						}else{
 						//if full; add the leaf to the leafList, build new leaf and check if it's reaching the last two leaf
 						countSize++;
 						LeafNode leaf = new LeafNode(leafMap, countSize);
 						leafList.add(leaf);
-						//serializer.writeNextNode(leaf);
+						serializer.writeNextNode(leaf);
 						leafMap = new TreeMap<>();
 						leafMap.put(entry.getKey(), entry.getValue());
 						dataEntryNum++;
