@@ -110,10 +110,7 @@ public class Interpreter {
 			}
 			configReader.close();
 			
-			if(buildIndex){
-				System.out.println("need to build index");
-				buildIndex(inputLocation);
-			}
+			
 			
 
 
@@ -157,6 +154,7 @@ public class Interpreter {
 	    br2.close();
 		
 		// 1.4 Create a 'Database_Catalog' object to store directory and schema
+	    //test java -jar cs4321_p3.jar /Users/tanlini/Desktop/samples/interpreter_config_file.txt
 		  //test java -jar cs4321 p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output
 		 //test java -jar cs4321_p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output /Users/benzhangtang/Desktop/samples/temp
 		 //test java -jar cs4321_p3.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output /Users/tanlini/Desktop/samples/temp
@@ -169,6 +167,12 @@ public class Interpreter {
 		catalog.setJoinConfig(joinConfigLine);
 		catalog.setSortConfig(sortConfigLine);
 		catalog.setSchema(map); // Original name + field
+		
+		// if need to build index
+		if(buildIndex){
+			System.out.println("need to build index");
+			buildIndex(inputLocation);
+		}
 		
 		// if we want to actually evaluate the SQL queries
 		if(evaluateOrNot){

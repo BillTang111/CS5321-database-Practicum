@@ -20,6 +20,7 @@ public class Serializer {
 		try {
 			fout = new FileOutputStream(input);
 			channel = fout.getChannel();
+			this.writeHeadPage(0, 0, 0);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -116,6 +117,7 @@ public class Serializer {
 
 	public void writeHeadPage(int root, int leafNum, int order) {
 		// TODO Auto-generated method stub
+		GoPage(0);
 		buffer.putInt(root);
 		buffer.putInt(leafNum);
 		buffer.putInt(order);
@@ -144,6 +146,17 @@ public class Serializer {
 		try {
 			fout.close();
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**rewrite the pages from the given index*/
+	public void GoPage(int pageIndex){
+		try {
+			channel.position(pageIndex*pageSize);
+			buffer=ByteBuffer.allocate(pageSize);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

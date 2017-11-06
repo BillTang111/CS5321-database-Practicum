@@ -27,6 +27,7 @@ public class Tuple {
 		tupleMap = new HashMap<String, Integer>();
 		
 		for(int i=0; i<tableName.size(); i++){
+			//System.out.println("haha: "+data.getSchema());
 			ArrayList a = (ArrayList) data.getSchema().get(tableName.get(i));
 			for (int j=0; j<a.size();j++){
 				mapKey.add(tableName.get(i)+"."+a.get(j));
