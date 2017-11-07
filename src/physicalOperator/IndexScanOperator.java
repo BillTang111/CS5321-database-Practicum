@@ -1,14 +1,21 @@
 package physicalOperator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 import BPlusTree.DataEntry;
 import Database_Catalog.BPlusIndexInform;
+import Database_Catalog.Catalog;
 import Interpreter.BPlusTreeDeserializer;
 import Interpreter.BinaryTR;
 import Tuple.Tuple;
+import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.schema.Table;
 
 /** An index scan will only retrieve a range (subset) of tuples from a relation file,
  *  and will use a B+-tree index to do so.
@@ -29,14 +36,51 @@ public class IndexScanOperator extends Operator{
 	private boolean foundClusterEntry; 
 	
 	
-	public IndexScanOperator() {
-		
+	public IndexScanOperator(Long lowkey, Long highkey, String tableName, String alias, BPlusIndexInform indexinform) {
+		this.lowkey = lowkey;
+		this.highkey = highkey;
+		this.tableName = tableName;
+		this.alias = alias;
+		this.indexinform = indexinform;
+		try {
+			this.deserializer = new BPlusTreeDeserializer(indexinform);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.foundClusterEntry = false;
+		if(alias != null) {
+			HashMap catlog = Catalog.getInstance().getSchema();
+			List<Column> columnList = (List<Column>) catlog.get(tableName);
+			List<Column> newColumnList = new ArrayList<Column>();
+//			?????
+			Table newTable = new Table();
+			newTable.setAlias(alias);
+			for (Column c:columnList) {
+				Column newColumn = new Column();
+				newColumn.setTable(newTable);
+				newColumn.setColumnName(c.getColumnName());
+				newColumnList.add(newColumn);
+			}
+			// ?????
+		}
+		if(!indexinform.isClustered()) {
+			this.dataEntryList = deserializer.getEntries(lowkey, highkey);
+			this.lstIterator = this.dataEntryList.listIterator();
+		}
+		String inputloc = Catalog.getInstance().getInputLocation() + "";
+		File inputFile = new File(inputloc);
+				
+		this.BtupleReader = new BinaryTR(tableName);
 	}
 	
 
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
+		if(indexinform.isClustered()) {
+			
+		}
 		return null;
 	}
 
@@ -61,7 +105,10 @@ public class IndexScanOperator extends Operator{
 	@Override
 	public void reset(int index) {
 		// TODO Auto-generated method stub
-		
+		BtupleReader.reset();
+		if(!indexinform.isClustered()) {
+			this.lstIterator=this.dataEntryList.listIterator();
+		}
 	}
 
 	@Override
