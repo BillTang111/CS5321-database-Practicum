@@ -36,7 +36,7 @@ public class IndexScanOperator extends Operator{
 	private boolean foundClusterEntry; 
 	
 	
-	public IndexScanOperator(Long lowkey, Long highkey, String tableName, String alias, BPlusIndexInform indexinform) {
+	public IndexScanOperator(Long lowkey, Long highkey, String tableName, String alias, BPlusIndexInform indexinform) throws IOException {
 		this.lowkey = lowkey;
 		this.highkey = highkey;
 		this.tableName = tableName;
@@ -71,7 +71,7 @@ public class IndexScanOperator extends Operator{
 		String inputloc = Catalog.getInstance().getInputLocation() + "";
 		File inputFile = new File(inputloc);
 				
-		this.BtupleReader = new BinaryTR(tableName);
+		this.BtupleReader = new BinaryTR(inputFile);
 	}
 	
 
@@ -79,7 +79,9 @@ public class IndexScanOperator extends Operator{
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
 		if(indexinform.isClustered()) {
-			
+			if(!foundClusterEntry) {
+				
+			}
 		}
 		return null;
 	}

@@ -47,8 +47,6 @@ public class BinaryTR implements TupleReader {
         }
     } 
 
-
-
 	public String ReadNextTuple() {
 		// TODO Auto-generated method stub
 		 String record = "";
@@ -86,8 +84,6 @@ public class BinaryTR implements TupleReader {
 		return record;
 	}
 	
-
-
 //	@Override
 //	public void close() {
 //		// TODO Auto-generated method stub
@@ -108,7 +104,15 @@ public class BinaryTR implements TupleReader {
 
 	}
 
-
+//reset the reader to a specific page and tuple index.
+	public void reset (int pageNum, int tupleId) throws IOException {
+		fc.position(pageNum*buffer_size);
+		buffer = ByteBuffer.allocate(buffer_size);
+		buffer.clear();
+		for (int i=0; i<tupleId;i++) {
+			this.ReadNextTuple();
+		}
+	}
 
 	@Override
 	public void dump() {
