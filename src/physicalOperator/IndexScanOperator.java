@@ -16,7 +16,7 @@ import Tuple.Tuple;
  * @author benzhangtang
  */
 
-public class IndexScanOperatior extends Operator{
+public class IndexScanOperator extends Operator{
 	private Long lowkey;
 	private Long highkey;
 	private String tableName;
@@ -29,7 +29,7 @@ public class IndexScanOperatior extends Operator{
 	private boolean foundClusterEntry; 
 	
 	
-	public IndexScanOperatior() {
+	public IndexScanOperator() {
 		
 	}
 	
