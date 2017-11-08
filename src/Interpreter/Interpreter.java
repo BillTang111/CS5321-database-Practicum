@@ -159,6 +159,7 @@ public class Interpreter {
 		
 		// 1.4 Create a 'Database_Catalog' object to store directory and schema
 	    //test java -jar cs4321_p3.jar /Users/tanlini/Desktop/samples/interpreter_config_file.txt
+	    //test java -jar cs4321_p3.jar /Users/benzhangtang/Desktop/samples/interpreter_config_file.txt
 		  //test java -jar cs4321 p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output
 		 //test java -jar cs4321_p2.jar /Users/benzhangtang/Desktop/samples/input /Users/benzhangtang/Desktop/samples/test_output /Users/benzhangtang/Desktop/samples/temp
 		 //test java -jar cs4321_p3.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output /Users/tanlini/Desktop/samples/temp
