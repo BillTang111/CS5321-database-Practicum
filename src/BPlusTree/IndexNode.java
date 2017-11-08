@@ -8,6 +8,7 @@ public class IndexNode {
 	private ArrayList<IndexNode> indexChildren;
 	private int address;
 	private boolean IsUpperLayer;
+	private int leafKey;
 	
 	/**
 	 * Constructor for the first index layer whose children nodes are leaves
@@ -15,11 +16,12 @@ public class IndexNode {
 	 * @param leaf: list of LeafNode
 	 * @param address: the address of this node;
 	 */
-	public IndexNode(ArrayList<Integer> keyList, ArrayList<LeafNode> leaf, int address){
+	public IndexNode(ArrayList<Integer> keyList, ArrayList<LeafNode> leaf, int address, int leafKey){
 		key = keyList;
 		leafChildren = leaf;
 		IsUpperLayer = false;
 		this.address = address;
+		this.leafKey = leafKey;
 	}
 	
 	/**
@@ -29,11 +31,12 @@ public class IndexNode {
 	 * @param address: the address of this node;
 	 * @param isUpper: to distinguish from the constructor above. Indicate whether it is the upper layer index;
 	 */
-	public IndexNode(ArrayList<Integer> keyList, ArrayList<IndexNode> index, int address, boolean IsUpper){
+	public IndexNode(ArrayList<Integer> keyList, ArrayList<IndexNode> index, int address, boolean IsUpper, int leafKey){
 		key = keyList;
 		indexChildren = index;
 		IsUpperLayer = true;
 		this.address = address;
+		this.leafKey = leafKey;
 	}
 	
 	public ArrayList<LeafNode> getLeafChildren(){
@@ -54,6 +57,10 @@ public class IndexNode {
 
 	public int getAddress() {
 		return address;
+	}
+	
+	public int getLeafKey() {
+		return this.leafKey;
 	}
 	
 	

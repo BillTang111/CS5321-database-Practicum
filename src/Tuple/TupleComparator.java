@@ -21,7 +21,6 @@ public class TupleComparator implements Comparator<Tuple> {
 		condition = order;
 		Catalog catalog = Catalog.getInstance();
 		PairAlias = catalog.getPairAlias();
-		//ystem.out.println("if any? "+PairAlias.size());
 	}
 	
 	/**compare two tuples.

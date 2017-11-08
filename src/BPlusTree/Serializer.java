@@ -153,7 +153,7 @@ public class Serializer {
 	/**rewrite the pages from the given index*/
 	public void GoPage(int pageIndex){
 		try {
-			channel.position(pageIndex*pageSize);
+			channel.position((long)pageIndex*pageSize);
 			buffer=ByteBuffer.allocate(pageSize);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
