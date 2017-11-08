@@ -98,28 +98,46 @@ public class IndexScanOperator extends Operator{
 				}
 			}else { 
 				 String input = BtupleReader.ReadNextTuple();
-				 List nameList = new LinkedList<String>();
+				 List nameList = new  LinkedList<String>();
 				 nameList.add(tableName);
 				 Tuple t = new Tuple(input,nameList);
-				 	if(t!=null) {
-				 		
-				 	}
-			
-			
-				
-				
-//				if(this.lstIterator.hasNext()) {
-//					DataEntry entry = this.lstIterator.next();
+			if (t != null) {
+				int key =(int) t.getTupleMap().get(indexinform.getColumn());
+				if (key<highkey) {
+					return t;
 				}
 			}
-		}
-		return null;
+			return null;
+				}
+			} else {
+					if(this.lstIterator.hasNext()) {
+					DataEntry entry = this.lstIterator.next();
+					int pageId = entry.getPageId();
+					int tupleId = entry.getTupleId();
+					try {
+						BtupleReader.reset(pageId,tupleId);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					 String input = BtupleReader.ReadNextTuple();
+					 List nameList = new  LinkedList<String>();
+					 nameList.add(tableName);
+					 return new Tuple(input,nameList);
+				} 
+			 else {
+				 return null;
+			 }
+			}
 	}
 
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		
+		BtupleReader.reset();
+		if(!indexinform.isClustered()) {
+			this.lstIterator=this.dataEntryList.listIterator();
+		}
 	}
 
 	@Override
@@ -137,10 +155,6 @@ public class IndexScanOperator extends Operator{
 	@Override
 	public void reset(int index) {
 		// TODO Auto-generated method stub
-		BtupleReader.reset();
-		if(!indexinform.isClustered()) {
-			this.lstIterator=this.dataEntryList.listIterator();
-		}
 	}
 
 	@Override
