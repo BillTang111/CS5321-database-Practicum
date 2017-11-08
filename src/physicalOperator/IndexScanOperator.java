@@ -80,7 +80,37 @@ public class IndexScanOperator extends Operator{
 		// TODO Auto-generated method stub
 		if(indexinform.isClustered()) {
 			if(!foundClusterEntry) {
+				DataEntry startEntry = deserializer.getLeftMostEntry(lowkey, highkey);
+				if (startEntry!=null) {
+					foundClusterEntry=true;
+					 try {
+						BtupleReader.reset(startEntry.getPageId(), startEntry.getTupleId());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					 String input = BtupleReader.ReadNextTuple();
+					 List nameList = new LinkedList<String>();
+					 nameList.add(tableName);
+					 return new Tuple(input,nameList);
+				}else {
+					return null;
+				}
+			}else { 
+				 String input = BtupleReader.ReadNextTuple();
+				 List nameList = new LinkedList<String>();
+				 nameList.add(tableName);
+				 Tuple t = new Tuple(input,nameList);
+				 	if(t!=null) {
+				 		
+				 	}
+			
+			
 				
+				
+//				if(this.lstIterator.hasNext()) {
+//					DataEntry entry = this.lstIterator.next();
+				}
 			}
 		}
 		return null;
