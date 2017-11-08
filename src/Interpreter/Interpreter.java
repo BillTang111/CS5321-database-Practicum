@@ -160,6 +160,8 @@ public class Interpreter {
 		 //test java -jar cs4321_p3.jar /Users/tanlini/Desktop/samples/input /Users/tanlini/Desktop/samples/test_output /Users/tanlini/Desktop/samples/temp
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/CS5321/input /Users/LukerRong/Desktop/CS5321/test_output
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2copy/input /Users/LukerRong/Desktop/project2copy/output /Users/LukerRong/Desktop/project2copy/temp
+	     //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2/input /Users/LukerRong/Desktop/project2/output /Users/LukerRong/Desktop/project2/temp
+	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/project2/interpreter_config_file.txt
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);

@@ -102,7 +102,8 @@ public class BPlusTree {
 				tableList.add(tableName);
 				Tuple tuple = new Tuple(tContent, tableList);
 				ArrayList tupleList = tuple.getTuple();
-				key = (int) tupleList.get((int) tuple.getTupleMap().get(column));
+				String columnValue = (String) tupleList.get((int) tuple.getTupleMap().get(column));
+				key = Integer.parseInt(columnValue);
 				int pageId = btr.getPageId();
 				int tupleId = btr.getTupleId();
 				if (allMap.containsKey(key))
