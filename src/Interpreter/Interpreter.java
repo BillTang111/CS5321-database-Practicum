@@ -122,10 +122,13 @@ public class Interpreter {
 		// read the schema file and to store it a Hashmap.
 	    BufferedReader br = new BufferedReader(new FileReader(inputLocation+"/db/schema.txt"));
 		 HashMap<String, ArrayList> map = new HashMap<String, ArrayList>();
+		 HashMap<String, String> defaultAliasPair = new HashMap<String, String>();
 		  try {
 		      StringBuilder sb = new StringBuilder();
 		      String line = br.readLine();
-
+		      
+		      
+		      
 		      while (line != null) {
 		    	  System.out.println("new line " + line);
 		    	  String[] oneLine = line.split(" ");
@@ -134,6 +137,7 @@ public class Interpreter {
 		    		  fields.add(oneLine[i]);
 		    	  }
 		    	  map.put(oneLine[0], fields);
+		    	  defaultAliasPair.put(oneLine[0], oneLine[0]);
 		    	  
 		          sb.append(line);
 		          sb.append(System.lineSeparator());
@@ -169,6 +173,12 @@ public class Interpreter {
 		catalog.setJoinConfig(joinConfigLine);
 		catalog.setSortConfig(sortConfigLine);
 		catalog.setSchema(map); // Original name + field
+		
+		catalog.setPairAlias(defaultAliasPair);
+		
+		
+		
+		
 		
 		// if need to build index
 		if(buildIndex){
