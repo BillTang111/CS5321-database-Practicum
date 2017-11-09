@@ -195,6 +195,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;
 					int order = Integer.parseInt(columnIndexInfo.get(1));
 					String indexPath = columnIndexInfo.get(2);
+					
+					System.out.println("isClustered: " + isClustered + " | order: " + order + " | indexPath: " + indexPath);
 					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
 					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", inform);
 					stackOp.push(iSelect);
@@ -239,6 +241,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					} else {
 						upperBound = Math.min(upperBound0, upperBound1);
 					}
+					
+					System.out.println("lowKey: " + lowerBound + " | highKey: " + upperBound);
 					
 					ArrayList<String> columnIndexInfo = indexInfo.get(tableColumn);
 					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;

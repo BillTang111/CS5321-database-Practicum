@@ -72,6 +72,8 @@ public class IndexScanOperator extends Operator{
 		System.out.print("input location is: " + inputloc + "\n");
 		File inputFile = new File(inputloc);
 		this.BtupleReader = new BinaryTR(inputFile);
+		System.out.println("try BtupleReader:" + BtupleReader.ReadNextTuple());
+		BtupleReader.reset();
 	}
 
 

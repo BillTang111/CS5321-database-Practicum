@@ -2,7 +2,13 @@ package parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import Database_Catalog.Catalog;
 import logicalOperator.LogicalDuplicateEliminationOperators;
@@ -20,6 +26,7 @@ import visitor.joinVisitor;
 public class LogicalQueryPlan {
 	
 	private LogicalOperator root;
+	private Object hashMap;
 	
 	/** logicalQueryPlan constructor
 	 * @param PlainSelect selectBody: the result parsed from Jsql parser 
@@ -50,6 +57,14 @@ public class LogicalQueryPlan {
 						
 			sortedTable = jVisitor.getJoinTableList(); // original name
 			selectConditionMap = jVisitor.getSelectConditionMap(); // key:original value:might be Alias name
+			System.out.println("Select condition" + selectConditionMap);
+			//TODO aa
+//			if (selectConditionMap!= null){
+//				sortSelectCondition(selectConditionMap);
+//			}
+			
+			
+			
 			joinConditionMap = jVisitor.getJoinConditionMap(); // key:original value:might be Alias name
 			joinPair = jVisitor.getJoinPair(); // original name
 
@@ -187,6 +202,23 @@ public class LogicalQueryPlan {
 	}
 	
 	
+	private void sortSelectCondition(
+			HashMap<String, ArrayList<Expression>> originSelectCondition) {
+		int size = originSelectCondition.size();
+		for (int i=0; i<size; i++){
+			ArrayList<Expression> eachTableConditon = originSelectCondition.get(i);
+			Comparator<? super Expression> c;
+			//eachTableConditon.sort(c);
+			}
+			
+			
+		}
+	
+		
+		
+	
+
+
 	/** @return the root of the entire query plan */
 	public LogicalOperator getRoot() {
 		return root;
