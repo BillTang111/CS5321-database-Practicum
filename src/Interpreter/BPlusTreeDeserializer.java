@@ -45,7 +45,11 @@ public class BPlusTreeDeserializer {
 	 * */
 	private int FIndPageNum(Long key) throws IOException {
 		int PageNum = RootAddress; 
-		bb = ByteBuffer.allocate(PageSize*PageNum);
+		//add this
+		fc.position((long)(PageSize * PageNum));
+		//end add
+		//bb = ByteBuffer.allocate(PageSize*PageNum);
+		bb = ByteBuffer.allocate(PageSize);
 		bb.clear();
 		fc.read(bb);
 		bb.flip(); //start a sequence of "gets"
@@ -59,8 +63,9 @@ public class BPlusTreeDeserializer {
 				if (childKey >key.intValue()) break;
 			}
 			//through page address, go to next page 
-			PageNum = bb.getInt(8+child*4);
-			fc.position(PageNum*PageSize);
+			//PageNum = bb.getInt(8+child*4);
+			PageNum = bb.getInt(8+4*numOfKeys+4*child);
+			fc.position((long)(PageNum*PageSize));
 			bb=ByteBuffer.allocate(PageSize);
 			bb.clear();
 			fc.read(bb);
@@ -81,15 +86,18 @@ public class BPlusTreeDeserializer {
 		if (lowkey != null) {
 			try {
 				int PageNum = FIndPageNum(lowkey);
-				boolean isLeaf = bb.getInt()==0;
+				boolean isLeaf = (bb.getInt()==0);
 
 				while (isLeaf) {
+		
 					int numEntries = bb.getInt();
-
+					System.out.println("num: "+numEntries);
 					for (int i=0; i<numEntries; i++) {
 						int currentKey = bb.getInt();
 						if (highkey != null) {
-							if (currentKey>lowkey.intValue()) {
+							//debug here
+						//	if (currentKey>lowkey.intValue()) {
+							if (currentKey>=highkey.intValue()) {
 								if (currentKey>highkey.intValue()) {
 									return entriesList;
 								} else {
