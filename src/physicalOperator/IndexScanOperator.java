@@ -102,8 +102,9 @@ public class IndexScanOperator extends Operator{
 				String input = BtupleReader.ReadNextTuple();
 				List nameList = new  LinkedList<String>();
 				nameList.add(tableName);
-				Tuple t = new Tuple(input,nameList);
-				if (t != null) {
+				//Tuple t = new Tuple(input,nameList);
+				if (input != null) {
+					Tuple t = new Tuple(input,nameList);
 					int key =(int) t.getTupleMap().get(indexinform.getColumn());
 					if (key<highkey) {
 						return t;

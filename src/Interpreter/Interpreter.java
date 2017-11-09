@@ -168,6 +168,7 @@ public class Interpreter {
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2copy/input /Users/LukerRong/Desktop/project2copy/output /Users/LukerRong/Desktop/project2copy/temp
 	     //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2/input /Users/LukerRong/Desktop/project2/output /Users/LukerRong/Desktop/project2/temp
 	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/project2/interpreter_config_file.txt
+	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/project4test/interpreter_config_file.txt
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);
@@ -228,16 +229,16 @@ public class Interpreter {
 				Operator physicalPlanRoot = builder.getRoot();
 				
 			// Option 1: dump result and see benchmark time
-				long timeStart = System.currentTimeMillis();
-				System.out.print("Current Time in milliseconds = ");
-				System.out.println(timeStart);
-				physicalPlanRoot.dump(1); //change to 1 when need to print out result
-				System.out.println("Results dumped.");
-				long timeEnd = System.currentTimeMillis();
-				System.out.print("Current Time in milliseconds = ");
-				System.out.println(timeEnd);
-				System.out.print("Cost time = ");
-				System.out.println(timeEnd - timeStart);
+//				long timeStart = System.currentTimeMillis();
+//				System.out.print("Current Time in milliseconds = ");
+//				System.out.println(timeStart);
+//				physicalPlanRoot.dump(0); //change to 1 when need to print out result
+//				System.out.println("Results dumped.");
+//				long timeEnd = System.currentTimeMillis();
+//				System.out.print("Current Time in milliseconds = ");
+//				System.out.println(timeEnd);
+//				System.out.print("Cost time = ");
+//				System.out.println(timeEnd - timeStart);
 
 			
 				
@@ -263,15 +264,15 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-//				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
-//				
-//				HumanTW humanWriter = new HumanTW(file);
-//				
-//				for(Tuple oneLine: result){
-//					humanWriter.WriteTuple(oneLine);
-//				}
-//				
-//				humanWriter.close();
+				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
+				
+				HumanTW humanWriter = new HumanTW(file);
+				
+				for(Tuple oneLine: result){
+					humanWriter.WriteTuple(oneLine);
+				}
+				
+				humanWriter.close();
 			
 				
 			// Option 4: Binary TW

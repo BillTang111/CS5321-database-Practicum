@@ -58,7 +58,7 @@ public class LogicalQueryPlan {
 			sortedTable = jVisitor.getJoinTableList(); // original name
 			selectConditionMap = jVisitor.getSelectConditionMap(); // key:original value:might be Alias name
 			System.out.println("Select condition" + selectConditionMap);
-			//TODO aa
+			//TODO next round
 //			if (selectConditionMap!= null){
 //				sortSelectCondition(selectConditionMap);
 //			}
@@ -202,17 +202,18 @@ public class LogicalQueryPlan {
 	}
 	
 	
-	private void sortSelectCondition(
-			HashMap<String, ArrayList<Expression>> originSelectCondition) {
-		int size = originSelectCondition.size();
-		for (int i=0; i<size; i++){
-			ArrayList<Expression> eachTableConditon = originSelectCondition.get(i);
-			Comparator<? super Expression> c;
-			//eachTableConditon.sort(c);
-			}
-			
-			
-		}
+//	private void sortSelectCondition(
+			//TODO
+//			HashMap<String, ArrayList<Expression>> originSelectCondition) {
+//		int size = originSelectCondition.size();
+//		for (int i=0; i<size; i++){
+//			ArrayList<Expression> eachTableConditon = originSelectCondition.get(i);
+//			Comparator<? super Expression> c;
+//			//eachTableConditon.sort(c);
+//			}
+//			
+//			
+//		}
 	
 		
 		
