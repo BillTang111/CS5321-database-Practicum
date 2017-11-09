@@ -35,11 +35,6 @@ public class BPlusTree {
 		column = tableName + "." + columnName;
 		serializer = new Serializer(location+"indexes/"+column);
 		leafList = new ArrayList<LeafNode>();
-		//Add support for building both clustered and unclustered indexes
-//		if(clusterOrNot == true){
-//			String inputPath = location+"data/"+tableName;
-//			cluster(column, inputPath, tableName);
-//		}
 		leafList = buildLeafLayer(tableName, column, clusterOrNot);
 		root = buildIndexLayers();
 		serializer.writeNextNode(root);
@@ -91,213 +86,6 @@ public class BPlusTree {
 	 * @param column
 	 * @return an array list to store all leaf nodes
 	 */
-//	private ArrayList<LeafNode> buildLeafLayer(String tableName, String column) {
-//		File table = new File(fileLocation + "data/" + tableName);
-//		TreeMap<Integer, List<DataEntry>> allMap = new TreeMap<>();
-//		try {
-//			BinaryTR btr = new BinaryTR(table);
-//			// build a tree map to store all key/dataEntry pairs in the corresponding column
-//			String tContent = btr.ReadNextTuple();
-//			int key = 0;
-//			while (tContent != null) {
-//				ArrayList tableList = new ArrayList();
-//				tableList.add(tableName);
-//				Tuple tuple = new Tuple(tContent, tableList);
-//				ArrayList tupleList = tuple.getTuple();
-//				String columnValue = (String) tupleList.get((int) tuple.getTupleMap().get(column));
-//				key = Integer.parseInt(columnValue);
-//				int pageId = btr.getPageId();
-//				int tupleId = btr.getTupleId();
-//				if (allMap.containsKey(key))
-//					allMap.get(key).add(new DataEntry(pageId, tupleId));
-//				else {
-//					ArrayList<DataEntry> newList = new ArrayList<DataEntry>();
-//					newList.add(new DataEntry(pageId, tupleId));
-//					allMap.put(key, newList);
-//				}
-//				tContent = btr.ReadNextTuple();
-//			}
-//			//split the allmap into different leafNode
-//			int dataEntryNum = 0;
-//			int leafNum = allMap.size()/(2*order);
-//			if(allMap.size()%(2*order)!=0){
-//				leafNum++;
-//				//if leave us with < d data entries for the last leaf node
-//				if(allMap.size()%(2*order)<order){
-//					TreeMap<Integer, List<DataEntry>> leafMap = new TreeMap<Integer, List<DataEntry>>();
-//					for (Entry<Integer, List<DataEntry>> entry : allMap.entrySet()) {
-//						if(leafList.size()>=leafNum-2){
-//							int remainder = leafMap.size();
-//							int restData = allMap.size()-dataEntryNum;
-//							//the second to last leaf node should take
-//							int secondLastNum = (restData+remainder)/2;
-//							//build second to last leaf
-//							if(remainder<=secondLastNum){
-//								leafMap.put(entry.getKey(), entry.getValue());
-//								remainder++;
-//								dataEntryNum++;
-//								//store the second to last leaf, start the last leaf
-//							}else if(remainder == secondLastNum+1){
-//								countSize++;
-//								LeafNode leaf = new LeafNode(leafMap, countSize);
-//								leafList.add(leaf);
-//								serializer.writeNextNode(leaf);
-//								leafMap = new TreeMap<>();
-//								leafMap.put(entry.getKey(), entry.getValue());
-//								remainder++;
-//								dataEntryNum++;
-//							}else{
-//								leafMap.put(entry.getKey(), entry.getValue());
-//								remainder++;
-//								dataEntryNum++;
-//								if(dataEntryNum == allMap.size()){
-//									countSize++;
-//									LeafNode leaf = new LeafNode(leafMap, countSize);
-//									leafList.add(leaf);
-//									serializer.writeNextNode(leaf);
-//								}
-//							}
-//						}else{
-//						//when a leaf is not full, fill it
-//						if(leafMap.size()<=2*order){
-//							leafMap.put(entry.getKey(), entry.getValue());
-//							dataEntryNum++;
-//						}else{
-//						//if full; add the leaf to the leafList, build new leaf and check if it's reaching the last two leaf
-//						countSize++;
-//						LeafNode leaf = new LeafNode(leafMap, countSize);
-//						leafList.add(leaf);
-//						serializer.writeNextNode(leaf);
-//						leafMap = new TreeMap<>();
-//						leafMap.put(entry.getKey(), entry.getValue());
-//						dataEntryNum++;
-//						}
-//					}
-//					}
-//				}else{// if not, just build leaf in order
-//					TreeMap<Integer, List<DataEntry>> leafMap = new TreeMap<Integer, List<DataEntry>>();
-//					for (Entry<Integer, List<DataEntry>> entry : allMap.entrySet()) {
-//						//when a leaf is not full, fill it
-//						if(leafMap.size()<=2*order){
-//							leafMap.put(entry.getKey(), entry.getValue());
-//							dataEntryNum++;
-//							if(dataEntryNum == allMap.size()){
-//								countSize++;
-//								LeafNode leaf = new LeafNode(leafMap, countSize);
-//								leafList.add(leaf);
-//								serializer.writeNextNode(leaf);
-//								}
-//						}else{
-//						//if full; add the leaf to the leafList, build new leaf and check if it's reaching the last two leaf
-//						countSize++;
-//						LeafNode leaf = new LeafNode(leafMap, countSize);
-//						leafList.add(leaf);
-//						serializer.writeNextNode(leaf);
-//						leafMap = new TreeMap<>();
-//						leafMap.put(entry.getKey(), entry.getValue());
-//						dataEntryNum++;
-//						}
-//					}
-//				}
-//			}
-//			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return leafList;
-//	}
-	
-	
-//	private ArrayList<LeafNode> buildLeafLayer(String tableName, String column) {
-//		File table = new File(fileLocation + "data/" + tableName);
-//		BinaryTR btr;
-//		try {
-//			btr = new BinaryTR(table);
-//			leafList = new ArrayList<LeafNode>();
-//			TreeMap<Integer, List<DataEntry>> wholeMap = new TreeMap<>();
-//			// scan all tuples and build a tree map to store all key/dataEntry pairs
-//			String tContent = btr.ReadNextTuple();
-//			int key;
-//			while (tContent != null) {
-//				ArrayList tableList = new ArrayList();
-//				tableList.add(tableName);
-//				Tuple tuple = new Tuple(tContent, tableList);
-//				ArrayList tupleList = tuple.getTuple();
-//				String columnValue = (String) tupleList.get((int) tuple.getTupleMap().get(column));
-//				key = Integer.parseInt(columnValue);
-//				int pageId = btr.getPageId();
-//				int tupleId = btr.getTupleId();
-//				if (wholeMap.containsKey(key))
-//					// if the node have key
-//					wholeMap.get(key).add(new DataEntry(pageId, tupleId));
-//				else {
-//					// map does not have the key but is not full
-//					ArrayList<DataEntry> tempList = new ArrayList<DataEntry>();
-//					tempList.add(new DataEntry(pageId, tupleId));
-//					wholeMap.put(key, tempList);
-//				}
-//				tContent = btr.ReadNextTuple();
-//			}
-//
-//			// split the whole tree map into leaf nodes based on D
-//			TreeMap<Integer, List<DataEntry>> tempMap = new TreeMap<Integer, List<DataEntry>>();
-//			for (Entry<Integer, List<DataEntry>> entry : wholeMap.entrySet()) {
-//				if (tempMap.size() < order * 2) {
-//					tempMap.put(entry.getKey(), entry.getValue());
-//				} else {
-//					countSize += 1;
-//					LeafNode n = new LeafNode(tempMap, countSize);
-//					leafList.add(n);
-//					serializer.writeNextNode(n);
-//					tempMap = new TreeMap<>();
-//					tempMap.put(entry.getKey(), entry.getValue());
-//				}
-//			}
-//
-//			// deal with the last one or two node(s).
-//			int remaining;
-//			LeafNode n = null;
-//			if (wholeMap.isEmpty()) {
-//				return null;
-//			} else if (leafList.isEmpty()) {
-//				countSize += 1;
-//				n = new LeafNode(tempMap, countSize);
-//			} else if ((remaining = tempMap.size()) < order) {
-//				remaining += 2 * order;
-//				int k = remaining / 2;
-//
-//				TreeMap<Integer, List<DataEntry>> lastMap = leafList.get(leafList.size() - 1).getMap();
-//				leafList.remove(leafList.size() - 1);
-//				serializer.GoPage(leafList.size() - 1);
-//				for (int i = 0; i < 2 * order - k; i++) {
-//					int lastKey = lastMap.lastKey();
-//					List<DataEntry> lastEntryList = lastMap.get(lastKey);
-//					tempMap.put(lastKey, lastEntryList);
-//					lastMap.remove(lastKey);
-//				}
-//				n = new LeafNode(lastMap, countSize);
-//				leafList.add(n);
-//				serializer.writeNextNode(n);
-//				countSize += 1;
-//				n = new LeafNode(tempMap, countSize);
-//			} else {// 2D >= nodeMap.size() > D
-//				countSize += 1;
-//				n = new LeafNode(tempMap, countSize);
-//			}
-//			leafList.add(n);
-//			serializer.writeNextNode(n);
-//
-//			
-//		
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			
-//		}
-//		return leafList;
-//	}
-	
 	private ArrayList<LeafNode> buildLeafLayer(String tableName, String column, boolean clustered) {
 		if(isCluster == true){
 		String inputPath = fileLocation+"data/"+tableName;
@@ -307,8 +95,8 @@ public class BPlusTree {
 		BinaryTR btr;
 		try {
 			btr = new BinaryTR(table);
-			TreeMap<Integer, List<DataEntry>> wholeMap = new TreeMap<>();
-			// scan all tuples and build a tree map to store all key/dataEntry pairs
+			//store all data we need
+			TreeMap<Integer, List<DataEntry>> allData = new TreeMap<>();
 			String tContent = btr.ReadNextTuple();
 			int key;
 			while (tContent != null) {
@@ -320,48 +108,47 @@ public class BPlusTree {
 				key = Integer.parseInt(columnValue);
 				int pageId = btr.getPageId();
 				int tupleId = btr.getTupleId();
-				if (wholeMap.containsKey(key))
-					// if the node have key
-					wholeMap.get(key).add(new DataEntry(pageId, tupleId));
+				if (allData.containsKey(key))
+					allData.get(key).add(new DataEntry(pageId, tupleId));
 				else {
-					// map does not have the key but is not full
-					ArrayList<DataEntry> tempList = new ArrayList<DataEntry>();
-					tempList.add(new DataEntry(pageId, tupleId));
-					wholeMap.put(key, tempList);
+					ArrayList<DataEntry> temp = new ArrayList<DataEntry>();
+					temp.add(new DataEntry(pageId, tupleId));
+					allData.put(key, temp);
 				}
 				tContent = btr.ReadNextTuple();
 			}
+			
+			if(allData.isEmpty()) return null;
 
-			// split the whole tree map into leaf nodes based on D
+			// split all data into different leaf nodes based on the order 
 			TreeMap<Integer, List<DataEntry>> tempMap = new TreeMap<Integer, List<DataEntry>>();
-			for (Entry<Integer, List<DataEntry>> entry : wholeMap.entrySet()) {
+			for (Entry<Integer, List<DataEntry>> entry : allData.entrySet()) {
 				if (tempMap.size() < order * 2) {
 					tempMap.put(entry.getKey(), entry.getValue());
 				} else {
 					countSize += 1;
-					LeafNode n = new LeafNode(tempMap, countSize);
-					leafList.add(n);
-					serializer.writeNextNode(n);
+					LeafNode leaf = new LeafNode(tempMap, countSize);
+					leafList.add(leaf);
+					serializer.writeNextNode(leaf);
 					tempMap = new TreeMap<>();
 					tempMap.put(entry.getKey(), entry.getValue());
 				}
 			}
 
-			// deal with the last one or two node(s).
-			int remaining;
+			// handle last two nodes
+			//int remaining;
+			int remaining = tempMap.size();
 			LeafNode n = null;
-			if (wholeMap.isEmpty()) {
-				return null;
-			} else if (leafList.isEmpty()) {
+			if (leafList.isEmpty()) {
 				countSize += 1;
 				n = new LeafNode(tempMap, countSize);
-			} else if ((remaining = tempMap.size()) < order) {
+			} else if (remaining < order){
 				remaining += 2 * order;
 				int k = remaining / 2;
-
+				//retrieve data entry from the last node so that it contains only k entries.
 				TreeMap<Integer, List<DataEntry>> lastMap = leafList.get(leafList.size() - 1).getMap();
-				LeafNode ln = leafList.remove(leafList.size() - 1);
-				serializer.GoPage(ln.getAddress());
+				LeafNode leaf = leafList.remove(leafList.size() - 1);
+				serializer.GoPage(leaf.getAddress());
 				for (int i = 0; i < 2 * order - k; i++) {
 					int lastKey = lastMap.lastKey();
 					List<DataEntry> lastEntryList = lastMap.get(lastKey);
@@ -373,7 +160,7 @@ public class BPlusTree {
 				serializer.writeNextNode(n);
 				countSize += 1;
 				n = new LeafNode(tempMap, countSize);
-			} else {// 2D >= nodeMap.size() > D
+			} else {
 				countSize += 1;
 				n = new LeafNode(tempMap, countSize);
 			}
@@ -389,84 +176,8 @@ public class BPlusTree {
 	}
 	
 	/**
-	 * Build the first layer of index nodes at the beginning and then build the
-	 * upper levels recursively
+	 * Build the first layer of index nodes and then recursively build the upper layer
 	 */
-//	private IndexNode buildIndexLayers() {
-//		// build the first index layer
-//				ArrayList<IndexNode> firstIndexLayer = new ArrayList<IndexNode>();
-//
-//				ArrayList<LeafNode> leafChildren = new ArrayList<LeafNode>();
-//				ArrayList<Integer> keyList = new ArrayList<Integer>();
-//				if (leafList.isEmpty()) {
-//					return null;
-//				}
-//				for (LeafNode ln : leafList) {
-//					keyList.add(ln.getMap().firstKey());
-//					leafChildren.add(ln);
-//					if (keyList.size() == 2 * order + 1) {
-//						keyList.remove(0);
-//						countSize += 1;
-//						IndexNode n = new IndexNode(keyList, leafChildren, countSize, leafKey);
-//						firstIndexLayer.add(n);
-//						serializer.writeNextNode(n);
-//						leafChildren = new ArrayList<LeafNode>();
-//						keyList = new ArrayList<Integer>();
-//					}
-//				}
-//
-//				// handle last one or two node
-//				if (firstIndexLayer.isEmpty()) {
-//					if (keyList.size() > 1) {
-//						keyList.remove(0);
-//					}
-////					else {
-////						//leafChildren.add(0, null);
-////					}
-//					countSize += 1;
-//					IndexNode n = new IndexNode(keyList, leafChildren, countSize);
-//					firstIndexLayer.add(n);
-//					serializer.writeNextNode(n);
-//				} else if (keyList.size() > 0 && keyList.size() < order + 1) {
-//
-//					// pop the last node from the layer
-//					IndexNode tempNode = firstIndexLayer.get(firstIndexLayer.size() - 1);
-//					firstIndexLayer.remove(firstIndexLayer.size() - 1);
-//					serializer.GoPage(tempNode.getAddress());
-//					ArrayList<LeafNode> firstChildren = tempNode.getLeafChildren();
-//					ArrayList<LeafNode> secondChildren = new ArrayList<LeafNode>();
-//					ArrayList<Integer> keyList1 = new ArrayList<Integer>();
-//					ArrayList<Integer> keyList2 = new ArrayList<Integer>();
-//					firstChildren.addAll(leafChildren);
-//					int k = firstChildren.size();
-//					while (firstChildren.size() > k / 2 ) {
-//						secondChildren.add(firstChildren.get(k / 2 ));
-//						keyList2.add(firstChildren.get(k / 2 ).getMap().firstKey());
-//						firstChildren.remove(k / 2 );
-//					}
-//					for (LeafNode ln : firstChildren) {
-//						keyList1.add(ln.getMap().firstKey());
-//					}
-//					keyList1.remove(0);
-//					keyList2.remove(0);
-//					IndexNode n = new IndexNode(keyList1, firstChildren, countSize);
-//					firstIndexLayer.add(n);
-//					serializer.writeNextNode(n);
-//					countSize += 1;
-//					n = new IndexNode(keyList2, secondChildren, countSize);
-//					firstIndexLayer.add(n);
-//					serializer.writeNextNode(n);
-//
-//				} else if (keyList.size() != 0) {// D <= size <= 2D
-//					keyList.remove(0);
-//					countSize += 1;
-//					firstIndexLayer.add(new IndexNode(keyList, leafChildren, countSize));
-//				}
-//				// after building the first layer, build the rest of the index
-//				// layers recursively until reach to root;
-//				return buildUpperLayers(firstIndexLayer);
-//	}
-	
 	private IndexNode buildIndexLayers() {
 		// build the first index layer
 		ArrayList<IndexNode> firstIndexLayer = new ArrayList<IndexNode>();
@@ -476,21 +187,22 @@ public class BPlusTree {
 		if (leafList.isEmpty()) {
 			return null;
 		}
-		for (LeafNode ln : leafList) {
-			keyList.add(ln.getMap().firstKey());
-			leafChildren.add(ln);
+		//put the leaf in the leaf list to the leaf children
+		for (LeafNode leaf : leafList) {
+			keyList.add(leaf.getMap().firstKey());
+			leafChildren.add(leaf);
 			if (keyList.size() == 2 * order + 1) {
 				int leafKey = keyList.remove(0);
 				countSize += 1;
-				IndexNode n = new IndexNode(keyList, leafChildren, countSize, leafKey);
-				firstIndexLayer.add(n);
-				serializer.writeNextNode(n);
+				IndexNode node = new IndexNode(keyList, leafChildren, countSize, leafKey);
+				firstIndexLayer.add(node);
+				serializer.writeNextNode(node);
 				leafChildren = new ArrayList<LeafNode>();
 				keyList = new ArrayList<Integer>();
 			}
 		}
 
-		// handle last one or two node
+		// handle the last two nodes
 		if (firstIndexLayer.isEmpty()) {
 			int leafKey = keyList.get(0);
 			if (keyList.size() > 1) {
@@ -501,12 +213,10 @@ public class BPlusTree {
 			firstIndexLayer.add(n);
 			serializer.writeNextNode(n);
 		} else if (keyList.size() > 0 && keyList.size() < order + 1) {
-
-			// pop the last node from the layer
-			IndexNode tempNode = firstIndexLayer.get(firstIndexLayer.size() - 1);
+			IndexNode tempIndexNode = firstIndexLayer.get(firstIndexLayer.size() - 1);
 			firstIndexLayer.remove(firstIndexLayer.size() - 1);
-			serializer.GoPage(tempNode.getAddress());
-			ArrayList<LeafNode> firstChildren = tempNode.getLeafChildren();
+			serializer.GoPage(tempIndexNode.getAddress());
+			ArrayList<LeafNode> firstChildren = tempIndexNode.getLeafChildren();
 			ArrayList<LeafNode> secondChildren = new ArrayList<LeafNode>();
 			ArrayList<Integer> keyList1 = new ArrayList<Integer>();
 			ArrayList<Integer> keyList2 = new ArrayList<Integer>();
@@ -523,107 +233,31 @@ public class BPlusTree {
 
 			int leafKey1 = keyList1.remove(0);
 			int leafKey2 = keyList2.remove(0);
-
-			IndexNode n = new IndexNode(keyList1, firstChildren, countSize, leafKey1);
-			firstIndexLayer.add(n);
-			serializer.writeNextNode(n);
+			// write the result to the last two nodes
+			IndexNode node = new IndexNode(keyList1, firstChildren, countSize, leafKey1);
+			firstIndexLayer.add(node);
+			serializer.writeNextNode(node);
 			countSize += 1;
-			n = new IndexNode(keyList2, secondChildren, countSize, leafKey2);
-			firstIndexLayer.add(n);
-			serializer.writeNextNode(n);
+			node = new IndexNode(keyList2, secondChildren, countSize, leafKey2);
+			firstIndexLayer.add(node);
+			serializer.writeNextNode(node);
 
-		} else if (keyList.size() != 0) {// D <= size <= 2D
+		} else if (keyList.size() != 0) {
 			int leafKey = keyList.remove(0);
 			countSize += 1;
 			IndexNode in = new IndexNode(keyList, leafChildren, countSize, leafKey);
 			firstIndexLayer.add(in);
 			serializer.writeNextNode(in);
 		}
-		// after building the first layer, build the rest of the index
-		// layers recursively until reach to root;
 		return buildUpperLayers(firstIndexLayer);
 	}
+	
 	
 	/**
 	 * @param IndexLayer:
 	 *            arrayList of index nodes build the upper level from the input
 	 *            arrayList call itself recursively until reaches the root
 	 */
-
-
-//	private IndexNode buildUpperLayers(ArrayList<IndexNode> IndexLayer) {
-//		ArrayList<IndexNode> output = new ArrayList<IndexNode>();
-//
-//		ArrayList<IndexNode> indexChildren = new ArrayList<IndexNode>();
-//
-//		ArrayList<Integer> keyList = new ArrayList<Integer>();
-//		for (IndexNode index : IndexLayer) {
-//			indexChildren.add(index);
-//			keyList.add(index.getKeys().get(0));
-//			if (keyList.size() == 2 * order + 1) {
-//				keyList.remove(0);
-//				countSize += 1;
-//				IndexNode n = new IndexNode(keyList, indexChildren, countSize, true);
-//				output.add(n);
-//				serializer.writeNextNode(n);
-//				keyList = new ArrayList<Integer>();
-//				indexChildren = new ArrayList<IndexNode>();
-//			}
-//		}
-//		// if the last node underflow, pop the last node from output
-//		// merge the children between the two nodes, split them.
-//		// generate new keys for the new sets of children
-//		// add both new nodes to output
-//		if (output.isEmpty() && !keyList.isEmpty()) {
-//			if (keyList.size() > 1) {
-//				keyList.remove(0);
-//			} else {
-//				//indexChildren.add(0, null);
-//			}
-//			countSize += 1;
-//			return new IndexNode(keyList, indexChildren, countSize, true);
-//		} else if (!keyList.isEmpty() && keyList.size() - 1 < order) {
-//			IndexNode tempNode = output.get(output.size() - 1);
-//			ArrayList<IndexNode> firstChildren = tempNode.getIndexChildren();
-//
-//			firstChildren.addAll(indexChildren);
-//			output.remove(output.size() - 1);
-//			serializer.GoPage(tempNode.getAddress());
-//			// split firstChildren to make two new nodes
-//			int k = firstChildren.size();
-//			ArrayList<IndexNode> secondChildren = new ArrayList<IndexNode>();
-//			ArrayList<Integer> keyList1 = new ArrayList<Integer>();
-//			ArrayList<Integer> keyList2 = new ArrayList<Integer>();
-//			while (firstChildren.size() > k / 2) {
-//				secondChildren.add(firstChildren.get(k / 2));
-//				keyList2.add(firstChildren.get(k / 2).getKeys().get(0));
-//				firstChildren.remove(k / 2);
-//			}
-//			for (IndexNode in : firstChildren) {
-//				keyList1.add(in.getKeys().get(0));
-//			}
-//			keyList1.remove(0);
-//			keyList2.remove(0);
-//			IndexNode n = new IndexNode(keyList1, indexChildren, countSize, true);
-//			output.add(n);
-//			serializer.writeNextNode(n);
-//			countSize += 1;
-//			n = new IndexNode(keyList2, indexChildren, countSize, true);
-//			output.add(n);
-//			serializer.writeNextNode(n);
-//
-//		} else if (!keyList.isEmpty()) {
-//			keyList.remove(0);
-//			countSize += 1;
-//			IndexNode n = new IndexNode(keyList, indexChildren, countSize, true);
-//			output.add(n);
-//			serializer.writeNextNode(n);
-//		}
-//		
-//		// recursion
-//		return buildUpperLayers(output);
-//	}
-	
 	private IndexNode buildUpperLayers(ArrayList<IndexNode> IndexLayer) {
 		ArrayList<IndexNode> output = new ArrayList<IndexNode>();
 
@@ -643,10 +277,6 @@ public class BPlusTree {
 				indexChildren = new ArrayList<IndexNode>();
 			}
 		}
-		// if the last node underflow, pop the last node from output
-		// merge the children between the two nodes, split them.
-		// generate new keys for the new sets of children
-		// add both new nodes to output
 		if (output.isEmpty() && !keyList.isEmpty()) {
 			int leafKey = keyList.get(0);
 			if (keyList.size() > 1) {
@@ -691,7 +321,6 @@ public class BPlusTree {
 			output.add(n);
 			serializer.writeNextNode(n);
 		}
-		// recursion
 		return buildUpperLayers(output);
 	}
 	

@@ -195,7 +195,7 @@ public class Interpreter {
 		
 		// if we want to actually evaluate the SQL queries
 		if(evaluateOrNot){
-		
+		System.out.println("need execute the query");
 		// 2.1 Get query file directory from command line argument,
 		// store the content of the file into a String object
 		String querypath = inputLocation + "/queries.sql";
@@ -228,16 +228,16 @@ public class Interpreter {
 				Operator physicalPlanRoot = builder.getRoot();
 				
 			// Option 1: dump result and see benchmark time
-//				long timeStart = System.currentTimeMillis();
-//				System.out.print("Current Time in milliseconds = ");
-//				System.out.println(timeStart);
-//				physicalPlanRoot.dump(0); //change to 1 when need to print out result
-//				System.out.println("Results dumped.");
-//				long timeEnd = System.currentTimeMillis();
-//				System.out.print("Current Time in milliseconds = ");
-//				System.out.println(timeEnd);
-//				System.out.print("Cost time = ");
-//				System.out.println(timeEnd - timeStart);
+				long timeStart = System.currentTimeMillis();
+				System.out.print("Current Time in milliseconds = ");
+				System.out.println(timeStart);
+				physicalPlanRoot.dump(0); //change to 1 when need to print out result
+				System.out.println("Results dumped.");
+				long timeEnd = System.currentTimeMillis();
+				System.out.print("Current Time in milliseconds = ");
+				System.out.println(timeEnd);
+				System.out.print("Cost time = ");
+				System.out.println(timeEnd - timeStart);
 
 			
 				

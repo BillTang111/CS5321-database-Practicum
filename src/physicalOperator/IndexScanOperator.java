@@ -68,7 +68,7 @@ public class IndexScanOperator extends Operator{
 			this.dataEntryList = deserializer.getEntries(lowkey, highkey);
 			this.lstIterator = this.dataEntryList.listIterator();
 		}
-		String inputloc = Catalog.getInstance().getInputLocation() + "";
+		String inputloc = Catalog.getInstance().getInputLocation() + "/db/data/"+ tableName;
 		File inputFile = new File(inputloc);
 				
 		this.BtupleReader = new BinaryTR(inputFile);
