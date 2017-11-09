@@ -2,6 +2,7 @@ package Interpreter;
 
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -26,17 +27,28 @@ public class BPlusTreeDeserializer {
 	private int numleaves;
 	public int PageSize = 4096;
 
-	public BPlusTreeDeserializer (BPlusIndexInform indexInform) throws IOException {
-		fis = new FileInputStream (indexInform.getIndexPath());
+	public BPlusTreeDeserializer (BPlusIndexInform indexInform) {
+		try {
+			fis = new FileInputStream (indexInform.getIndexPath());
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		fc = fis.getChannel();
 		//allocate buffer to load the header page
 		bb = ByteBuffer.allocate(PageSize);
 		bb.clear();
-		fc.read(bb);
+		try {
+			fc.read(bb);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		bb.flip(); //start a sequence of "gets"
 		RootAddress = bb.getInt(0);
 		numleaves = bb.getInt(4);
 	}
+   
 
 	/*
 	 * [FIndPageNum] is a helper method that traverse the tree to find the 
@@ -177,16 +189,17 @@ public class BPlusTreeDeserializer {
 					//					if (currentKey>=highkey.intValue()) {
 					if (currentKey>highkey.intValue()) {
 						return entriesList;
-					} else {
+					} 
 						int numRids = bb.getInt();
 						for (int k=0; k<numRids; k++) {
 							int pageId =  bb.getInt();
 							int tupleId = bb.getInt();
 							DataEntry dataTuple = new DataEntry(pageId,tupleId);
 							entriesList.add(dataTuple);
-						}
+						
 					}
 				}
+				PageNum++;
 			}
 		}// end of else
 		return entriesList;
@@ -305,7 +318,6 @@ public class BPlusTreeDeserializer {
 	 */
 	public DataEntry getLeftMostEntry (Long lowkey, Long highkey) {
 		if (lowkey != null) {
-			try {
 				int PageNum = FIndPageNum(lowkey);
 				boolean isLeaf = bb.getInt()==0;
 
@@ -314,36 +326,36 @@ public class BPlusTreeDeserializer {
 
 					for (int i=0; i<numEntries; i++) {
 						int currentKey = bb.getInt();
-						if (highkey != null) {
 
 							if (currentKey>lowkey.intValue()) {
+								if (highkey != null) {
 								if (currentKey>highkey.intValue()) {
 									return null;
-								} else {
+								} 
+								}
 									int numRids = bb.getInt();
 									int pageId =  bb.getInt();
 									int tupleId = bb.getInt();
-									return new DataEntry(pageId,tupleId);
-								}
-							}	
+									return new DataEntry(pageId,tupleId);	
 						} 
 					}
-				}
 				PageNum++;
 				if (PageNum > numleaves) {
 					return null;
-				}else { //read next page
+				}
+				try {
 					fc.position(PageNum*PageSize);
 					bb=ByteBuffer.allocate(PageSize);
 					bb.clear();
 					fc.read(bb);
 					bb.flip();
 					isLeaf = (bb.getInt(0)==0);
-				}
-			} catch (IOException e) {
+				}catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+				isLeaf = (bb.getInt()==0);
+				}
 			return null;
 		}else {//if the lowkey is null
 			int PageNum = 1; //start reading from the leftmost leaf node

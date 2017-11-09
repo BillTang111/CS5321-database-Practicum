@@ -42,12 +42,7 @@ public class IndexScanOperator extends Operator{
 		this.tableName = tableName;
 		this.alias = alias;
 		this.indexinform = indexinform;
-		try {
-			this.deserializer = new BPlusTreeDeserializer(indexinform);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.deserializer = new BPlusTreeDeserializer(indexinform);
 		this.foundClusterEntry = false;
 		//		if(alias != null) {
 		//			HashMap catlog = Catalog.getInstance().getSchema();
