@@ -49,15 +49,6 @@ public class IndexScanOperator extends Operator{
 			e.printStackTrace();
 		}
 		this.foundClusterEntry = false;
-//		if(alias != null) {
-//			HashMap catlog = Catalog.getInstance().getSchema();
-//			List<Column> columnList = (List<Column>) catlog.get(tableName);
-//			List<Column> newColumnList = new ArrayList<Column>();
-////			?????
-//			Table newTable = new Table();
-//			newTable.setAlias(alias);
-//			for (Column c:columnList) {
-//				Column newColumn = new Column();
 		//		if(alias != null) {
 		//			HashMap catlog = Catalog.getInstance().getSchema();
 		//			List<Column> columnList = (List<Column>) catlog.get(tableName);
