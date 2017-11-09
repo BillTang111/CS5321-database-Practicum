@@ -106,10 +106,12 @@ public class BinaryTR implements TupleReader {
 
 //reset the reader to a specific page and tuple index.
 	public void reset (int pageNum, int tupleId) throws IOException {
-		fc.position(pageNum*buffer_size);
+		this.records.clear();
+		fc.position((long)(pageNum*buffer_size));
 		buffer = ByteBuffer.allocate(buffer_size);
 		buffer.clear();
 		for (int i=0; i<tupleId;i++) {
+			System.out.println("tupleId: "+i);
 			this.ReadNextTuple();
 		}
 	}

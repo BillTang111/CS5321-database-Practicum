@@ -94,46 +94,37 @@ public class BPlusTreeDeserializer {
 	 * @param highkey
 	 * @return List<DataEntry>
 	 */
+	//try to debug
 	public List<DataEntry> getEntries(Long lowkey, Long highkey){
 		List<DataEntry> entriesList = new LinkedList<>();
 		if (lowkey != null) {
 			int	PageNum = FIndPageNum (lowkey);
 			boolean isLeaf = (bb.getInt()==0);
-			int	numEntries = 10000; //randomly assign an initial number of entries 
-			while (isLeaf && numEntries!=0) {
-				numEntries = bb.getInt();
-//				System.out.println("i am right here");
-//				System.out.println("num: "+numEntries);
+			while(isLeaf){
+				int numEntries = bb.getInt();
 				for (int i=0; i<numEntries; i++) {
 					int currentKey = bb.getInt();
-//					System.out.println("!!! low key: " + lowkey);
-//					System.out.println("!!! current key: " + currentKey);
-//					System.out.println("!!! high key: " + highkey);
-
-						if (currentKey>lowkey.intValue()) {
-							if (highkey != null) {
-								//debug here
+					if (currentKey>lowkey.intValue()) {
+						if (highkey != null) {
 							if (currentKey>highkey.intValue()) {
 								return entriesList;
-							}else { // low_key < k < high_key
-								int numRids = bb.getInt();
-								for (int k=0; k<numRids; k++) {
-									int pageId =  bb.getInt();
-									int tupleId = bb.getInt();
-									DataEntry dataTuple = new DataEntry(pageId,tupleId);
-									entriesList.add(dataTuple);
-								}
 							}
-						}	
-					} else { //current key value is lower than the data entry's key
+						}
+						int numRids = bb.getInt();
+						for (int k=0; k<numRids; k++) {
+							int pageId =  bb.getInt();
+							int tupleId = bb.getInt();
+							DataEntry dataTuple = new DataEntry(pageId,tupleId);
+							entriesList.add(dataTuple);
+						}
+					}else{
 						int numRids = bb.getInt();
 						for (int k=0; k<numRids; k++) {
 							int pageId =  bb.getInt();
 							int tupleId = bb.getInt();
 						}
-					} 
-				}
-
+					}
+				}// end of for loop
 				PageNum++;
 				if (numEntries > numleaves) {
 					return entriesList;
@@ -155,8 +146,9 @@ public class BPlusTreeDeserializer {
 					bb.flip();}
 
 				isLeaf = (bb.getInt(0)==0);
+				
 			}
-		}else {//if the lowkey is null
+		}else{// if low key is null
 			int PageNum = 1; //start reading from the leftmost leaf node
 			for (PageNum=1; PageNum<=numleaves; PageNum++) {
 				try {
@@ -174,7 +166,8 @@ public class BPlusTreeDeserializer {
 					e.printStackTrace();
 				}
 				bb.flip();
-				bb.getInt(); //skip the flag
+				//debug here
+				//bb.getInt(); //skip the flag
 				boolean isLeaf = (bb.getInt()==0);
 				int numEntry = bb.getInt();
 				for (int i =0; i<numEntry; i++) {
@@ -195,9 +188,115 @@ public class BPlusTreeDeserializer {
 					}
 				}
 			}
-		}
+		}// end of else
 		return entriesList;
 	}
+	
+//	public List<DataEntry> getEntries(Long lowkey, Long highkey){
+//		List<DataEntry> entriesList = new LinkedList<>();
+//		if (lowkey != null) {
+//			int	PageNum = FIndPageNum (lowkey);
+//			boolean isLeaf = (bb.getInt()==0);
+//			int	numEntries = 10000; //randomly assign an initial number of entries 
+//			while (isLeaf && numEntries!=0) {
+//				numEntries = bb.getInt();
+////				System.out.println("i am right here");
+////				System.out.println("num: "+numEntries);
+//				for (int i=0; i<numEntries; i++) {
+//					int currentKey = bb.getInt();
+////					System.out.println("!!! low key: " + lowkey);
+////					System.out.println("!!! current key: " + currentKey);
+////					System.out.println("!!! high key: " + highkey);
+//
+//						if (currentKey>lowkey.intValue()) {
+//							if (highkey != null) {
+//								//debug here
+//							if (currentKey>highkey.intValue()) {
+//								return entriesList;
+//							}else { // low_key < k < high_key
+//								int numRids = bb.getInt();
+//								for (int k=0; k<numRids; k++) {
+//									int pageId =  bb.getInt();
+//									int tupleId = bb.getInt();
+//									DataEntry dataTuple = new DataEntry(pageId,tupleId);
+//									entriesList.add(dataTuple);
+//								}
+//							}
+//						}	
+//					} else { //current key value is lower than the data entry's key
+//						int numRids = bb.getInt();
+//						for (int k=0; k<numRids; k++) {
+//							int pageId =  bb.getInt();
+//							int tupleId = bb.getInt();
+//						}
+//					} 
+//				}
+//
+//				PageNum++;
+//				if (numEntries > numleaves) {
+//					return entriesList;
+//				}else { //read next page
+//					try {
+//						fc.position(numEntries*PageSize);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					bb=ByteBuffer.allocate(PageSize);
+//					bb.clear();
+//					try {
+//						fc.read(bb);
+//					} catch (IOException e) {
+//						// TODO Auto-generated catch block
+//						e.printStackTrace();
+//					}
+//					bb.flip();}
+//
+//				isLeaf = (bb.getInt(0)==0);
+//			}
+//		}else {//if the lowkey is null
+//			int PageNum = 1; //start reading from the leftmost leaf node
+//			for (PageNum=1; PageNum<=numleaves; PageNum++) {
+//				try {
+//					fc.position(PageNum*PageSize);
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+//				bb=ByteBuffer.allocate(PageSize);
+//				bb.clear();
+//				try {
+//					fc.read(bb);
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				bb.flip();
+//				//debug here
+//				//bb.getInt(); //skip the flag
+//				boolean isLeaf = (bb.getInt()==0);
+//				int numEntry = bb.getInt();
+//				for (int i =0; i<numEntry; i++) {
+//					int currentKey=bb.getInt();
+//					System.out.println("I am lowkey: "+lowkey);
+//					//if (currentKey>lowkey.intValue()) {
+//					//					if (currentKey>=highkey.intValue()) {
+//					if (currentKey>highkey.intValue()) {
+//						return entriesList;
+//					} else {
+//						int numRids = bb.getInt();
+//						for (int k=0; k<numRids; k++) {
+//							int pageId =  bb.getInt();
+//							int tupleId = bb.getInt();
+//							DataEntry dataTuple = new DataEntry(pageId,tupleId);
+//							entriesList.add(dataTuple);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		return entriesList;
+//	}
 
 	/**[getLeftMostEntry] is a method designed for clustered index case. 
 	 * 

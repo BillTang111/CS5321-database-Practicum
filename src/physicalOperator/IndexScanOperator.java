@@ -114,6 +114,7 @@ public class IndexScanOperator extends Operator{
 				DataEntry entry = this.lstIterator.next();
 				int pageId = entry.getPageId();
 				int tupleId = entry.getTupleId();
+				//System.out.println("tupleId: "+tupleId);
 				try {
 					BtupleReader.reset(pageId,tupleId);
 				} catch (IOException e) {
