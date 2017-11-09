@@ -1,9 +1,12 @@
 package visitor;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import Database_Catalog.BPlusIndexInform;
 import Database_Catalog.Catalog;
 import logicalOperator.LogicalDuplicateEliminationOperators;
 import logicalOperator.LogicalJoinOperator;
@@ -17,6 +20,7 @@ import net.sf.jsqlparser.statement.select.PlainSelect;
 import physicalOperator.BNLJOperator;
 import physicalOperator.DuplicateEliminationOperators;
 import physicalOperator.ExternalSortOperator;
+import physicalOperator.IndexScanOperator;
 import physicalOperator.JoinOperator;
 import physicalOperator.Operator;
 import physicalOperator.ProjectOperator;
@@ -34,6 +38,9 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	int jPara; //BNLJ size
 	int sMode; //0 for in-memory sort, 1 for external sort
 	int sPara; //number of buffer pages for external sort
+	private Boolean useIndex;
+	private ArrayList<String> indexList;
+	private String tableName;
 	
 	public PhysicalPlanBuilder() {
 		stackOp = new Stack<Operator>();
@@ -150,10 +157,121 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		logChild.accept(this);
 		
 		Operator child = stackOp.pop();
-		SelectOperator select = new SelectOperator(selectCondition, child);
-		stackOp.push(select);
+		
+		if (!useIndex){
+			SelectOperator select = new SelectOperator(selectCondition, child);
+			stackOp.push(select);
+		}
+		else {
+			if (!examineEligible(selectCondition, indexList)){
+				System.out.println("Using index, but this condition is not eligible");
+				SelectOperator select = new SelectOperator(selectCondition, child);
+				stackOp.push(select);
+			}
+			else {
+				System.out.println("Using index, this condition attribute is eligible");
+				System.out.println(selectCondition);
+				System.out.println("Now check if there are multiple conditions on this attribute");
+
+				if (!(child instanceof IndexScanOperator)){
+					System.out.println("//no multiple conditions");
+					//System.out.println(child.getClass());
+					boundVisitor bv = new boundVisitor();
+					selectCondition.accept(bv);
+					Long lowerBound = ((bv.getLower()==null)? null: ((Long)bv.getLower()-1));
+					Long upperBound = ((bv.getUpper()==null)? null: ((Long)bv.getUpper()+1));
+					System.out.println("lowKey: " + lowerBound + " | highKey: " + upperBound);
+					
+					
+					//IndexScanOperator iSelect = IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", BPlusIndexInform indexinform);
+					//stackOp.push(iSelect);
+					
+				} else {
+					System.out.println("//yes multiple conditions");
+					IndexScanOperator indexChild= (IndexScanOperator) child;
+					Long lowerBound0 = indexChild.getLowKey();
+					Long upperBound0 = indexChild.getHighKey();
+					boundVisitor bv = new boundVisitor();
+					selectCondition.accept(bv);
+					Long lowerBound1 = ((bv.getLower()==null)? null: ((Long)bv.getLower()-1));
+					Long upperBound1 = ((bv.getUpper()==null)? null: ((Long)bv.getUpper()+1));
+					
+					Long lowerBound;
+					Long upperBound;
+					
+					if (lowerBound0==null || lowerBound1==null) {
+						if (lowerBound0==null && lowerBound1==null) {
+							lowerBound = null;
+						}
+						if (lowerBound0==null){
+							lowerBound = lowerBound1;
+						}
+						if (lowerBound1==null){
+							lowerBound = lowerBound0;
+						}
+					} else {
+						lowerBound = Math.max(lowerBound0, lowerBound1);
+					}
+					
+					if (upperBound0==null || upperBound1==null) {
+						if (upperBound0==null && upperBound1==null) {
+							upperBound = null;
+						}
+						if (upperBound0==null){
+							upperBound = upperBound1;
+						}
+						if (upperBound1==null){
+							upperBound = upperBound0;
+						}
+					} else {
+						upperBound = Math.min(upperBound0, upperBound1);
+					}
+					
+					//IndexScanOperator iSelect = IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", BPlusIndexInform indexinform);
+					//stackOp.push(iSelect);
+				}
+			}
+		}
 	}
 
+
+
+	private boolean examineEligible(Expression selectCondition,
+			ArrayList<String> iList) {
+		String sCondition = selectCondition.toString();
+		
+		if(!(sCondition.contains("<")||sCondition.contains(">"))){
+			// condition must be =
+			System.out.println("Reason: this is a = condition");
+			return false;
+		}
+		
+		Catalog catalog = Catalog.getInstance();
+		HashMap<String, String> aliasPair = catalog.getPairAlias();
+		int dot1Index = sCondition.indexOf(".");
+		int space1Indect = sCondition.indexOf(" ");
+		String firstTable = aliasPair.get(sCondition.substring(0, dot1Index));
+		this.tableName = firstTable;
+		
+		String indexField = firstTable + "." + sCondition.substring(dot1Index+1, space1Indect);
+		
+		if (!iList.contains(indexField)){
+			System.out.println("indexList is: " + iList);
+			System.out.println("condition field is: " + indexField);
+			System.out.println("Reason: condition not in indexList");
+			return false;
+		}
+		
+		// iList.contains(indexField) = true
+		String remain = sCondition.substring(space1Indect, sCondition.length());
+		if (remain.contains(".")){
+			// condition after compare sign is another column
+			System.out.println("Reason: condition compare two column");
+			return false;
+		}
+		
+		return true;
+	}
 
 
 	@Override
@@ -189,6 +307,14 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		if (sMode==1){
 			String ESortSize = sConfig.split(" ")[1];
 			sPara = Integer.parseInt(ESortSize);
+		}
+		
+		useIndex = false;
+		indexList = null;
+		Catalog data = Catalog.getInstance();
+		if (data.getIndexConfig().equals("1")){
+			useIndex = true;
+			indexList = data.getIndexList();
 		}
 	}
 	

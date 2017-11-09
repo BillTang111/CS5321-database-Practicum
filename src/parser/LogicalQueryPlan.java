@@ -21,7 +21,6 @@ public class LogicalQueryPlan {
 	
 	private LogicalOperator root;
 	
-	
 	/** logicalQueryPlan constructor
 	 * @param PlainSelect selectBody: the result parsed from Jsql parser 
 	 * @throws IOException */
@@ -37,6 +36,7 @@ public class LogicalQueryPlan {
 		ArrayList<ArrayList<String>> joinPair = new ArrayList<ArrayList<String>>(); 
 		ArrayList<LogicalOperator> nodeBeforeJoin = new ArrayList<LogicalOperator>(); 
 		HashMap<String, String> pairAlias = new HashMap<String, String>();
+		Catalog data = Catalog.getInstance();
 		
 		// 1. Pre-processing the statement from Jsql parser
 		Expression e = selectBody.getWhere();
@@ -45,7 +45,7 @@ public class LogicalQueryPlan {
 			e.accept(jVisitor);
 						
 			pairAlias = jVisitor.getPairAlias();
-			Catalog data = Catalog.getInstance();
+			data = Catalog.getInstance();
 			data.setPairAlias(pairAlias);
 						
 			sortedTable = jVisitor.getJoinTableList(); // original name
@@ -81,7 +81,7 @@ public class LogicalQueryPlan {
 						
 		sortedTable.add(onlyTable);
 		pairAlias.put(onlyTable, onlyTable);
-		Catalog data = Catalog.getInstance();
+		data = Catalog.getInstance();
 		data.setPairAlias(pairAlias);
 		}
 		int tableNum = sortedTable.size(); // number of table involved in this query
@@ -91,17 +91,21 @@ public class LogicalQueryPlan {
 		for(int i = 0; i < tableNum; i++) {
 			String tableName = sortedTable.get(i); //original name
 			LogicalScanOperator scan =  new LogicalScanOperator(tableName);
-			root = scan; //First process scan all the time
-							
+			root = scan; //First process scan all the time		
 			//If there are related select expressions of a table, process each of them 
 			//to grow the subtree
+			
+			
+			
 			if(selectConditionMap.containsKey(tableName)){
 				ArrayList<Expression> selectConditionList = selectConditionMap.get(tableName);
+				//System.out.println(selectConditionList);
 				for(Expression eachExpression: selectConditionList){
-				LogicalSelectOperator select = new LogicalSelectOperator(eachExpression, root);
-				root = select;
+					LogicalSelectOperator select = new LogicalSelectOperator(eachExpression, root);
+					root = select;
 				}
 			}
+			
 			nodeBeforeJoin.add(root); //finish subtree of this table after scan and select
 		}
 		ArrayList<LogicalOperator> parentsOfTable = (ArrayList<LogicalOperator>) nodeBeforeJoin.clone(); // parents nodes of each table

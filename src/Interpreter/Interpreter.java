@@ -155,6 +155,7 @@ public class Interpreter {
 		StringBuilder sb2 = new StringBuilder();
 	    String joinConfigLine = br2.readLine();
 	    String sortConfigLine = br2.readLine();
+	    String indexConfigLine = br2.readLine();
 	    br2.close();
 		
 		// 1.4 Create a 'Database_Catalog' object to store directory and schema
@@ -173,6 +174,7 @@ public class Interpreter {
 		catalog.settempLocation(tempLocation);
 		catalog.setJoinConfig(joinConfigLine);
 		catalog.setSortConfig(sortConfigLine);
+		catalog.setIndexConfig(indexConfigLine);
 		catalog.setSchema(map); // Original name + field
 		
 		catalog.setPairAlias(defaultAliasPair);
@@ -316,6 +318,7 @@ public class Interpreter {
 	public static void buildIndex(String input) throws IOException {
 		BufferedReader indexReader = new BufferedReader(new FileReader(input + "/db/index_info.txt"));
 		String config;
+		ArrayList<String> indexConfigList = new ArrayList<String>();
 		while((config = indexReader.readLine()) != null){
 			//split each line and build corresponding b+ tree
 			String[] configs = config.split("\\s+");
@@ -323,8 +326,12 @@ public class Interpreter {
 			String columnName = configs[1];
 			boolean clusterOrNot = configs[2].equals("1");
 			int order = Integer.parseInt(configs[3]);
+			indexConfigList.add(tableName + "." + columnName);
 			BPlusTree indexTree = new BPlusTree(clusterOrNot, tableName, columnName, order, input + "/db/");
 		}
+		
+		Catalog catalog = Catalog.getInstance();
+		catalog.setIndexList(indexConfigList);
 	}
 	
 	

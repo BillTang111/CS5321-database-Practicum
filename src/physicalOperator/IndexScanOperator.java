@@ -162,5 +162,13 @@ public class IndexScanOperator extends Operator{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public Long getLowKey(){
+		return this.lowkey;
+	}
+	
+	public Long getHighKey(){
+		return this.highkey;
+	}
 
 }
