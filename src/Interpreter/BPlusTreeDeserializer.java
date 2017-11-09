@@ -102,16 +102,17 @@ public class BPlusTreeDeserializer {
 			int	numEntries = 10000; //randomly assign an initial number of entries 
 			while (isLeaf && numEntries!=0) {
 				numEntries = bb.getInt();
-				System.out.println("i am right here");
-				System.out.println("num: "+numEntries);
+//				System.out.println("i am right here");
+//				System.out.println("num: "+numEntries);
 				for (int i=0; i<numEntries; i++) {
 					int currentKey = bb.getInt();
-					System.out.println("!!! low key: " + lowkey);
-					System.out.println("!!! current key: " + currentKey);
-					System.out.println("!!! high key: " + highkey);
-					if (highkey != null) {
-						//debug here
+//					System.out.println("!!! low key: " + lowkey);
+//					System.out.println("!!! current key: " + currentKey);
+//					System.out.println("!!! high key: " + highkey);
+
 						if (currentKey>lowkey.intValue()) {
+							if (highkey != null) {
+								//debug here
 							if (currentKey>highkey.intValue()) {
 								return entriesList;
 							}else { // low_key < k < high_key

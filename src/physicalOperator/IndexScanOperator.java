@@ -34,8 +34,8 @@ public class IndexScanOperator extends Operator{
 	private List<DataEntry> dataEntryList;
 	private ListIterator<DataEntry> lstIterator;
 	private boolean foundClusterEntry; 
-	
-	
+
+
 	public IndexScanOperator(Long lowkey, Long highkey, String tableName, String alias, BPlusIndexInform indexinform) throws IOException {
 		this.lowkey = lowkey;
 		this.highkey = highkey;
@@ -58,22 +58,31 @@ public class IndexScanOperator extends Operator{
 //			newTable.setAlias(alias);
 //			for (Column c:columnList) {
 //				Column newColumn = new Column();
-//				newColumn.setTable(newTable);
-//				newColumn.setColumnName(c.getColumnName());
-//				newColumnList.add(newColumn);
-//			}
-//			// ?????
-//		}
+		//		if(alias != null) {
+		//			HashMap catlog = Catalog.getInstance().getSchema();
+		//			List<Column> columnList = (List<Column>) catlog.get(tableName);
+		//			List<Column> newColumnList = new ArrayList<Column>();
+		////			?????
+		//			Table newTable = new Table();
+		//			newTable.setAlias(alias);
+		//			for (Column c:columnList) {
+		//				Column newColumn = new Column();
+		//				newColumn.setTable(newTable);
+		//				newColumn.setColumnName(c.getColumnName());
+		//				newColumnList.add(newColumn);
+		//			}
+		//			// ?????
+		//		}
 		if(!indexinform.isClustered()) {
 			this.dataEntryList = deserializer.getEntries(lowkey, highkey);
 			this.lstIterator = this.dataEntryList.listIterator();
 		}
 		String inputloc = Catalog.getInstance().getInputLocation() + "/db/data/"+ tableName;
+		System.out.print("input location is: " + inputloc + "\n");
 		File inputFile = new File(inputloc);
-				
 		this.BtupleReader = new BinaryTR(inputFile);
 	}
-	
+
 
 	@Override
 	public Tuple getNextTuple() {
@@ -83,52 +92,54 @@ public class IndexScanOperator extends Operator{
 				DataEntry startEntry = deserializer.getLeftMostEntry(lowkey, highkey);
 				if (startEntry!=null) {
 					foundClusterEntry=true;
-					 try {
+					try {
 						BtupleReader.reset(startEntry.getPageId(), startEntry.getTupleId());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					 String input = BtupleReader.ReadNextTuple();
-					 List nameList = new LinkedList<String>();
-					 nameList.add(tableName);
-					 return new Tuple(input,nameList);
+					String input = BtupleReader.ReadNextTuple();
+					List nameList = new LinkedList<String>();
+					nameList.add(tableName);
+					return new Tuple(input,nameList);
 				}else {
 					return null;
 				}
 			}else { 
-				 String input = BtupleReader.ReadNextTuple();
-				 List nameList = new  LinkedList<String>();
-				 nameList.add(tableName);
-				 Tuple t = new Tuple(input,nameList);
-			if (t != null) {
-				int key =(int) t.getTupleMap().get(indexinform.getColumn());
-				if (key<highkey) {
-					return t;
-				}
-			}
-			return null;
-				}
-			} else {
-					if(this.lstIterator.hasNext()) {
-					DataEntry entry = this.lstIterator.next();
-					int pageId = entry.getPageId();
-					int tupleId = entry.getTupleId();
-					try {
-						BtupleReader.reset(pageId,tupleId);
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				String input = BtupleReader.ReadNextTuple();
+				List nameList = new  LinkedList<String>();
+				nameList.add(tableName);
+				Tuple t = new Tuple(input,nameList);
+				if (t != null) {
+					int key =(int) t.getTupleMap().get(indexinform.getColumn());
+					if (key<highkey) {
+						return t;
 					}
-					 String input = BtupleReader.ReadNextTuple();
-					 List nameList = new  LinkedList<String>();
-					 nameList.add(tableName);
-					 return new Tuple(input,nameList);
-				} 
-			 else {
-				 return null;
-			 }
+				}
+				return null;
 			}
+		} else {
+			if(this.lstIterator.hasNext()) {
+				DataEntry entry = this.lstIterator.next();
+				int pageId = entry.getPageId();
+				int tupleId = entry.getTupleId();
+				try {
+					BtupleReader.reset(pageId,tupleId);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				String input = BtupleReader.ReadNextTuple();
+				System.out.println("\n"+"this is input tuple:" + input);
+				System.out.println("this is input table:" + tableName + "\n");
+				List nameList = new  LinkedList<String>();
+				nameList.add(tableName);
+				return new Tuple(input,nameList);
+			} 
+			else {
+				return null;
+			}
+		}
 	}
 
 	@Override
@@ -143,7 +154,7 @@ public class IndexScanOperator extends Operator{
 	@Override
 	public void dump(int printOrNot) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -162,11 +173,11 @@ public class IndexScanOperator extends Operator{
 		// TODO Auto-generated method stub
 		return 0;
 	}
-	
+
 	public Long getLowKey(){
 		return this.lowkey;
 	}
-	
+
 	public Long getHighKey(){
 		return this.highkey;
 	}
