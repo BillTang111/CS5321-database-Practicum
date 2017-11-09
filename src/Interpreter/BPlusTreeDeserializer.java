@@ -43,16 +43,22 @@ public class BPlusTreeDeserializer {
 	 * correct page number for the matched key.
 	 * @Return: matched leaf node's page number  
 	 * */
-	private int FIndPageNum(Long key) throws IOException {
+	private int FIndPageNum(Long key) {
 		int PageNum = RootAddress; 
 		//add this
-		fc.position((long)(PageSize * PageNum));
-		//end add
-		//bb = ByteBuffer.allocate(PageSize*PageNum);
-		bb = ByteBuffer.allocate(PageSize);
-		bb.clear();
-		fc.read(bb);
-		bb.flip(); //start a sequence of "gets"
+		try {
+			fc.position((long)(PageSize * PageNum));
+			//end add
+			//bb = ByteBuffer.allocate(PageSize*PageNum);
+			bb = ByteBuffer.allocate(PageSize);
+			bb.clear();
+			fc.read(bb);
+			bb.flip(); //start a sequence of "gets"
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		boolean isLeaf = false;
 		//start searching from the top of the tree 
 		while (!isLeaf) {
@@ -65,11 +71,18 @@ public class BPlusTreeDeserializer {
 			//through page address, go to next page 
 			//PageNum = bb.getInt(8+child*4);
 			PageNum = bb.getInt(8+4*numOfKeys+4*child);
-			fc.position((long)(PageNum*PageSize));
-			bb=ByteBuffer.allocate(PageSize);
-			bb.clear();
-			fc.read(bb);
-			bb.flip();
+
+			try {
+				fc.position((long)(PageNum*PageSize));
+				bb=ByteBuffer.allocate(PageSize);
+				bb.clear();
+				fc.read(bb);
+				bb.flip();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 			isLeaf = (bb.getInt(0)==0);
 		}
 		return PageNum;
@@ -84,54 +97,58 @@ public class BPlusTreeDeserializer {
 	public List<DataEntry> getEntries(Long lowkey, Long highkey){
 		List<DataEntry> entriesList = new LinkedList<>();
 		if (lowkey != null) {
-			try {
-				int PageNum = FIndPageNum(lowkey);
-				boolean isLeaf = (bb.getInt()==0);
-
-				while (isLeaf) {
-		
-					int numEntries = bb.getInt();
-					System.out.println("num: "+numEntries);
-					for (int i=0; i<numEntries; i++) {
-						int currentKey = bb.getInt();
-						if (highkey != null) {
-							//debug here
-						//	if (currentKey>lowkey.intValue()) {
-							if (currentKey>=highkey.intValue()) {
-								if (currentKey>highkey.intValue()) {
-									return entriesList;
-								} else {
-									int numRids = bb.getInt();
-									for (int k=0; k<numRids; k++) {
-										int pageId =  bb.getInt();
-										int tupleId = bb.getInt();
-										DataEntry dataTuple = new DataEntry(pageId,tupleId);
-										entriesList.add(dataTuple);
-									}
-								}	
-							} else { //current key value is lower than the data entry's key
-								int numRids = bb.getInt();
-								for (int k=0; k<numRids; k++) {
-									int pageId =  bb.getInt();
-									int tupleId = bb.getInt();}
-							} 
+			int	PageNum = FIndPageNum (lowkey);
+			boolean isLeaf = (bb.getInt()==0);
+			while (isLeaf) {
+				int numEntries = bb.getInt();
+				System.out.println("num: "+numEntries);
+				for (int i=0; i<numEntries; i++) {
+					int currentKey = bb.getInt();
+					if (highkey != null) {
+						//debug here
+						if (currentKey>lowkey.intValue()) {
+							//							if (currentKey>=highkey.intValue()) {
+							if (currentKey>highkey.intValue()) {
+								return entriesList;
+							}
 						}
-					}
+						int numRids = bb.getInt();
+						for (int k=0; k<numRids; k++) {
+							int pageId =  bb.getInt();
+							int tupleId = bb.getInt();
+							DataEntry dataTuple = new DataEntry(pageId,tupleId);
+							entriesList.add(dataTuple);
+						}	
+					} else { //current key value is lower than the data entry's key
+						int numRids = bb.getInt();
+						for (int k=0; k<numRids; k++) {
+							int pageId =  bb.getInt();
+							int tupleId = bb.getInt();
+						}
+					} 
 				}
+
 				PageNum++;
 				if (PageNum > numleaves) {
 					return entriesList;
 				}else { //read next page
-					fc.position(PageNum*PageSize);
+					try {
+						fc.position(PageNum*PageSize);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					bb=ByteBuffer.allocate(PageSize);
 					bb.clear();
-					fc.read(bb);
-					bb.flip();
-					isLeaf = (bb.getInt(0)==0);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					try {
+						fc.read(bb);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					bb.flip();}
+
+				isLeaf = (bb.getInt(0)==0);
 			}
 		}else {//if the lowkey is null
 			int PageNum = 1; //start reading from the leftmost leaf node
@@ -152,22 +169,22 @@ public class BPlusTreeDeserializer {
 				}
 				bb.flip();
 				bb.getInt(); //skip the flag
+				boolean isLeaf = (bb.getInt()==0);
 				int numEntry = bb.getInt();
 				for (int i =0; i<numEntry; i++) {
 					int currentKey=bb.getInt();
 					System.out.println("I am lowkey: "+lowkey);
 					//if (currentKey>lowkey.intValue()) {
-					if (currentKey>=highkey.intValue()) {
-						if (currentKey>highkey.intValue()) {
-							return entriesList;
-						} else {
-							int numRids = bb.getInt();
-							for (int k=0; k<numRids; k++) {
-								int pageId =  bb.getInt();
-								int tupleId = bb.getInt();
-								DataEntry dataTuple = new DataEntry(pageId,tupleId);
-								entriesList.add(dataTuple);
-							}
+					//					if (currentKey>=highkey.intValue()) {
+					if (currentKey>highkey.intValue()) {
+						return entriesList;
+					} else {
+						int numRids = bb.getInt();
+						for (int k=0; k<numRids; k++) {
+							int pageId =  bb.getInt();
+							int tupleId = bb.getInt();
+							DataEntry dataTuple = new DataEntry(pageId,tupleId);
+							entriesList.add(dataTuple);
 						}
 					}
 				}
@@ -193,7 +210,7 @@ public class BPlusTreeDeserializer {
 					for (int i=0; i<numEntries; i++) {
 						int currentKey = bb.getInt();
 						if (highkey != null) {
-							
+
 							if (currentKey>lowkey.intValue()) {
 								if (currentKey>highkey.intValue()) {
 									return null;
@@ -225,31 +242,31 @@ public class BPlusTreeDeserializer {
 			return null;
 		}else {//if the lowkey is null
 			int PageNum = 1; //start reading from the leftmost leaf node
-				try {
-					fc.position(PageNum*PageSize);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				bb=ByteBuffer.allocate(PageSize);
-				bb.clear();
-				try {
-					fc.read(bb);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				bb.flip();
-				int current_key = bb.getInt(8); //get the key
-				if (current_key >highkey) {
-					return null;
-				}
-				int pageId =bb.getInt(4*4);
-				int tupleId = bb.getInt(4*5);
-				return new DataEntry(pageId,tupleId);
+			try {
+				fc.position(PageNum*PageSize);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+			bb=ByteBuffer.allocate(PageSize);
+			bb.clear();
+			try {
+				fc.read(bb);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			bb.flip();
+			int current_key = bb.getInt(8); //get the key
+			if (current_key >highkey) {
+				return null;
+			}
+			int pageId =bb.getInt(4*4);
+			int tupleId = bb.getInt(4*5);
+			return new DataEntry(pageId,tupleId);
 		}
 	}
+}
 
 
 
