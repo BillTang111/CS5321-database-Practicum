@@ -1,11 +1,15 @@
 package visitor;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
+import BPlusTree.BPlusTree;
 import Database_Catalog.BPlusIndexInform;
 import Database_Catalog.Catalog;
 import logicalOperator.LogicalDuplicateEliminationOperators;
@@ -41,6 +45,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	private Boolean useIndex;
 	private ArrayList<String> indexList;
 	private String tableName;
+	private String tableColumn;
 	
 	public PhysicalPlanBuilder() {
 		stackOp = new Stack<Operator>();
@@ -172,7 +177,10 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 				System.out.println("Using index, this condition attribute is eligible");
 				System.out.println(selectCondition);
 				System.out.println("Now check if there are multiple conditions on this attribute");
-
+				
+				Catalog catalog = Catalog.getInstance();
+				HashMap<String, ArrayList> indexInfo = catalog.getIndexInfo();
+				
 				if (!(child instanceof IndexScanOperator)){
 					System.out.println("//no multiple conditions");
 					//System.out.println(child.getClass());
@@ -183,8 +191,13 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					System.out.println("lowKey: " + lowerBound + " | highKey: " + upperBound);
 					
 					
-					//IndexScanOperator iSelect = IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", BPlusIndexInform indexinform);
-					//stackOp.push(iSelect);
+					ArrayList<String> columnIndexInfo = indexInfo.get(tableColumn);
+					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;
+					int order = Integer.parseInt(columnIndexInfo.get(1));
+					String indexPath = columnIndexInfo.get(2);
+					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
+					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", inform);
+					stackOp.push(iSelect);
 					
 				} else {
 					System.out.println("//yes multiple conditions");
@@ -196,8 +209,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					Long lowerBound1 = ((bv.getLower()==null)? null: ((Long)bv.getLower()-1));
 					Long upperBound1 = ((bv.getUpper()==null)? null: ((Long)bv.getUpper()+1));
 					
-					Long lowerBound;
-					Long upperBound;
+					Long lowerBound = null;
+					Long upperBound = null;
 					
 					if (lowerBound0==null || lowerBound1==null) {
 						if (lowerBound0==null && lowerBound1==null) {
@@ -227,8 +240,13 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 						upperBound = Math.min(upperBound0, upperBound1);
 					}
 					
-					//IndexScanOperator iSelect = IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", BPlusIndexInform indexinform);
-					//stackOp.push(iSelect);
+					ArrayList<String> columnIndexInfo = indexInfo.get(tableColumn);
+					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;
+					int order = Integer.parseInt(columnIndexInfo.get(1));
+					String indexPath = columnIndexInfo.get(2);
+					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
+					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", inform);
+					stackOp.push(iSelect);
 				}
 			}
 		}
@@ -254,6 +272,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		this.tableName = firstTable;
 		
 		String indexField = firstTable + "." + sCondition.substring(dot1Index+1, space1Indect);
+		this.tableColumn = indexField;
 		
 		if (!iList.contains(indexField)){
 			System.out.println("indexList is: " + iList);
@@ -315,7 +334,44 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		if (data.getIndexConfig().equals("1")){
 			useIndex = true;
 			indexList = data.getIndexList();
+			try {
+				reloadIndexInfo(data.getInputLocation());
+			} catch (NumberFormatException | IOException e) {
+				e.printStackTrace();
+			}
 		}
+	}
+
+
+	private void reloadIndexInfo(String inputLocation) throws NumberFormatException, IOException {
+		BufferedReader indexReader = new BufferedReader(new FileReader(inputLocation + "/db/index_info.txt"));
+		String config;
+		ArrayList<String> indexConfigList = new ArrayList<String>();
+		HashMap<String, ArrayList> indexConfigInfo = new HashMap<String, ArrayList>();
+		while((config = indexReader.readLine()) != null){
+			//split each line and build corresponding b+ tree
+			String[] configs = config.split("\\s+");
+			String tableName = configs[0];
+			String columnName = configs[1];
+			String clusterOrNotString = configs[2];
+			boolean clusterOrNot = configs[2].equals("1");
+			int order = Integer.parseInt(configs[3]);
+			
+			ArrayList<String> eachIndexInfo = new ArrayList<String>();
+			eachIndexInfo.add(configs[2]);
+			eachIndexInfo.add(configs[3]);
+			eachIndexInfo.add(inputLocation + "/db/indexes/" + tableName + "." + columnName);
+			
+			indexConfigList.add(tableName + "." + columnName);
+			indexConfigInfo.put(tableName + "." + columnName, eachIndexInfo);
+			
+		}
+		
+		indexReader.close();
+		
+		Catalog catalog = Catalog.getInstance();
+		catalog.setIndexList(indexConfigList);
+		catalog.setIndexInfo(indexConfigInfo);
 	}
 	
 }

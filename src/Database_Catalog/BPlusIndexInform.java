@@ -11,11 +11,11 @@ import net.sf.jsqlparser.schema.Column;
 public class BPlusIndexInform {
 	private String indexPath;
 	private int order;
-	private Column column;
+	private String column;
 	private boolean isClustered;
 	
 	//class constructor creating data structure to store index inform
-	public BPlusIndexInform (Column column, boolean isClustered, int order, String indexPath) {
+	public BPlusIndexInform (String column, boolean isClustered, int order, String indexPath) {
 	this.column = column;
 	this.isClustered=isClustered; 
 	this.order=order;
@@ -28,7 +28,7 @@ public class BPlusIndexInform {
 	}
 	
 	
-	public Column getColumn() {
+	public String getColumn() {
 		return column;
 	}
 	

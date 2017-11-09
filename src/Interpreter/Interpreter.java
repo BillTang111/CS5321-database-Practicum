@@ -183,6 +183,10 @@ public class Interpreter {
 		
 		
 		
+		
+		
+		
+		
 		// if need to build index
 		if(buildIndex){
 			System.out.println("need to build index");
@@ -319,19 +323,32 @@ public class Interpreter {
 		BufferedReader indexReader = new BufferedReader(new FileReader(input + "/db/index_info.txt"));
 		String config;
 		ArrayList<String> indexConfigList = new ArrayList<String>();
+		HashMap<String, ArrayList> indexConfigInfo = new HashMap<String, ArrayList>();
 		while((config = indexReader.readLine()) != null){
 			//split each line and build corresponding b+ tree
 			String[] configs = config.split("\\s+");
 			String tableName = configs[0];
 			String columnName = configs[1];
+			String clusterOrNotString = configs[2];
 			boolean clusterOrNot = configs[2].equals("1");
 			int order = Integer.parseInt(configs[3]);
+			
+			ArrayList<String> eachIndexInfo = new ArrayList<String>();
+			eachIndexInfo.add(configs[2]);
+			eachIndexInfo.add(configs[3]);
+			eachIndexInfo.add(input + "/db/indexes/" + tableName + "." + columnName);
+			
 			indexConfigList.add(tableName + "." + columnName);
+			indexConfigInfo.put(tableName + "." + columnName, eachIndexInfo);
+			
 			BPlusTree indexTree = new BPlusTree(clusterOrNot, tableName, columnName, order, input + "/db/");
 		}
 		
+		indexReader.close();
+		
 		Catalog catalog = Catalog.getInstance();
 		catalog.setIndexList(indexConfigList);
+		catalog.setIndexInfo(indexConfigInfo);
 	}
 	
 	

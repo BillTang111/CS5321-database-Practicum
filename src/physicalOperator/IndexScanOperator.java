@@ -14,8 +14,8 @@ import Database_Catalog.Catalog;
 import Interpreter.BPlusTreeDeserializer;
 import Interpreter.BinaryTR;
 import Tuple.Tuple;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
+//import net.sf.jsqlparser.schema.Column;
+//import net.sf.jsqlparser.schema.Table;
 
 /** An index scan will only retrieve a range (subset) of tuples from a relation file,
  *  and will use a B+-tree index to do so.
@@ -49,21 +49,21 @@ public class IndexScanOperator extends Operator{
 			e.printStackTrace();
 		}
 		this.foundClusterEntry = false;
-		if(alias != null) {
-			HashMap catlog = Catalog.getInstance().getSchema();
-			List<Column> columnList = (List<Column>) catlog.get(tableName);
-			List<Column> newColumnList = new ArrayList<Column>();
-//			?????
-			Table newTable = new Table();
-			newTable.setAlias(alias);
-			for (Column c:columnList) {
-				Column newColumn = new Column();
-				newColumn.setTable(newTable);
-				newColumn.setColumnName(c.getColumnName());
-				newColumnList.add(newColumn);
-			}
-			// ?????
-		}
+//		if(alias != null) {
+//			HashMap catlog = Catalog.getInstance().getSchema();
+//			List<Column> columnList = (List<Column>) catlog.get(tableName);
+//			List<Column> newColumnList = new ArrayList<Column>();
+////			?????
+//			Table newTable = new Table();
+//			newTable.setAlias(alias);
+//			for (Column c:columnList) {
+//				Column newColumn = new Column();
+//				newColumn.setTable(newTable);
+//				newColumn.setColumnName(c.getColumnName());
+//				newColumnList.add(newColumn);
+//			}
+//			// ?????
+//		}
 		if(!indexinform.isClustered()) {
 			this.dataEntryList = deserializer.getEntries(lowkey, highkey);
 			this.lstIterator = this.dataEntryList.listIterator();
