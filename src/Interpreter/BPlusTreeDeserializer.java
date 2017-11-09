@@ -99,25 +99,30 @@ public class BPlusTreeDeserializer {
 		if (lowkey != null) {
 			int	PageNum = FIndPageNum (lowkey);
 			boolean isLeaf = (bb.getInt()==0);
-			while (isLeaf) {
-				int numEntries = bb.getInt();
+			int	numEntries = 10000; //randomly assign an initial number of entries 
+			while (isLeaf && numEntries!=0) {
+				numEntries = bb.getInt();
+				System.out.println("i am right here");
 				System.out.println("num: "+numEntries);
 				for (int i=0; i<numEntries; i++) {
 					int currentKey = bb.getInt();
+					System.out.println("!!! low key: " + lowkey);
+					System.out.println("!!! current key: " + currentKey);
+					System.out.println("!!! high key: " + highkey);
 					if (highkey != null) {
 						//debug here
 						if (currentKey>lowkey.intValue()) {
-							//							if (currentKey>=highkey.intValue()) {
 							if (currentKey>highkey.intValue()) {
 								return entriesList;
+							}else { // low_key < k < high_key
+								int numRids = bb.getInt();
+								for (int k=0; k<numRids; k++) {
+									int pageId =  bb.getInt();
+									int tupleId = bb.getInt();
+									DataEntry dataTuple = new DataEntry(pageId,tupleId);
+									entriesList.add(dataTuple);
+								}
 							}
-						}
-						int numRids = bb.getInt();
-						for (int k=0; k<numRids; k++) {
-							int pageId =  bb.getInt();
-							int tupleId = bb.getInt();
-							DataEntry dataTuple = new DataEntry(pageId,tupleId);
-							entriesList.add(dataTuple);
 						}	
 					} else { //current key value is lower than the data entry's key
 						int numRids = bb.getInt();
@@ -129,11 +134,11 @@ public class BPlusTreeDeserializer {
 				}
 
 				PageNum++;
-				if (PageNum > numleaves) {
+				if (numEntries > numleaves) {
 					return entriesList;
 				}else { //read next page
 					try {
-						fc.position(PageNum*PageSize);
+						fc.position(numEntries*PageSize);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

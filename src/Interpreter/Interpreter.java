@@ -231,7 +231,7 @@ public class Interpreter {
 				long timeStart = System.currentTimeMillis();
 				System.out.print("Current Time in milliseconds = ");
 				System.out.println(timeStart);
-				physicalPlanRoot.dump(0); //change to 1 when need to print out result
+				physicalPlanRoot.dump(1); //change to 1 when need to print out result
 				System.out.println("Results dumped.");
 				long timeEnd = System.currentTimeMillis();
 				System.out.print("Current Time in milliseconds = ");
