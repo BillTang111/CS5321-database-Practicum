@@ -111,7 +111,7 @@ public class BinaryTR implements TupleReader {
 		buffer = ByteBuffer.allocate(buffer_size);
 		buffer.clear();
 		for (int i=0; i<tupleId;i++) {
-			System.out.println("tupleId: "+i);
+			//System.out.println("tupleId: "+i);
 			this.ReadNextTuple();
 		}
 	}
