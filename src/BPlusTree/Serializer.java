@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**This class build a serializer for the B+ tree
+ * 
+ * author: Lini Tan lt398
+ * */
 public class Serializer {
 	private FileOutputStream fout;
 	private FileChannel channel;
@@ -28,7 +32,9 @@ public class Serializer {
 		
 	}
 	
-	/**write next leaf node*/
+	/**@param leaf: the leaf node we want to write
+	 * 
+	 * write next leaf node*/
 	public void writeNextNode(LeafNode leaf){
 		buffer.putInt(0);
 		buffer.putInt(leaf.getNum());
@@ -114,7 +120,11 @@ public class Serializer {
 	
 	
 	
-
+/**write the head page
+ * @param root: the location of the root 
+ * @param leafNum: the num of leaf
+ * @param order: the order size
+ * */
 	public void writeHeadPage(int root, int leafNum, int order) {
 		// TODO Auto-generated method stub
 		GoPage(0);
@@ -140,7 +150,7 @@ public class Serializer {
 	}
 
 	/**
-	 * Close the index file.
+	 * @param: Close the index file.
 	 */
 	public void close() {
 		try {
@@ -150,7 +160,8 @@ public class Serializer {
 		}
 	}
 	
-	/**rewrite the pages from the given index*/
+	/**
+	 * @param rewrite the pages from the given index*/
 	public void GoPage(int pageIndex){
 		try {
 			channel.position((long)pageIndex*pageSize);

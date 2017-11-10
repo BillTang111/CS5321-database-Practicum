@@ -80,6 +80,7 @@ public class BPlusTreeDeserializer {
 				int childKey = bb.getInt(8+4*child);
 				if (childKey >key.intValue()) break;
 			}
+			//System.out.println("child: "+child);
 			//through page address, go to next page 
 			//PageNum = bb.getInt(8+child*4);
 			PageNum = bb.getInt(8+4*numOfKeys+4*child);
@@ -94,9 +95,9 @@ public class BPlusTreeDeserializer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			//System.out.println(bb.getInt(0));
+			//System.out.println(isLeaf);
 			isLeaf = (bb.getInt(0)==0);
-			System.out.println("Leaf: "+isLeaf);
 		}
 		System.out.println("haha i am here");
 		return PageNum;
@@ -112,7 +113,9 @@ public class BPlusTreeDeserializer {
 	public List<DataEntry> getEntries(Long lowkey, Long highkey){
 		List<DataEntry> entriesList = new LinkedList<>();
 		if (lowkey != null) {
+			System.out.println("llll");
 			int	PageNum = FIndPageNum (lowkey);
+			System.out.println("zzzz");
 			boolean isLeaf = (bb.getInt()==0);
 			while(isLeaf){
 				int numEntries = bb.getInt();

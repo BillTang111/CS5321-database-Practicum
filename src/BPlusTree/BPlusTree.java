@@ -16,6 +16,9 @@ import Tuple.TupleComparator;
 import net.sf.jsqlparser.schema.Column;
 import physicalOperator.*;
 
+/** This class is to build a B+ tree to facilitate the index search.
+ * @author Lini Tan lt398
+ */
 public class BPlusTree {
 	private String fileLocation;
 	private String column;
@@ -42,6 +45,7 @@ public class BPlusTree {
 		serializer.close();
 	}
 	
+	/**@param cluster the tree if needed*/
 	private void cluster(String column, String inputPath, String tableName){
 		File input = new File(inputPath);
 		try {
@@ -81,9 +85,6 @@ public class BPlusTree {
 	
 	/**
 	 * build the very bottom layer of the tree(leaves)
-	 * 
-	 * @param tableName
-	 * @param column
 	 * @return an array list to store all leaf nodes
 	 */
 	private ArrayList<LeafNode> buildLeafLayer(String tableName, String column, boolean clustered) {
@@ -176,7 +177,7 @@ public class BPlusTree {
 	}
 	
 	/**
-	 * Build the first layer of index nodes and then recursively build the upper layer
+	 * @param IndexNode: Build the first layer of index nodes and then recursively build the upper layer
 	 */
 	private IndexNode buildIndexLayers() {
 		// build the first index layer
@@ -254,9 +255,7 @@ public class BPlusTree {
 	
 	
 	/**
-	 * @param IndexLayer:
-	 *            arrayList of index nodes build the upper level from the input
-	 *            arrayList call itself recursively until reaches the root
+	 * @param IndexLayer: the child index layer of the layer we are building. recursively call iteself
 	 */
 	private IndexNode buildUpperLayers(ArrayList<IndexNode> IndexLayer) {
 		ArrayList<IndexNode> output = new ArrayList<IndexNode>();
@@ -327,7 +326,7 @@ public class BPlusTree {
 	
 	/**
 	 * get the root of this tree
-	 * @return index node: root
+	 * @return indexnode: root
 	 */
 	public IndexNode getRoot(){
 		return root;

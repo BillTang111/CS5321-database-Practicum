@@ -2,6 +2,9 @@ package BPlusTree;
 
 import java.util.ArrayList;
 
+/** This class is used to build indexNode.
+ * @author Lini Tan lt398
+ */
 public class IndexNode {
 	private ArrayList<Integer> key;
 	private ArrayList<LeafNode> leafChildren;
@@ -12,9 +15,7 @@ public class IndexNode {
 	
 	/**
 	 * Constructor for the first index layer whose children nodes are leaves
-	 * @param keyList: key list of the node
-	 * @param leaf: list of LeafNode
-	 * @param address: the address of this node;
+	 * 
 	 */
 	public IndexNode(ArrayList<Integer> keyList, ArrayList<LeafNode> leaf, int address, int leafKey){
 		key = keyList;
@@ -26,10 +27,6 @@ public class IndexNode {
 	
 	/**
 	 * Constructor for other index layers
-	 * @param keyList: key list of the node
-	 * @param leaf: list of LeafNode
-	 * @param address: the address of this node;
-	 * @param isUpper: to distinguish from the constructor above. Indicate whether it is the upper layer index;
 	 */
 	public IndexNode(ArrayList<Integer> keyList, ArrayList<IndexNode> index, int address, boolean IsUpper, int leafKey){
 		key = keyList;
@@ -39,26 +36,32 @@ public class IndexNode {
 		this.leafKey = leafKey;
 	}
 	
+	/**@return return the leaf Children of the indexNode*/
 	public ArrayList<LeafNode> getLeafChildren(){
 		return leafChildren;
 	}
 	
+	/**@return return the index Children of the indexNode*/
 	public ArrayList<IndexNode> getIndexChildren(){
 		return indexChildren;
 	}
 	
+	/**@return whether or not the index node is in the upper layer*/
 	public boolean isUpperLayer(){
 		return IsUpperLayer;
 	}
 	
+	/**@return the key list of the node*/
 	public ArrayList<Integer> getKeys(){
 		return key;
 	}
 
+	/**@return the address of the node*/
 	public int getAddress() {
 		return address;
 	}
 	
+	/**@return the leaf key of the node*/
 	public int getLeafKey() {
 		return this.leafKey;
 	}

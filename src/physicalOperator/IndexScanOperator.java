@@ -78,7 +78,9 @@ public class IndexScanOperator extends Operator{
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
+		System.out.println("sss");
 		if(indexinform.isClustered()) {
+			//System.out.println("haha");
 			if(!foundClusterEntry) {
 				DataEntry startEntry = deserializer.getLeftMostEntry(lowkey, highkey);
 				if (startEntry!=null) {
@@ -116,11 +118,12 @@ public class IndexScanOperator extends Operator{
 				return null;
 			}
 		} else {
+			System.out.println("hh");
 			if(this.lstIterator.hasNext()) {
+				
 				DataEntry entry = this.lstIterator.next();
 				int pageId = entry.getPageId();
 				int tupleId = entry.getTupleId();
-				System.out.println("PageId: "+pageId);
 				System.out.println("tupleId: "+tupleId);
 				try {
 					BtupleReader.reset(pageId,tupleId);
