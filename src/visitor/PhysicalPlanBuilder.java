@@ -199,7 +199,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					System.out.println("isClustered: " + isClustered + " | order: " + order + " | indexPath: " + indexPath);
 					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
 					System.out.println("BPlusIndexInform built.");
-					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", inform);
+					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, inform);
 					System.out.println("IndexScanOperator built.");
 					stackOp.push(iSelect);
 					
@@ -251,7 +251,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					int order = Integer.parseInt(columnIndexInfo.get(1));
 					String indexPath = columnIndexInfo.get(2);
 					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
-					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", inform);
+					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, inform);
 					stackOp.push(iSelect);
 				}
 			}

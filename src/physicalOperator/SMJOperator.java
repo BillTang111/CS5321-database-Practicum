@@ -96,15 +96,19 @@ public class SMJOperator extends Operator {
 		this.lastPartiIndex=rightOp.getIndex()-1;
 		//System.out.println("last Part index now: "+lastPartiIndex);
 		while(Tleft!=null&&currentPartiTuple!=null) {
-			while(joinCompare.compare(Tleft, currentPartiTuple)<0) {
+			while(joinCompare.compare(Tleft, currentPartiTuple)<0) { //Tleft < currentPartiTuple
 				Tleft=leftOp.getNextTuple();
-			}
-			while(joinCompare.compare(Tleft, currentPartiTuple)>0) {
+				if (Tleft == null) break;
+			} //Tleft >= currentPartiTuple
+			if (Tleft == null) break;
+			while(joinCompare.compare(Tleft, currentPartiTuple)>0) { //Tleft > currentPartiTuple
 				currentPartiTuple = rightOp.getNextTuple();
 				this.lastPartiIndex++;
-			}
+				if (currentPartiTuple == null) break;
+			} //Tleft <= currentPartiTuple
+			if (currentPartiTuple == null) break;
 			Tright=currentPartiTuple;
-			if(joinCompare.compare(Tleft, Tright)==0) {
+			if(joinCompare.compare(Tleft, Tright)==0) { // //Tleft = currentPartiTuple
 				lastLeftTuple=Tleft;
 				return combineTuples(Tleft,Tright);
 			}
@@ -210,7 +214,7 @@ class EqulJoinTupleComparator implements Comparator<Tuple> {
 	@Override
 	public int compare(Tuple t1, Tuple t2) {
 		ArrayList t1List = t1.getTuple();
-		//System.out.println(t1List.toString());
+		//System.out.println(t2);
 		ArrayList t2List = t2.getTuple();
 		//System.out.println(t2List.toString());
 		if(t1==null||t2==null){

@@ -28,7 +28,6 @@ public class IndexScanOperator extends Operator{
 	private Long lowkey;
 	private Long highkey;
 	private String tableName;
-	private String alias;
 	private BPlusIndexInform indexinform;
 	private BPlusTreeDeserializer deserializer;
 	private BinaryTR BtupleReader;
@@ -37,29 +36,15 @@ public class IndexScanOperator extends Operator{
 	private boolean foundClusterEntry; 
 
 
-	public IndexScanOperator(Long lowkey, Long highkey, String tableName, String alias, BPlusIndexInform indexinform) throws IOException {
+	public IndexScanOperator(Long lowkey, Long highkey, String tableName, BPlusIndexInform indexinform) throws IOException {
 		this.lowkey = lowkey;
 		this.highkey = highkey;
 		this.tableName = tableName;
-		this.alias = alias;
 		this.indexinform = indexinform;
 		this.deserializer = new BPlusTreeDeserializer(indexinform);
 		this.foundClusterEntry = false;
-		//		if(alias != null) {
-		//			HashMap catlog = Catalog.getInstance().getSchema();
-		//			List<Column> columnList = (List<Column>) catlog.get(tableName);
-		//			List<Column> newColumnList = new ArrayList<Column>();
-		////			?????
-		//			Table newTable = new Table();
-		//			newTable.setAlias(alias);
-		//			for (Column c:columnList) {
-		//				Column newColumn = new Column();
-		//				newColumn.setTable(newTable);
-		//				newColumn.setColumnName(c.getColumnName());
-		//				newColumnList.add(newColumn);
-		//			}
-		//			// ?????
-		//		}
+
+
 		if(!indexinform.isClustered()) {
 			this.dataEntryList = deserializer.getEntries(lowkey, highkey);
 			System.out.print("111111");
