@@ -13,6 +13,7 @@ import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import visitor.printQueryPlanVisitor;
 
 /**
  * This class is used when sql query contains select condition.
@@ -159,4 +160,12 @@ public class ProjectOperator extends Operator {
 		return 0;
 	}
 
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
+	}
+
+	public Operator getChild(){
+		return this.childOp;
+	}
 }

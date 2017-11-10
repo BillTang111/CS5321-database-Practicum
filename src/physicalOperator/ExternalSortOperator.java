@@ -22,6 +22,7 @@ import Tuple.TupleComparator;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.printQueryPlanVisitor;
 
 /**
  * This class is used to sort externally.
@@ -423,5 +424,15 @@ public class ExternalSortOperator extends Operator{
 	 */
 	public int getIndex() {
 		return this.index;
+	}
+
+
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
+	}
+	
+	public Operator getChild(){
+		return this.childOp;
 	}
 }

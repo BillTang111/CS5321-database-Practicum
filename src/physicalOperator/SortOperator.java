@@ -16,6 +16,7 @@ import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import Tuple.TupleComparator;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.printQueryPlanVisitor;
 
 /**
  * This class is used when sql query contains order by condition.
@@ -156,6 +157,15 @@ public class SortOperator extends Operator {
 	public int getIndex() {
 		// TODO Auto-generated method stub
 		return index;
+	}
+
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
+	}
+
+	public Operator getChild() {
+		return this.childOp;
 	}
 }
 

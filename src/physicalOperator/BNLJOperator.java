@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import Tuple.Tuple;
 import net.sf.jsqlparser.expression.Expression;
+import visitor.printQueryPlanVisitor;
 import visitor.visitor;
 
 /**
@@ -228,7 +229,19 @@ public class BNLJOperator extends Operator{
 		return 0;
 	}
 	
+	public Operator getOutterChild(){
+		return this.outter;
+	}
 	
+	public Operator getInnerChild(){
+		return this.inner;
+	}
+
+
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
+	}
 	
 	
 }

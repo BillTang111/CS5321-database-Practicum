@@ -16,6 +16,7 @@ import Interpreter.BinaryTR;
 import Tuple.Tuple;
 //import net.sf.jsqlparser.schema.Column;
 //import net.sf.jsqlparser.schema.Table;
+import visitor.printQueryPlanVisitor;
 
 /** An index scan will only retrieve a range (subset) of tuples from a relation file,
  *  and will use a B+-tree index to do so.
@@ -61,8 +62,10 @@ public class IndexScanOperator extends Operator{
 		//		}
 		if(!indexinform.isClustered()) {
 			this.dataEntryList = deserializer.getEntries(lowkey, highkey);
+			System.out.print("111111");
 			this.lstIterator = this.dataEntryList.listIterator();
 		}
+		
 		String inputloc = Catalog.getInstance().getInputLocation() + "/db/data/"+ tableName;
 		System.out.print("input location is: " + inputloc + "\n");
 		File inputFile = new File(inputloc);
@@ -102,6 +105,7 @@ public class IndexScanOperator extends Operator{
 				//Tuple t = new Tuple(input,nameList);
 				if (input != null) {
 					int key =(int) tuple.getTupleMap().get(indexinform.getColumn());
+					System.out.println("null?" + highkey);
 					if (key<highkey) {
 						return tuple;
 					}
@@ -172,6 +176,12 @@ public class IndexScanOperator extends Operator{
 
 	public Long getHighKey(){
 		return this.highkey;
+	}
+
+
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
 	}
 
 }

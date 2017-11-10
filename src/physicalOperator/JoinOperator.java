@@ -8,6 +8,7 @@ import java.util.List;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.printQueryPlanVisitor;
 import visitor.visitor;
 import net.sf.jsqlparser.expression.Expression;
 
@@ -144,6 +145,21 @@ public class JoinOperator extends Operator {
 	public int getIndex() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+	
+	
+	public Operator getOutterChild(){
+		return this.outter;
+	}
+	
+	public Operator getInnerChild(){
+		return this.inner;
+	}
+
+	
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
 	}
 
 }

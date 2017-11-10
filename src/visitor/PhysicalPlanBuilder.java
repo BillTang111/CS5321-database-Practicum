@@ -198,7 +198,9 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					
 					System.out.println("isClustered: " + isClustered + " | order: " + order + " | indexPath: " + indexPath);
 					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
+					System.out.println("BPlusIndexInform built.");
 					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, "alias", inform);
+					System.out.println("IndexScanOperator built.");
 					stackOp.push(iSelect);
 					
 				} else {
@@ -277,6 +279,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		
 		String indexField = firstTable + "." + sCondition.substring(dot1Index+1, space1Indect);
 		this.tableColumn = indexField;
+		//System.out.println(iList);
 		
 		if (!iList.contains(indexField)){
 			System.out.println("indexList is: " + iList);
@@ -335,11 +338,12 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		useIndex = false;
 		indexList = null;
 		Catalog data = Catalog.getInstance();
+		//System.out.println(data.getIndexConfig());
 		if (data.getIndexConfig().equals("1")){
 			useIndex = true;
-			indexList = data.getIndexList();
 			try {
 				reloadIndexInfo(data.getInputLocation());
+				indexList = data.getIndexList();
 			} catch (NumberFormatException | IOException e) {
 				e.printStackTrace();
 			}
@@ -348,6 +352,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 
 	private void reloadIndexInfo(String inputLocation) throws NumberFormatException, IOException {
+		
+		
 		BufferedReader indexReader = new BufferedReader(new FileReader(inputLocation + "/db/index_info.txt"));
 		String config;
 		ArrayList<String> indexConfigList = new ArrayList<String>();
@@ -376,6 +382,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		Catalog catalog = Catalog.getInstance();
 		catalog.setIndexList(indexConfigList);
 		catalog.setIndexInfo(indexConfigInfo);
+		System.out.println("##reloadIndexInfo" + indexConfigInfo);
 	}
 	
 }

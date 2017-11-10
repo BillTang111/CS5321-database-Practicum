@@ -14,6 +14,7 @@ import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.printQueryPlanVisitor;
 
 /**
  * This class is used to scan table files to become tuple.
@@ -132,6 +133,12 @@ public class ScanOperator extends Operator {
 	public int getIndex() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
 	}
 
 

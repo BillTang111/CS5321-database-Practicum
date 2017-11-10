@@ -7,6 +7,7 @@ import java.util.Iterator;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.printQueryPlanVisitor;
 
 /**
  * This class is the abstract operator class
@@ -60,5 +61,9 @@ public abstract class Operator implements Iterator {
 	 * Get current tuple index, only need to be implemented in sort operators.
 	 */
 	public abstract int getIndex();
+
+	public abstract void accept(printQueryPlanVisitor printQueryPlanVisitor);
+
+	
 	
 }

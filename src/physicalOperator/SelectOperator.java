@@ -13,6 +13,7 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.ExpressionVisitor;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.PlainSelect;
+import visitor.printQueryPlanVisitor;
 import visitor.visitor;
 
 /**
@@ -112,6 +113,15 @@ public class SelectOperator extends Operator {
 	public int getIndex() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
+	}
+
+	public Operator getChild() {
+		return this.childOp;
 	}
 
 

@@ -11,6 +11,7 @@ import java.util.HashMap;
 import Database_Catalog.Catalog;
 import Interpreter.HumanTR;
 import Tuple.Tuple;
+import visitor.printQueryPlanVisitor;
 
 public class ScanOperatorHuman extends Operator{
 	BufferedReader br;
@@ -126,6 +127,12 @@ public class ScanOperatorHuman extends Operator{
 	public int getIndex() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+
+	@Override
+	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
+		printQueryPlanVisitor.visit(this);
 	}
 
 

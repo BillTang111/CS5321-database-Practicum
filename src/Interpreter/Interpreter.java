@@ -18,6 +18,7 @@ import physicalOperator.Operator;
 import physicalOperator.ScanOperator;
 import physicalOperator.SelectOperator;
 import visitor.PhysicalPlanBuilder;
+import visitor.printQueryPlanVisitor;
 import BPlusTree.BPlusTree;
 
 /**
@@ -169,6 +170,7 @@ public class Interpreter {
 	     //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2/input /Users/LukerRong/Desktop/project2/output /Users/LukerRong/Desktop/project2/temp
 	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/project2/interpreter_config_file.txt
 	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/project4test/interpreter_config_file.txt
+	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/test_cases/2/interpreter_config_file.txt
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
 		catalog.setoutputLocation(outputLocation);
@@ -228,6 +230,17 @@ public class Interpreter {
 				logPlan.getRoot().accept(builder);
 				Operator physicalPlanRoot = builder.getRoot();
 				
+				
+				//New function: print Tree
+				printQueryPlanVisitor pv = new printQueryPlanVisitor();
+				physicalPlanRoot.accept(pv);
+				System.out.println("---------------------------------");
+				System.out.println("---------Query Plan Tree---------");
+				System.out.println(" ");
+				System.out.println(pv.getResult());
+				System.out.println(" ");
+				System.out.println("---------------------------------");
+				
 			// Option 1: dump result and see benchmark time
 //				long timeStart = System.currentTimeMillis();
 //				System.out.print("Current Time in milliseconds = ");
@@ -242,12 +255,12 @@ public class Interpreter {
 
 			
 				
-				String outputPath = outputLocation + "/query" + i;
-				File file = new File(outputPath);
-				System.out.println(outputLocation + "/query" + i);
-				if (!file.exists()) {
-					file.createNewFile();
-				}
+//				String outputPath = outputLocation + "/query" + i;
+//				File file = new File(outputPath);
+//				System.out.println(outputLocation + "/query" + i);
+//				if (!file.exists()) {
+//					file.createNewFile();
+//				}
 				
 			// Option 2: Project 2 Write to file	
 				
@@ -264,15 +277,15 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
-				
-				HumanTW humanWriter = new HumanTW(file);
-				
-				for(Tuple oneLine: result){
-					humanWriter.WriteTuple(oneLine);
-				}
-				
-				humanWriter.close();
+//				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
+//				
+//				HumanTW humanWriter = new HumanTW(file);
+//				
+//				for(Tuple oneLine: result){
+//					humanWriter.WriteTuple(oneLine);
+//				}
+//				
+//				humanWriter.close();
 			
 				
 			// Option 4: Binary TW
