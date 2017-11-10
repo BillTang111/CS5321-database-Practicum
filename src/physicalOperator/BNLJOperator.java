@@ -215,7 +215,7 @@ public class BNLJOperator extends Operator{
 		return result;
 	}
 
-
+	
 	@Override
 	public void reset(int index) {
 		// TODO Auto-generated method stub
@@ -228,6 +228,7 @@ public class BNLJOperator extends Operator{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
 	
 	public Operator getOutterChild(){
 		return this.outter;

@@ -36,12 +36,12 @@ public class Interpreter {
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	    String command = reader.readLine();
-	    int start = command.indexOf(".jar")+5;
-
-
-		String configLocation = command.substring(start);
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//	    String command = reader.readLine();
+//	    int start = command.indexOf(".jar")+5;
+//
+//
+//		String configLocation = command.substring(start);
 
 		
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -90,7 +90,7 @@ public class Interpreter {
 		
 		
 	// submission start here
-//		String configLocation = args[0];
+		String configLocation = args[0];
 //		String inputLocation = args[0];
 //		String outputLocation = args[1];
 //		String tempLocation = args[2];
@@ -277,25 +277,25 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
-				
-				HumanTW humanWriter = new HumanTW(file);
-				
-				for(Tuple oneLine: result){
-					humanWriter.WriteTuple(oneLine);
-				}
-				
-				humanWriter.close();
+//				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
+//				
+//				HumanTW humanWriter = new HumanTW(file);
+//				
+//				for(Tuple oneLine: result){
+//					humanWriter.WriteTuple(oneLine);
+//				}
+//				
+//				humanWriter.close();
 			
 				
 			// Option 4: Binary TW
-//				BinaryTW binaryWriter = new BinaryTW(outputPath);
-//				Tuple resultT = physicalPlanRoot.getNextTuple();
-//				while (resultT!=null) {
-//					binaryWriter.WriteTuple(resultT);
-//					resultT = physicalPlanRoot.getNextTuple();
-//				}
-//				binaryWriter.close();
+				BinaryTW binaryWriter = new BinaryTW(outputPath);
+				Tuple resultT = physicalPlanRoot.getNextTuple();
+				while (resultT!=null) {
+					binaryWriter.WriteTuple(resultT);
+					resultT = physicalPlanRoot.getNextTuple();
+				}
+				binaryWriter.close();
 				
 				
 				

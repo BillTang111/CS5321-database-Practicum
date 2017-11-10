@@ -101,8 +101,9 @@ public class IndexScanOperator extends Operator{
 					if (highkey==null) {
 						return tuple;
 					}
-					System.out.println("key: "+key+" highkey: "+highkey);
+					
 					if (key<highkey) {
+						System.out.println("key: "+key+" highkey: "+highkey);
 						return tuple;
 					}
 				}

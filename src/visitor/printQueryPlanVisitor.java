@@ -13,6 +13,8 @@ import physicalOperator.ScanOperatorHuman;
 import physicalOperator.SelectOperator;
 import physicalOperator.SortOperator;
 
+/** Class used to visit each physical operator then
+ *  provide a result of a string represent physical operator plan */
 public class printQueryPlanVisitor {
 	
 	private String result;
@@ -21,6 +23,7 @@ public class printQueryPlanVisitor {
 		result = "";
 	}
 	
+	/** @return Get string result*/
 	public String getResult(){
 		return result;
 	}
