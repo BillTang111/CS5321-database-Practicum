@@ -47,6 +47,7 @@ public class BPlusTree {
 	
 	/**@param cluster the tree if needed*/
 	private void cluster(String column, String inputPath, String tableName){
+		System.out.println("I am clustered");
 		File input = new File(inputPath);
 		try {
 			BinaryTR btr = new BinaryTR(input);
@@ -56,6 +57,7 @@ public class BPlusTree {
 			ArrayList tableList = new ArrayList();
 			tableList.add(tableName);
 			//System.out.println(tableName);
+			//System.out.println(column);
 			Tuple tuple = new Tuple(tupleContent, tableList);
 			while(tuple != null){
 				tupleList.add(tuple);
@@ -88,7 +90,7 @@ public class BPlusTree {
 	 * @return an array list to store all leaf nodes
 	 */
 	private ArrayList<LeafNode> buildLeafLayer(String tableName, String column, boolean clustered) {
-		if(isCluster == true){
+		if(clustered == true){
 		String inputPath = fileLocation+"data/"+tableName;
 		cluster(column, inputPath, tableName);
 	}
