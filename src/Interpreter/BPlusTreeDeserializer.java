@@ -56,6 +56,7 @@ public class BPlusTreeDeserializer {
 	 * @Return: matched leaf node's page number  
 	 * */
 	private int FIndPageNum(Long key) {
+		boolean isLeaf = false;
 		int PageNum = RootAddress; 
 		//add this
 		try {
@@ -71,11 +72,10 @@ public class BPlusTreeDeserializer {
 			e.printStackTrace();
 		}
 
-		boolean isLeaf = false;
 		//start searching from the top of the tree 
 		while (!isLeaf) {
 			int numOfKeys = bb.getInt(4);
-			int child=0;
+			int child;
 			for (child=0; child<numOfKeys; child++) {
 				int childKey = bb.getInt(8+4*child);
 				if (childKey >key.intValue()) break;
@@ -96,7 +96,9 @@ public class BPlusTreeDeserializer {
 			}
 
 			isLeaf = (bb.getInt(0)==0);
+			System.out.println("Leaf: "+isLeaf);
 		}
+		System.out.println("haha i am here");
 		return PageNum;
 	}
 

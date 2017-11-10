@@ -87,7 +87,7 @@ public class IndexScanOperator extends Operator{
 						e.printStackTrace();
 					}
 					String input = BtupleReader.ReadNextTuple();
-					if(input == null) return null;
+					if(input == null) {return null;}
 					List nameList = new LinkedList<String>();
 					nameList.add(tableName);
 					return new Tuple(input,nameList);
@@ -95,7 +95,7 @@ public class IndexScanOperator extends Operator{
 					return null;
 			}else { 
 				String input = BtupleReader.ReadNextTuple();
-				if (input == null)  return null; 
+				if (input == null)  {return null;}
 				List nameList = new  LinkedList<String>();
 				nameList.add(tableName);
 				Tuple tuple = new Tuple(input,nameList);
@@ -113,7 +113,8 @@ public class IndexScanOperator extends Operator{
 				DataEntry entry = this.lstIterator.next();
 				int pageId = entry.getPageId();
 				int tupleId = entry.getTupleId();
-				//System.out.println("tupleId: "+tupleId);
+				System.out.println("PageId: "+pageId);
+				System.out.println("tupleId: "+tupleId);
 				try {
 					BtupleReader.reset(pageId,tupleId);
 				} catch (IOException e) {
