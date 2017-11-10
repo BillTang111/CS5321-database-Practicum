@@ -255,12 +255,12 @@ public class Interpreter {
 
 			
 				
-//				String outputPath = outputLocation + "/query" + i;
-//				File file = new File(outputPath);
-//				System.out.println(outputLocation + "/query" + i);
-//				if (!file.exists()) {
-//					file.createNewFile();
-//				}
+				String outputPath = outputLocation + "/query" + i;
+				File file = new File(outputPath);
+				System.out.println(outputLocation + "/query" + i);
+				if (!file.exists()) {
+					file.createNewFile();
+				}
 				
 			// Option 2: Project 2 Write to file	
 				
@@ -277,15 +277,15 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-//				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
-//				
-//				HumanTW humanWriter = new HumanTW(file);
-//				
-//				for(Tuple oneLine: result){
-//					humanWriter.WriteTuple(oneLine);
-//				}
-//				
-//				humanWriter.close();
+				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
+				
+				HumanTW humanWriter = new HumanTW(file);
+				
+				for(Tuple oneLine: result){
+					humanWriter.WriteTuple(oneLine);
+				}
+				
+				humanWriter.close();
 			
 				
 			// Option 4: Binary TW

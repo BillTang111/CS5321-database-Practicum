@@ -105,7 +105,10 @@ public class IndexScanOperator extends Operator{
 				//Tuple t = new Tuple(input,nameList);
 				if (input != null) {
 					int key =(int) tuple.getTupleMap().get(indexinform.getColumn());
-					System.out.println("null?" + highkey);
+					
+					if (highkey==null) {
+						return tuple;
+					}
 					if (key<highkey) {
 						return tuple;
 					}
