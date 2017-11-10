@@ -78,6 +78,7 @@ public class IndexScanOperator extends Operator{
 						e.printStackTrace();
 					}
 					String input = BtupleReader.ReadNextTuple();
+					System.out.println("Starting tuple:" + input);
 					if(input == null) {return null;}
 					List nameList = new LinkedList<String>();
 					nameList.add(tableName);
@@ -92,11 +93,15 @@ public class IndexScanOperator extends Operator{
 				Tuple tuple = new Tuple(input,nameList);
 				//Tuple t = new Tuple(input,nameList);
 				if (input != null) {
-					int key =(int) tuple.getTupleMap().get(indexinform.getColumn());
+					//System.out.println(tuple.getTuple().toString());
+					//System.out.println("field: "+ indexinform.getColumn());
+					int keyFieldNumber = (int) tuple.getTupleMap().get(indexinform.getColumn());
+					int key =Integer.parseInt((String) tuple.getTuple().get(keyFieldNumber));
 					
 					if (highkey==null) {
 						return tuple;
 					}
+					System.out.println("key: "+key+" highkey: "+highkey);
 					if (key<highkey) {
 						return tuple;
 					}
@@ -104,13 +109,13 @@ public class IndexScanOperator extends Operator{
 				return null;
 			}
 		} else {
-			System.out.println("hh");
+			//System.out.println("hh");
 			if(this.lstIterator.hasNext()) {
 				
 				DataEntry entry = this.lstIterator.next();
 				int pageId = entry.getPageId();
 				int tupleId = entry.getTupleId();
-				System.out.println("tupleId: "+tupleId);
+				//System.out.println("tupleId: "+tupleId);
 				try {
 					BtupleReader.reset(pageId,tupleId);
 				} catch (IOException e) {
@@ -118,8 +123,8 @@ public class IndexScanOperator extends Operator{
 					e.printStackTrace();
 				}
 				String input = BtupleReader.ReadNextTuple();
-				System.out.println("\n"+"this is input tuple:" + input);
-				System.out.println("this is input table:" + tableName + "\n");
+				//System.out.println("\n"+"this is input tuple:" + input);
+				//System.out.println("this is input table:" + tableName + "\n");
 				List nameList = new  LinkedList<String>();
 				nameList.add(tableName);
 				return new Tuple(input,nameList);

@@ -74,15 +74,18 @@ public class BPlusTreeDeserializer {
 
 		//start searching from the top of the tree 
 		while (!isLeaf) {
+			
+			System.out.println("indicator: "+ bb.getInt(0));
+			
 			int numOfKeys = bb.getInt(4);
+
 			int child;
 			for (child=0; child<numOfKeys; child++) {
 				int childKey = bb.getInt(8+4*child);
 				if (childKey >key.intValue()) break;
 			}
-			//System.out.println("child: "+child);
-			//through page address, go to next page 
-			//PageNum = bb.getInt(8+child*4);
+			
+			
 			PageNum = bb.getInt(8+4*numOfKeys+4*child);
 
 			try {
