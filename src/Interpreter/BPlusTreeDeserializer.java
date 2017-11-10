@@ -184,7 +184,7 @@ public class BPlusTreeDeserializer {
 				int numEntry = bb.getInt();
 				for (int i =0; i<numEntry; i++) {
 					int currentKey=bb.getInt();
-					System.out.println("I am lowkey: "+lowkey);
+//					System.out.println("I am lowkey: "+lowkey);
 					//if (currentKey>lowkey.intValue()) {
 					//					if (currentKey>=highkey.intValue()) {
 					if (currentKey>highkey.intValue()) {
