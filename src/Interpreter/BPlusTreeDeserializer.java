@@ -116,15 +116,18 @@ public class BPlusTreeDeserializer {
 	public List<DataEntry> getEntries(Long lowkey, Long highkey){
 		List<DataEntry> entriesList = new LinkedList<>();
 		if (lowkey != null) {
-			System.out.println("llll");
 			int	PageNum = FIndPageNum (lowkey);
-			System.out.println("zzzz");
 			boolean isLeaf = (bb.getInt()==0);
 			while(isLeaf){
+//				int flag = bb.getInt();
 				int numEntries = bb.getInt();
+				System.out.println("numEntries: "+  numEntries);
 				for (int i=0; i<numEntries; i++) {
 					int currentKey = bb.getInt();
+					System.out.println("Current key: "+  currentKey);
+			
 					if (currentKey>lowkey.intValue()) {
+						
 						if (highkey != null) {
 							if (currentKey>highkey.intValue()) {
 								return entriesList;
@@ -145,12 +148,15 @@ public class BPlusTreeDeserializer {
 						}
 					}
 				}// end of for loop
+				System.out.println("Page num before add: " + PageNum);
 				PageNum++;
 //				if (numEntries > numleaves) {
 //					return entriesList;
 				if (PageNum > numleaves) {
-					return entriesList;
-				}else { //read next page
+					System.out.println("Page num: " + PageNum);
+					System.out.println("numleaves num: "+numleaves);
+					return entriesList;}
+				 //read next page
 					try {
 						fc.position((long)(PageNum*PageSize));
 					} catch (IOException e) {
@@ -165,7 +171,7 @@ public class BPlusTreeDeserializer {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					bb.flip();}
+					bb.flip();
 
 				isLeaf = (bb.getInt(0)==0);
 				

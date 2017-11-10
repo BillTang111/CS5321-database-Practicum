@@ -109,7 +109,7 @@ public class IndexScanOperator extends Operator{
 				}
 				return null;
 			}
-		} else {
+		} else {//data is not clustered
 			//System.out.println("hh");
 			if(this.lstIterator.hasNext()) {
 				
