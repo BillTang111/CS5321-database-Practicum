@@ -55,18 +55,19 @@ public class IndexScanOperator extends Operator{
 		System.out.print("input location is: " + inputloc + "\n");
 		File inputFile = new File(inputloc);
 		this.BtupleReader = new BinaryTR(inputFile);
-		System.out.println("try BtupleReader:" + BtupleReader.ReadNextTuple());
-		BtupleReader.reset();
+		//System.out.println("try BtupleReader:" + BtupleReader.ReadNextTuple());
+		//BtupleReader.reset();
 	}
 
 
 	@Override
 	public Tuple getNextTuple() {
 		// TODO Auto-generated method stub
-		System.out.println("sss");
+		//System.out.println("sss");
 		if(indexinform.isClustered()) {
 			//System.out.println("haha");
 			if(!foundClusterEntry) {
+				//System.out.println("yoyo");
 				DataEntry startEntry = deserializer.getLeftMostEntry(lowkey, highkey);
 				if (startEntry!=null) {
 					foundClusterEntry=true;
