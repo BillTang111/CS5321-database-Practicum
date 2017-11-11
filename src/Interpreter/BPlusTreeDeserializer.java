@@ -173,7 +173,7 @@ public class BPlusTreeDeserializer {
 					}
 					bb.flip();
 
-				isLeaf = (bb.getInt(0)==0);
+				isLeaf = (bb.getInt()==0);
 				
 			}
 		}else{// if low key is null
