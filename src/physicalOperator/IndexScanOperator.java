@@ -184,4 +184,9 @@ public class IndexScanOperator extends Operator{
 		printPhysicalQueryPlanVisitor.visit(this);	
 	}
 
+
+	public String getOTName() {
+		return this.tableName;
+	}
+
 }

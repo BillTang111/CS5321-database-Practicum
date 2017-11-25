@@ -189,9 +189,6 @@ public class Interpreter {
 		
 		
 		
-		
-		
-		
 		// if need to build index
 		if(buildIndex){
 			System.out.println("need to build index");

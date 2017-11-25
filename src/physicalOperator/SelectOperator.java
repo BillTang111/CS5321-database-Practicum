@@ -126,6 +126,10 @@ public class SelectOperator extends Operator {
 		printPhysicalQueryPlanVisitor.visit(this);
 	}
 
+	public String getConditionString() {
+		return e.toString();
+	}
+
 
 
 }

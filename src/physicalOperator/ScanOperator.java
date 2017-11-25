@@ -26,18 +26,18 @@ public class ScanOperator extends Operator {
 	BufferedReader br;
 	String input;
 	String inputStar;
-	//String originName;
+	String originTableName;
 	String location;
 	
 	
 	public ScanOperator(String tableName) throws IOException {
-		// TODO Auto-generated constructor stub
 		//input = selectBody.getFromItem();
 		Catalog data = Catalog.getInstance();
 		HashMap<String, String> pairAlias = data.getPairAlias();
 		
 		location = Catalog.getInstance().getInputLocation();
 		input = tableName; //Original name
+		originTableName = tableName;
 		inputStar = tableName;
 		if (input.contains("*")) {
 			input = input.substring(0, input.length()-1);
@@ -141,6 +141,11 @@ public class ScanOperator extends Operator {
 	public void accept(
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
+	}
+
+
+	public String getOTName() {
+		return this.originTableName;
 	}
 
 

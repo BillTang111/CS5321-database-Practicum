@@ -170,6 +170,10 @@ public class SortOperator extends Operator {
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
 	}
+
+	public String getSortField() {
+		return order.toString();
+	}
 }
 
 ///**

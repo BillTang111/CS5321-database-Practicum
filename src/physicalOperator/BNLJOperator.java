@@ -245,6 +245,11 @@ public class BNLJOperator extends Operator{
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
 	}
+
+
+	public String getConditionString() {
+		return expression.toString();
+	}
 	
 	
 }

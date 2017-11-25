@@ -171,4 +171,8 @@ public class ProjectOperator extends Operator {
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
 	}
+
+	public String getProjectField() {
+		return project.toString();
+	}
 }

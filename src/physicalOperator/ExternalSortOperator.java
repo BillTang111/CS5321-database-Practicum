@@ -438,4 +438,10 @@ public class ExternalSortOperator extends Operator{
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
 	}
+
+
+	public String getSortField() {
+		// TODO Auto-generated method stub
+		return order.toString();
+	}
 }

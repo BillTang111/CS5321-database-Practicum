@@ -193,6 +193,10 @@ public class SMJOperator extends Operator {
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
 	}
+
+	public String getConditionString() {
+		return joinExpr.toString();
+	}
 }
 
 /**

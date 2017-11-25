@@ -19,91 +19,120 @@ public class printPhysicalQueryPlanVisitor {
 
 	
 	private String result;
+	private int numOfDash;
 	
 	public printPhysicalQueryPlanVisitor() {
 		result = "";
+		numOfDash = 0;
+	}
+	
+	private String prefix(int n) {
+		String pre = "";
+		for(int i=0; i<n; i++){
+            pre = pre + "-";
+		}
+		return pre;
 	}
 	
 	/** @return Get string result*/
 	public String getResult(){
-		return result;
+		int l = result.length();
+		return result.substring(0, l-1); // Strip final \n
 	}
 	
 	
 	public void visit(IndexScanOperator operator) {
-		result += "IndexScanOperator";
+		result += prefix(numOfDash) + "IndexScan" + "[" 
+				+ operator.getOTName() + "]" + '\n';
 	}
 	
 	public void visit(ScanOperator operator) {
-		result += "ScanOperator";
+		result += prefix(numOfDash) + "TableScan" + "[" 
+				+ operator.getOTName() + "]" + '\n';
 	}
 	
 	public void visit(ScanOperatorBinary operator) {
-		result += "ScanOperatorBinary";
+		result += prefix(numOfDash) + "TableScan" + "[" 
+				+ operator.getOTName() + "]" + '\n';
 	}
 
 	public void visit(ScanOperatorHuman operator) {
-		result += "ScanOperatorHuman";
+		result += prefix(numOfDash) + "TableScan" + "[" 
+				+ operator.getOTName() + "]" + '\n';
 	}
 	
 	
 	
 	
 	public void visit(JoinOperator operator) {
-		result += "JoinOperator--(";
+		result += prefix(numOfDash) + "TNLJ"  + "[" 
+				+ operator.getConditionString() + "]" + '\n';
+		numOfDash += 1;
 		operator.getOutterChild().accept(this);
-		result += " ~ ";
 		operator.getInnerChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 	
 	public void visit(BNLJOperator operator) {
-		result += "BNLJOperator--(";
+		result += prefix(numOfDash) + "BNLJ"  + "[" 
+				+ operator.getConditionString() + "]" + '\n';
+		numOfDash += 1;
 		operator.getOutterChild().accept(this);
-		result += " ~ ";
 		operator.getInnerChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 	
 	public void visit(SMJOperator operator) {
-		result += "SMJOperator--(";
+		result += prefix(numOfDash) + "SMJ" + "[" 
+				+ operator.getConditionString() + "]" + '\n';
+		numOfDash += 1;
 		operator.getOutterChild().accept(this);
-		result += " ~ ";
 		operator.getInnerChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 
 	
 	
 	public void visit(
 			DuplicateEliminationOperators operator) {
-		result += "DuplicateEliminationOperators--(";
+		result += prefix(numOfDash) + "DupElim" + '\n';
+		numOfDash += 1;
 		operator.getChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 
+	
+
 	public void visit(ExternalSortOperator operator) {
-		result += "externalSortOperator--(";
+		result += prefix(numOfDash) + "ExternalSort" + 
+				operator.getSortField() + '\n';
+		numOfDash += 1;
 		operator.getChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 
 	public void visit(ProjectOperator operator) {
-		result += "ProjectOperator--(";
+		result += prefix(numOfDash) + "Project"
+				+ operator.getProjectField() + '\n';
+		numOfDash += 1;
 		operator.getChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 	
 	public void visit(SelectOperator operator) {
-		result += "SelectOperator--(";
+		result += prefix(numOfDash) + "Select" + "[" 
+				+ operator.getConditionString() + "]" + '\n';
+		numOfDash += 1;
 		operator.getChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 
 	public void visit(SortOperator operator) {
-		result += "SortOperator--(";
+		result += prefix(numOfDash) + "InternalSort" 
+				+ operator.getSortField()  + '\n';
+		numOfDash += 1;
 		operator.getChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 
 }

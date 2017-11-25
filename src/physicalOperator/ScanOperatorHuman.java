@@ -18,7 +18,7 @@ public class ScanOperatorHuman extends Operator{
 	BufferedReader br;
 	String input;
 	String inputStar;
-	//String originName;
+	String originTableName;
 	String location;
 	File inputFile;
 	HumanTR humanReader;
@@ -31,6 +31,7 @@ public class ScanOperatorHuman extends Operator{
 		
 		location = Catalog.getInstance().getInputLocation();
 		input = tableName; //Original name
+		originTableName = tableName;
 		inputStar = tableName; // the name containing *, which is a second copy of table
 		if (input.contains("*")) {
 			input = input.substring(0, input.length()-1);
@@ -135,6 +136,11 @@ public class ScanOperatorHuman extends Operator{
 	public void accept(
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
+	}
+
+
+	public String getOTName() {
+		return this.originTableName;
 	}
 
 

@@ -164,4 +164,8 @@ public class JoinOperator extends Operator {
 		printPhysicalQueryPlanVisitor.visit(this);
 	}
 
+	public String getConditionString() {
+		return expression.toString();
+	}
+
 }

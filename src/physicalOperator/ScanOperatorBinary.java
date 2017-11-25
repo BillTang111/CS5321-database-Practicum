@@ -23,6 +23,8 @@ public class ScanOperatorBinary extends Operator{
 	File inputFile;
 	BinaryTR binaryReader;
 	
+	String originTableName;
+	
 	public ScanOperatorBinary(String tableName) throws IOException {
 		// TODO Auto-generated constructor stub
 		//input = selectBody.getFromItem();
@@ -31,6 +33,7 @@ public class ScanOperatorBinary extends Operator{
 		
 		location = Catalog.getInstance().getInputLocation();
 		input = tableName; //Original name
+		originTableName = tableName;
 		inputStar = tableName; // the name containing *, which is a second copy of table
 		if (input.contains("*")) {
 			input = input.substring(0, input.length()-1);
@@ -60,6 +63,7 @@ public class ScanOperatorBinary extends Operator{
 
 		return null;	
 	}
+	
 
 	/**Reset the operator to re-call from the beginning */
 	@Override
@@ -123,6 +127,11 @@ public class ScanOperatorBinary extends Operator{
 	public void accept(
 			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
 		printPhysicalQueryPlanVisitor.visit(this);
+	}
+
+
+	public String getOTName() {
+		return this.originTableName;
 	}
 
 
