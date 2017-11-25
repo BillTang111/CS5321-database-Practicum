@@ -62,4 +62,8 @@ public class LogicalSelectOperator extends LogicalOperator {
 		lpv.visit(this);
 	}
 
+	public String getConditionString() {
+		return e.toString();
+	}
+
 }

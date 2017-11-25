@@ -43,7 +43,9 @@ public class printPhysicalQueryPlanVisitor {
 	
 	public void visit(IndexScanOperator operator) {
 		result += prefix(numOfDash) + "IndexScan" + "[" 
-				+ operator.getOTName() + "]" + '\n';
+				+ operator.getOTName().replaceAll(".", ",") + "," 
+				+ operator.getLowString() + "," + operator.getHighString() 
+				+ "]" + '\n';
 	}
 	
 	public void visit(ScanOperator operator) {

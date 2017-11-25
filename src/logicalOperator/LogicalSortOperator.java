@@ -59,4 +59,8 @@ public class LogicalSortOperator extends LogicalOperator {
 	public void accept(printLogicalQueryPlanVisitor lpv) throws IOException {
 		lpv.visit(this);
 	}
+
+	public String getSortField() {
+		return order.toString();
+	}
 }

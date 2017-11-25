@@ -60,4 +60,8 @@ public class LogicalJoinOperator extends LogicalOperator {
 	public void accept(printLogicalQueryPlanVisitor lpv) throws IOException {
 		lpv.visit(this);
 	}
+
+	public String getConditionString() {
+		return expression.toString();
+	}
 }

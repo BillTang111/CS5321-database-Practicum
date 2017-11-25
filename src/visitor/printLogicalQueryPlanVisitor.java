@@ -15,9 +15,11 @@ import logicalOperator.LogicalSortOperator;
 public class printLogicalQueryPlanVisitor {
 	
 	private String result;
+	private int numOfDash;
 	
 	public printLogicalQueryPlanVisitor() {
 		result = "";
+		numOfDash = 0;
 	}
 	
 	/** @return Get string result*/
@@ -25,46 +27,61 @@ public class printLogicalQueryPlanVisitor {
 		return result;
 	}
 	
-	public void visit(LogicalScanOperator loperator) {
-		result += "LogicalScanOperator";
+	private String prefix(int n) {
+		String pre = "";
+		for(int i=0; i<n; i++){
+            pre = pre + "-";
+		}
+		return pre;
 	}
 	
-	
+	public void visit(LogicalScanOperator loperator) {
+		result += prefix(numOfDash) + "Leaf" + "[" 
+				+ loperator.getTableName() + "]" + '\n';
+	}
 	
 	
 	public void visit(LogicalDuplicateEliminationOperators loperator) throws IOException {
-		result += "LogicalDuplicateEliminationOperators--(";
+		result += prefix(numOfDash) + "DupElim" + '\n';
+		numOfDash += 1;
 		loperator.getchildOperator().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 
 	public void visit(LogicalProjectOperator loperator) throws IOException {
-		result += "LogicalProjectOperator--(";
+		result += prefix(numOfDash) + "Project"
+				+ loperator.getProjectField() + '\n';
+		numOfDash += 1;
 		loperator.getchildOperator().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 
 
 	public void visit(LogicalSelectOperator loperator) throws IOException {
-		result += "LogicalSelectOperator--(";
+		result += prefix(numOfDash) + "Select" + "[" 
+				+ loperator.getConditionString() + "]" + '\n';
+		numOfDash += 1;
 		loperator.getchildOperator().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 	
 	public void visit(LogicalSortOperator loperator) throws IOException {
-		result += "LogicalSortOperator--(";
+		result += prefix(numOfDash) + "Sort" + 
+				loperator.getSortField() + '\n';
+		numOfDash += 1;
 		loperator.getchildOperator().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 	
 	
 	
 	public void visit(LogicalJoinOperator loperator) throws IOException {
-		result += "LogicalJoinOperator--(";
+		result += prefix(numOfDash) + "Join"  + "[" 
+				+ loperator.getConditionString() + "]" + '\n';
+		numOfDash += 1;
 		loperator.getOutterChild().accept(this);
-		result += " ~ ";
 		loperator.getInnerChild().accept(this);
-		result += ")";
+		numOfDash -= 1;
 	}
 	
 	

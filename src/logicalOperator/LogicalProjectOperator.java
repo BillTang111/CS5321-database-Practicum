@@ -63,4 +63,8 @@ public class LogicalProjectOperator extends LogicalOperator {
 		lpv.visit(this);
 	}
 
+	public String getProjectField() {
+		return project.toString();
+	}
+
 }

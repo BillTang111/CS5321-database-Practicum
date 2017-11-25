@@ -172,11 +172,28 @@ public class IndexScanOperator extends Operator{
 	public Long getLowKey(){
 		return this.lowkey;
 	}
-
+	
+	public String getLowString() {
+		if (this.lowkey==null){
+			return "null";
+		}
+		else{
+			return this.lowkey.toString();
+		}
+	}
+	
 	public Long getHighKey(){
 		return this.highkey;
 	}
-
+	
+	public String getHighString() {
+		if (this.highkey==null){
+			return "null";
+		}
+		else{
+			return this.highkey.toString();
+		}
+	}
 
 	@Override
 	public void accept(
@@ -188,5 +205,8 @@ public class IndexScanOperator extends Operator{
 	public String getOTName() {
 		return this.tableName;
 	}
+
+
+
 
 }
