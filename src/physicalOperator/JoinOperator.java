@@ -8,7 +8,8 @@ import java.util.List;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 import visitor.visitor;
 import net.sf.jsqlparser.expression.Expression;
 
@@ -158,8 +159,9 @@ public class JoinOperator extends Operator {
 
 	
 	@Override
-	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
-		printQueryPlanVisitor.visit(this);
+	public void accept(
+			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
+		printPhysicalQueryPlanVisitor.visit(this);
 	}
 
 }

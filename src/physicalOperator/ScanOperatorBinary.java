@@ -10,7 +10,8 @@ import java.util.HashMap;
 import Database_Catalog.Catalog;
 import Interpreter.BinaryTR;
 import Tuple.Tuple;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 
 public class ScanOperatorBinary extends Operator{
 
@@ -119,8 +120,9 @@ public class ScanOperatorBinary extends Operator{
 
 
 	@Override
-	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
-		printQueryPlanVisitor.visit(this);
+	public void accept(
+			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
+		printPhysicalQueryPlanVisitor.visit(this);
 	}
 
 

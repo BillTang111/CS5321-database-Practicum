@@ -75,7 +75,7 @@ public class BPlusTreeDeserializer {
 		//start searching from the top of the tree 
 		while (!isLeaf) {
 			
-			System.out.println("indicator: "+ bb.getInt(0));
+			//System.out.println("indicator: "+ bb.getInt(0));
 			
 			int numOfKeys = bb.getInt(4);
 

@@ -10,6 +10,7 @@ import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import physicalOperator.Operator;
 import visitor.PhysicalPlanBuilder;
+import visitor.printLogicalQueryPlanVisitor;
 
 /**
  * This class is used when sql query contains "distinct". It is used to remove duplicate 
@@ -33,6 +34,11 @@ public class LogicalDuplicateEliminationOperators extends LogicalOperator {
 
 	public LogicalOperator getchildOperator() {
 		return childOp;
+	}
+
+	@Override
+	public void accept(printLogicalQueryPlanVisitor lpv) throws IOException {
+		lpv.visit(this);
 	}
 	
 	

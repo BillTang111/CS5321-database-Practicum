@@ -10,7 +10,8 @@ import Tuple.Tuple;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.schema.Column;
 import visitor.JoinAttributeVisitor;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 
 /**
  * @author benzhangtang
@@ -178,10 +179,6 @@ public class SMJOperator extends Operator {
 		return 0;
 	}
 
-	@Override
-	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
-		printQueryPlanVisitor.visit(this);
-	}
 	
 	public Operator getOutterChild(){
 		return this.leftOp;
@@ -189,6 +186,12 @@ public class SMJOperator extends Operator {
 	
 	public Operator getInnerChild(){
 		return this.rightOp;
+	}
+
+	@Override
+	public void accept(
+			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
+		printPhysicalQueryPlanVisitor.visit(this);
 	}
 }
 

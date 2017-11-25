@@ -8,6 +8,7 @@ import java.nio.channels.*;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
+import logicalOperator.LogicalOperator;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -18,7 +19,8 @@ import physicalOperator.Operator;
 import physicalOperator.ScanOperator;
 import physicalOperator.SelectOperator;
 import visitor.PhysicalPlanBuilder;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 import BPlusTree.BPlusTree;
 
 /**
@@ -227,19 +229,34 @@ public class Interpreter {
 				//queryPlan plan = new queryPlan(eachQuerySelect);
 				LogicalQueryPlan logPlan = new LogicalQueryPlan(eachQuerySelect);
 				PhysicalPlanBuilder builder = new PhysicalPlanBuilder();
-				logPlan.getRoot().accept(builder);
+				
+				
+				LogicalOperator logicalPlanRoot = logPlan.getRoot();
+				logicalPlanRoot.accept(builder);
 				Operator physicalPlanRoot = builder.getRoot();
 				
 				
 				//New function: print Tree
-				printQueryPlanVisitor pv = new printQueryPlanVisitor();
-				physicalPlanRoot.accept(pv);
-				System.out.println("---------------------------------");
-				System.out.println("---------Query Plan Tree---------");
+				printLogicalQueryPlanVisitor lpv = new printLogicalQueryPlanVisitor();
+				logicalPlanRoot.accept(lpv);
+				
+				printPhysicalQueryPlanVisitor ppv = new printPhysicalQueryPlanVisitor();
+				physicalPlanRoot.accept(ppv);
+				
+				
+				System.out.println("-----------------------------------------");
+				System.out.println("---------Logical Query Plan Tree---------");
 				System.out.println(" ");
-				System.out.println(pv.getResult());
+				System.out.println(lpv.getResult());
 				System.out.println(" ");
-				System.out.println("---------------------------------");
+				System.out.println("-----------------------------------------");
+				
+				
+				System.out.println("---------Physical Query Plan Tree---------");
+				System.out.println(" ");
+				System.out.println(ppv.getResult());
+				System.out.println(" ");
+				System.out.println("-----------------------------------------");
 				
 			// Option 1: dump result and see benchmark time
 //				long timeStart = System.currentTimeMillis();
@@ -255,12 +272,12 @@ public class Interpreter {
 
 			
 				
-				String outputPath = outputLocation + "/query" + i;
-				File file = new File(outputPath);
-				System.out.println(outputLocation + "/query" + i);
-				if (!file.exists()) {
-					file.createNewFile();
-				}
+//				String outputPath = outputLocation + "/query" + i;
+//				File file = new File(outputPath);
+//				System.out.println(outputLocation + "/query" + i);
+//				if (!file.exists()) {
+//					file.createNewFile();
+//				}
 				
 			// Option 2: Project 2 Write to file	
 				
@@ -277,15 +294,15 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
-				
-				HumanTW humanWriter = new HumanTW(file);
-				
-				for(Tuple oneLine: result){
-					humanWriter.WriteTuple(oneLine);
-				}
-				
-				humanWriter.close();
+//				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
+//				
+//				HumanTW humanWriter = new HumanTW(file);
+//				
+//				for(Tuple oneLine: result){
+//					humanWriter.WriteTuple(oneLine);
+//				}
+//				
+//				humanWriter.close();
 			
 				
 			// Option 4: Binary TW

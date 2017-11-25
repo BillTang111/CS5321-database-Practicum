@@ -16,7 +16,8 @@ import Interpreter.BinaryTR;
 import Tuple.Tuple;
 //import net.sf.jsqlparser.schema.Column;
 //import net.sf.jsqlparser.schema.Table;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 
 /** An index scan will only retrieve a range (subset) of tuples from a relation file,
  *  and will use a B+-tree index to do so.
@@ -178,8 +179,9 @@ public class IndexScanOperator extends Operator{
 
 
 	@Override
-	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
-		printQueryPlanVisitor.visit(this);
+	public void accept(
+			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
+		printPhysicalQueryPlanVisitor.visit(this);	
 	}
 
 }

@@ -8,6 +8,7 @@ import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import visitor.PhysicalPlanBuilder;
+import visitor.printLogicalQueryPlanVisitor;
 
 /**
  * This class is the abstract operator class
@@ -30,7 +31,7 @@ public abstract class LogicalOperator implements Iterator {
 		return null;
 	}
 
-	public abstract void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException;
+	public abstract void accept(printLogicalQueryPlanVisitor lpv) throws IOException;
 	
-
+	public abstract void accept(PhysicalPlanBuilder pplanbuilder) throws IOException;
 }

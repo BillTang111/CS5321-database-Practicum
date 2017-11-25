@@ -7,7 +7,8 @@ import java.util.Iterator;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 
 /**
  * This class is the abstract operator class
@@ -62,7 +63,7 @@ public abstract class Operator implements Iterator {
 	 */
 	public abstract int getIndex();
 
-	public abstract void accept(printQueryPlanVisitor printQueryPlanVisitor);
+	public abstract void accept(printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor);
 
 	
 	

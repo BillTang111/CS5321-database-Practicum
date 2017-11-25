@@ -8,7 +8,8 @@ import java.util.HashSet;
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
 import net.sf.jsqlparser.statement.select.PlainSelect;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 
 /**
  * This class is used when sql query contains "distinct". It is used to remove duplicate 
@@ -116,7 +117,8 @@ public class DuplicateEliminationOperators extends Operator {
 	}
 	
 	@Override
-	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
-		printQueryPlanVisitor.visit(this);
+	public void accept(
+			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
+		printPhysicalQueryPlanVisitor.visit(this);
 	}
 }

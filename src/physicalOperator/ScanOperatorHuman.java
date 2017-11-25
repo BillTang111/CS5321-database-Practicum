@@ -11,7 +11,8 @@ import java.util.HashMap;
 import Database_Catalog.Catalog;
 import Interpreter.HumanTR;
 import Tuple.Tuple;
-import visitor.printQueryPlanVisitor;
+import visitor.printLogicalQueryPlanVisitor;
+import visitor.printPhysicalQueryPlanVisitor;
 
 public class ScanOperatorHuman extends Operator{
 	BufferedReader br;
@@ -131,8 +132,9 @@ public class ScanOperatorHuman extends Operator{
 
 
 	@Override
-	public void accept(printQueryPlanVisitor printQueryPlanVisitor) {
-		printQueryPlanVisitor.visit(this);
+	public void accept(
+			printPhysicalQueryPlanVisitor printPhysicalQueryPlanVisitor) {
+		printPhysicalQueryPlanVisitor.visit(this);
 	}
 
 

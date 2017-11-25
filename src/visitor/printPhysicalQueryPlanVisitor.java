@@ -14,12 +14,13 @@ import physicalOperator.SelectOperator;
 import physicalOperator.SortOperator;
 
 /** Class used to visit each physical operator then
- *  provide a result of a string represent physical operator plan */
-public class printQueryPlanVisitor {
+ *  provide a result of a string represent Physical operator plan */
+public class printPhysicalQueryPlanVisitor {
+
 	
 	private String result;
 	
-	public printQueryPlanVisitor() {
+	public printPhysicalQueryPlanVisitor() {
 		result = "";
 	}
 	
@@ -104,17 +105,5 @@ public class printQueryPlanVisitor {
 		operator.getChild().accept(this);
 		result += ")";
 	}
-
-
-	
-
-
-
-
-
-
-	
-
-	
 
 }

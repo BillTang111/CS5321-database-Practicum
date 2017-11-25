@@ -14,6 +14,7 @@ import net.sf.jsqlparser.statement.select.AllColumns;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import visitor.PhysicalPlanBuilder;
+import visitor.printLogicalQueryPlanVisitor;
 
 /**
  * This class is used when sql query contains select condition.
@@ -55,6 +56,11 @@ public class LogicalProjectOperator extends LogicalOperator {
 	@Override
 	public void accept(PhysicalPlanBuilder physicalPlanBuilder) throws IOException {
 		physicalPlanBuilder.visit(this);
+	}
+
+	@Override
+	public void accept(printLogicalQueryPlanVisitor lpv) throws IOException {
+		lpv.visit(this);
 	}
 
 }
