@@ -24,7 +24,8 @@ public class printLogicalQueryPlanVisitor {
 	
 	/** @return Get string result*/
 	public String getResult(){
-		return result;
+		int l = result.length();
+		return result.substring(0, l-1); // Strip final \n
 	}
 	
 	private String prefix(int n) {
