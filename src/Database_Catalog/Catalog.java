@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import UnionFind.UnionFind;
+import net.sf.jsqlparser.expression.Expression;
 import java.io.Serializable;
 
 /**
@@ -30,6 +34,10 @@ public class Catalog implements Cloneable, Serializable {
 	private ArrayList<String> indexList;
 	private int queryNumber;
 	private HashMap<String, ArrayList> indexInfo;
+	private UnionFind unionFind;
+	private List<Expression> joinResidual;
+	private List<Expression> selectResidual;
+	
 
 	
 	/* Private Constructor prevents any other class from instantiating */
@@ -139,6 +147,54 @@ public class Catalog implements Cloneable, Serializable {
 	 * */
 	public int getQueryNumber() {
 		return queryNumber;
+	}
+	
+	/**Get the unionfind
+	 * 
+	 * @return the unionfind
+	 * */
+	public UnionFind getUnionFind(){
+		return unionFind;
+	}
+	
+	/**Get the SelectResidual list
+	 * 
+	 * @return the SelectResidual list
+	 * */
+	public List<Expression> getSelectResidual(){
+		return selectResidual;
+	}
+	
+	/**Get the JoinResidual list
+	 * 
+	 * @return the JoinResidual list
+	 * */
+	public List<Expression> getJoinResidual(){
+		return joinResidual;
+	}
+	
+	/**set the unionfind
+	 * 
+	 * @param the unionfind
+	 * */
+	public void setUnionFind(UnionFind uf){
+		unionFind = uf;
+	}
+	
+	/**set the SelectResidual list
+	 * 
+	 * @param the SelectResidual list
+	 * */
+	public void setSelectResidual(List<Expression> selectList){
+		selectResidual = selectList;
+	}
+	
+	/**set the JoinResidual list
+	 * 
+	 * @param the JoinResidual list
+	 * */
+	public void setJoinResidual(List<Expression> joinList){
+		joinResidual = joinList;
 	}
 	
 	/**set the input directory location

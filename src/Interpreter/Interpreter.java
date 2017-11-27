@@ -2,13 +2,16 @@ package Interpreter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 
 import Database_Catalog.Catalog;
 import Tuple.Tuple;
+import UnionFind.UnionFind;
 import logicalOperator.LogicalOperator;
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -21,6 +24,7 @@ import physicalOperator.SelectOperator;
 import visitor.PhysicalPlanBuilder;
 import visitor.printLogicalQueryPlanVisitor;
 import visitor.printPhysicalQueryPlanVisitor;
+import visitor.unionFindVisitor;
 import BPlusTree.BPlusTree;
 
 /**
@@ -224,6 +228,17 @@ public class Interpreter {
 				cleanFolder(tempFolder);
 				
 				//queryPlan plan = new queryPlan(eachQuerySelect);
+				
+				//for each query, build unionFind and redisualList
+				unionFindVisitor ufVisitor = new unionFindVisitor();
+				eachQuerySelect.getWhere().accept(ufVisitor);
+				UnionFind uf = ufVisitor.getUnionfind();
+				List<Expression> selectResidual = ufVisitor.getSelectResidual();
+				List<Expression> joinResidual = ufVisitor.getJoinResidual();
+				catalog.setUnionFind(uf);
+				catalog.setSelectResidual(selectResidual);
+				catalog.setJoinResidual(joinResidual);
+				
 				LogicalQueryPlan logPlan = new LogicalQueryPlan(eachQuerySelect);
 				PhysicalPlanBuilder builder = new PhysicalPlanBuilder();
 				
