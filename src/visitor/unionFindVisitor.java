@@ -3,6 +3,7 @@ package visitor;
 import java.util.ArrayList;
 import java.util.List;
 
+import UnionFind.Element;
 import UnionFind.UnionFind;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.AllComparisonExpression;
@@ -168,7 +169,8 @@ public class unionFindVisitor implements ExpressionVisitor {
 	@Override
 	public void visit(AndExpression arg0) {
 		// TODO Auto-generated method stub
-		
+		arg0.getLeftExpression().accept(this);
+		arg0.getRightExpression().accept(this);
 	}
 
 	@Override
@@ -182,22 +184,108 @@ public class unionFindVisitor implements ExpressionVisitor {
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	/**
+	 * if the comparison has the form att1 = att2, find the two elements
+	 * containing att1 and att2 and union them
+	 * if the comparison has the form att OP val, find the element containing
+	 * att and update the numeric bound
+	 * */
 	@Override
 	public void visit(EqualsTo arg0) {
 		// TODO Auto-generated method stub
+		Expression left = arg0.getLeftExpression();
+		Expression right = arg0.getRightExpression();
+		if (left instanceof Column){
+			if (right instanceof Column){
+				Element leftElement = unionFind.FindElement(left.toString());
+				Element rightElement = unionFind.FindElement(right.toString());
+				unionFind.merge(leftElement, rightElement);
+			}else{
+				Element leftElement = unionFind.FindElement(left.toString());
+				String rightNum = right.toString();
+				Long equal = Long.valueOf(rightNum);
+				Long lower = leftElement.getLowerBound();
+				Long upper = leftElement.getUpperBound();
+				unionFind.updateElement(leftElement, lower, upper, equal);
+			}
+		}
 		
 	}
 
+	/**
+	 * if the comparison has the form att1 OP att2, put them in the residual list.
+	 * if the comparison has the form att OP val, find the element containing
+	 * att and update the numeric bound
+	 * */
 	@Override
 	public void visit(GreaterThan arg0) {
 		// TODO Auto-generated method stub
-		
+		Expression left = arg0.getLeftExpression();
+		Expression right = arg0.getRightExpression();
+		if(left instanceof Column){
+			if(right instanceof Column){
+				//if they are from the same table, add to select residual list.
+				if((((Column) left).getTable()).equals(((Column) right).getTable())){
+//					GreaterThan greaterthan = arg0;
+//					greaterthan.setLeftExpression(left);
+//					greaterthan.setRightExpression(right);
+//					selectResidual.add(greaterthan); 
+					selectResidual.add(arg0);
+				}else{
+					joinResidual.add(arg0);
+				}
+			}else{
+				Element leftElement = unionFind.FindElement(left.toString());
+				String rightNum = right.toString();
+				Long lower = Long.valueOf(rightNum);
+				Long oldLower = leftElement.getLowerBound();
+				lower = Math.max(lower, oldLower);
+				Long equal = leftElement.getEquality();
+				Long upper = leftElement.getUpperBound();
+				if(equal == null){
+					unionFind.updateElement(leftElement, lower, upper, equal);
+				}
+			}
+		}
 	}
 
+	/**
+	 * if the comparison has the form att1 OP att2, put them in the residual list.
+	 * if the comparison has the form att OP val, find the element containing
+	 * att and update the numeric bound
+	 * */
 	@Override
 	public void visit(GreaterThanEquals arg0) {
 		// TODO Auto-generated method stub
+		Expression left = arg0.getLeftExpression();
+		Expression right = arg0.getRightExpression();
+		if(left instanceof Column){
+			if(right instanceof Column){
+				//if they are from the same table, add to select residual list.
+				if((((Column) left).getTable()).equals(((Column) right).getTable())){
+//					GreaterThan greaterthanEqual = arg0;
+//					greaterthanEqual.setLeftExpression(left);
+//					greaterthanEqual.setRightExpression(right);
+//					selectResidual.add(greaterthanEqual); 
+					selectResidual.add(arg0);
+				}else{
+					joinResidual.add(arg0);
+				}
+			}else{
+				Element leftElement = unionFind.FindElement(left.toString());
+				String rightNum = right.toString();
+				Long lower = Long.valueOf(rightNum);
+				lower = lower-1;
+				Long oldLower = leftElement.getLowerBound();
+				lower = Math.max(lower, oldLower);
+				Long equal = leftElement.getEquality();
+				Long upper = leftElement.getUpperBound();
+				if(equal == null){
+					unionFind.updateElement(leftElement, lower, upper, equal);
+				}
+			}
+		}
 		
 	}
 
@@ -219,22 +307,100 @@ public class unionFindVisitor implements ExpressionVisitor {
 		
 	}
 
+	/**
+	 * if the comparison has the form att1 OP att2, put them in the residual list.
+	 * if the comparison has the form att OP val, find the element containing
+	 * att and update the numeric bound
+	 * */
 	@Override
 	public void visit(MinorThan arg0) {
 		// TODO Auto-generated method stub
-		
+		Expression left = arg0.getLeftExpression();
+		Expression right = arg0.getRightExpression();
+		if(left instanceof Column){
+			if(right instanceof Column){
+				//if they are from the same table, add to select residual list.
+				if((((Column) left).getTable()).equals(((Column) right).getTable())){
+//					MinorThan minorthan = arg0;
+//					minorthan.setLeftExpression(left);
+//					minorthan.setRightExpression(right);
+//					selectResidual.add(minorthan); 
+					selectResidual.add(arg0);
+				}else{
+					joinResidual.add(arg0);
+				}
+			}else{
+				Element leftElement = unionFind.FindElement(left.toString());
+				String rightNum = right.toString();
+				Long upper = Long.valueOf(rightNum);
+				Long oldUpper = leftElement.getUpperBound();
+				upper = Math.min(upper, oldUpper);
+				Long equal = leftElement.getEquality();
+				Long lower = leftElement.getLowerBound();
+				if(equal == null){
+					unionFind.updateElement(leftElement, lower, upper, equal);
+				}
+			}
+		}
 	}
 
+	/**
+	 * if the comparison has the form att1 OP att2, put them in the residual list.
+	 * if the comparison has the form att OP val, find the element containing
+	 * att and update the numeric bound
+	 * */
 	@Override
 	public void visit(MinorThanEquals arg0) {
 		// TODO Auto-generated method stub
-		
+		Expression left = arg0.getLeftExpression();
+		Expression right = arg0.getRightExpression();
+		if(left instanceof Column){
+			if(right instanceof Column){
+				//if they are from the same table, add to select residual list.
+				if((((Column) left).getTable()).equals(((Column) right).getTable())){
+//					MinorThan minorthan = arg0;
+//					minorthan.setLeftExpression(left);
+//					minorthan.setRightExpression(right);
+//					selectResidual.add(minorthan); 
+					selectResidual.add(arg0);
+				}else{
+					joinResidual.add(arg0);
+				}
+			}else{
+				Element leftElement = unionFind.FindElement(left.toString());
+				String rightNum = right.toString();
+				Long upper = Long.valueOf(rightNum);
+				upper = upper +1;
+				Long oldUpper = leftElement.getUpperBound();
+				upper = Math.min(upper, oldUpper);
+				Long equal = leftElement.getEquality();
+				Long lower = leftElement.getLowerBound();
+				if(equal == null){
+					unionFind.updateElement(leftElement, lower, upper, equal);
+				}
+			}
+		}
 	}
 
+	/**
+	 * Determine whether it should go to the joinResidual list or selectResidual list.
+	 * */
 	@Override
 	public void visit(NotEqualsTo arg0) {
 		// TODO Auto-generated method stub
-		
+		Expression left = arg0.getLeftExpression();
+		Expression right = arg0.getRightExpression();
+		if(left instanceof Column){
+			if(right instanceof Column){
+				if((((Column) left).getTable()).equals(((Column) right).getTable())){
+					selectResidual.add(arg0);
+				}else{
+					joinResidual.add(arg0);
+				}
+			}else{
+				selectResidual.add(arg0);
+			}
+		}
 	}
 
 	@Override
