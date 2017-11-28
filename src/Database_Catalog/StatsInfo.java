@@ -54,6 +54,11 @@ public class StatsInfo {
 						//update field and bound relation map
 						String fieldNow = fields.get(k).toString();
 						int fieldNumNow = Integer.parseInt(tupleField[k]);
+						if(fieldAndBound.containsKey(fieldNow)){
+							
+						}else{
+							
+						}
 					}
 				}// end of while loop
 			} catch (IOException e) {

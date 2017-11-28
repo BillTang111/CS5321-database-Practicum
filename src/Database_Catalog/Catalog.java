@@ -37,6 +37,7 @@ public class Catalog implements Cloneable, Serializable {
 	private UnionFind unionFind;
 	private List<Expression> joinResidual;
 	private List<Expression> selectResidual;
+	private StatsInfo statsInfo;
 	
 
 	
@@ -171,6 +172,22 @@ public class Catalog implements Cloneable, Serializable {
 	 * */
 	public List<Expression> getJoinResidual(){
 		return joinResidual;
+	}
+	
+	/**Get the stats info txt
+	 * 
+	 * @return the stats info txt
+	 * */
+	public StatsInfo getStatsInfo(){
+		return statsInfo;
+	}
+	
+	/**set the stats info
+	 * 
+	 * @param the stats info
+	 * */
+	public void setStatsInfo(StatsInfo stat){
+		statsInfo = stat;
 	}
 	
 	/**set the unionfind
