@@ -18,7 +18,7 @@ public class StatsInfo {
 	private List<String> tableList;
 	private HashMap<String,ArrayList> tableAndFieldMap;
 	private HashMap<String,Integer> tableAndSizeMap;
-	private HashMap<String,ArrayList> fieldAndBound;
+	private HashMap<String,ArrayList<Integer>> fieldAndBound;
 	
 	public StatsInfo(){
 		//build table List
@@ -35,7 +35,7 @@ public class StatsInfo {
 		
 		// initialize table and size relation map and field and Bound relation map
 		tableAndSizeMap = new HashMap<String,Integer>();
-		fieldAndBound = new HashMap<String,ArrayList>();
+		fieldAndBound = new HashMap<String,ArrayList<Integer>>();
 		
 		//loop over every table and every field
 		for(int i=0; i<tableList.size(); i++){
@@ -84,7 +84,7 @@ public class StatsInfo {
 		return tableAndSizeMap;
 	} 
 	
-	public HashMap<String,ArrayList> getFieldAndBound(){
+	public HashMap<String,ArrayList<Integer>> getFieldAndBound(){
 		return fieldAndBound;
 	}
 	
