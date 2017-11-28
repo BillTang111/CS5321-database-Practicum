@@ -1,6 +1,8 @@
 package Database_Catalog;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,12 +21,13 @@ public class StatsInfo {
 	private HashMap<String,ArrayList> tableAndFieldMap;
 	private HashMap<String,Integer> tableAndSizeMap;
 	private HashMap<String,ArrayList<Integer>> fieldAndBound;
+	private String inputLocation;
 	
 	public StatsInfo(){
 		//build table List
 		tableList = new ArrayList<String>();
 		Catalog catalog = Catalog.getInstance();
-		String inputLocation = catalog.getInputLocation();
+		inputLocation = catalog.getInputLocation();
 		HashMap schemaMap = catalog.getSchema();
 		Set tableSet = schemaMap.keySet();
 		for(Object table: tableSet){
@@ -55,9 +58,21 @@ public class StatsInfo {
 						String fieldNow = fields.get(k).toString();
 						int fieldNumNow = Integer.parseInt(tupleField[k]);
 						if(fieldAndBound.containsKey(fieldNow)){
-							
+							ArrayList<Integer> bound = fieldAndBound.get(fieldNow);
+							int lowerBound = bound.get(0);
+							int upperBound = bound.get(1);
+							if(fieldNumNow< lowerBound) lowerBound = fieldNumNow;
+							if(fieldNumNow>upperBound) upperBound = fieldNumNow;
+							ArrayList<Integer> newBound = new ArrayList<Integer>();
+							newBound.add(lowerBound);
+							newBound.add(upperBound);
+							fieldAndBound.put(fieldNow, newBound);
 						}else{
-							
+							//if the field does not exists before, create it
+							ArrayList<Integer> newBound =  new ArrayList<Integer>();
+							newBound.add(fieldNumNow);
+							newBound.add(fieldNumNow);
+							fieldAndBound.put(fieldNow, newBound);
 						}
 					}
 				}// end of while loop
@@ -66,7 +81,7 @@ public class StatsInfo {
 				e.printStackTrace();
 			}
 			//update table and size map
-			
+			tableAndSizeMap.put(table, tableSize);
 		}// end of for loop
 		
 		
@@ -90,6 +105,29 @@ public class StatsInfo {
 	
 	
 	public void writeStatsFile(){
-		
+		try {
+			FileWriter fw = new FileWriter(inputLocation + "/db/stats.txt");
+			BufferedWriter bw = new BufferedWriter(fw);
+			for(int i=0; i<tableList.size(); i++){
+				StringBuilder singleLine = new StringBuilder();
+				String table = tableList.get(i);
+				singleLine.append(table+" ");
+				Integer tableSize = tableAndSizeMap.get(table);
+				singleLine.append(tableSize+" ");
+				ArrayList fields = tableAndFieldMap.get(table);
+				for(int k=0; k<fields.size(); k++){
+					String field = fields.get(k).toString();
+					singleLine.append(field+",");
+					ArrayList<Integer> bound = fieldAndBound.get(field);
+					singleLine.append(bound.get(0)+","+bound.get(1)+" ");
+				}
+				bw.write("\n");
+			}
+			bw.close();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

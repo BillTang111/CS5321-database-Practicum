@@ -8,6 +8,7 @@ import java.nio.*;
 import java.nio.channels.*;
 
 import Database_Catalog.Catalog;
+import Database_Catalog.StatsInfo;
 import Tuple.Tuple;
 import UnionFind.UnionFind;
 import logicalOperator.LogicalOperator;
@@ -188,8 +189,10 @@ public class Interpreter {
 		
 		catalog.setPairAlias(defaultAliasPair);
 		
-		//1.5 scan over different table to build stats.txt
-	//	catalog.getSchema().
+		//1.5 create stats.txt and then set the statsinfo into the catalog
+		StatsInfo stats = new StatsInfo();
+		catalog.setStatsInfo(stats);
+		stats.writeStatsFile();
 		
 		// if need to build index
 		if(buildIndex){
