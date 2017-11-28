@@ -8,7 +8,10 @@ import java.util.Map;
 import java.util.Set;
 
 import UnionFind.Element;
-
+import logicalOperator.LogicalOperator;
+import logicalOperator.LogicalScanOperator;
+import logicalOperator.LogicalSelectOperator;
+import logicalOperator.LogicalUnionJoinOperator;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.schema.Column;
 
@@ -26,6 +29,7 @@ public class JoinOrder {
 	private List<Expression> expressions = new ArrayList<>();//list of expressions 
 	private Map<String, Expression> Table_Expres_Map = new HashMap<>();
 	private List<Element> union;
+	private List<Integer> tablesIndex = new ArrayList<>();
 	
 	//Question: expression? TableIndex? getJoinSize-> second for loop
 	
@@ -33,8 +37,26 @@ public class JoinOrder {
 	/*
 	 * constructor of this class
 	 */
-//	public JoinOrder(LogicalNewJoinOperator )
-	
+	public JoinOrder(LogicalUnionJoinOperator UnionJoinOp, List<Element> union) {
+		List<LogicalOperator> LogOperators = UnionJoinOp.getChildrenOperators();
+		this.union = union;
+		//loop through operators to get each table name
+        for (LogicalOperator op : LogOperators) {
+            String init_table = "";
+            Expression init_exp = null;
+            if (op instanceof LogicalScanOperator) {
+                init_table = ((LogicalScanOperator) op).getTableName();
+            } else if (op instanceof LogicalSelectOperator) {
+                init_table = ((LogicalScanOperator) ((LogicalSelectOperator) op).getchildOperator()).getTableName();
+                init_exp = ((LogicalSelectOperator) op).getSelectCondition();
+            }
+            tables.add(init_table);
+            expressions.add(init_exp);
+            Table_Expres_Map.put(init_table, init_exp);
+        }
+        // use dp algo to sort tables
+        dp_Table_order();
+	}
 	
 
 	/*
@@ -51,6 +73,14 @@ public class JoinOrder {
 	 */
 	public List<Expression> getExpressions() {
 		return expressions;
+	}
+	
+	/*
+	 * getter methods for this class
+	 * return: list of expressions
+	 */
+	public List<Integer> getTablesIndex(){
+		return tablesIndex;
 	}
 	
 	/*
@@ -192,6 +222,11 @@ public class JoinOrder {
 		//3. get the best join order & update field
 		tables = OC_Table [N-1] [lowestCostInx].getTableList();
 		expressions = OC_Table [N-1] [lowestCostInx].getExpressionList();
+		
+		//set tableIndex
+        for (String t : OC_Table[N - 1][lowestCostInx].getTableList()) {
+            tablesIndex.add(tables.indexOf(t));
+        }
 	}
 	
 	/**
@@ -206,21 +241,30 @@ public class JoinOrder {
 		private List<Expression> expressionList = new ArrayList<>();
 		private double cost;
 		
-		
+		/*
+		 * constructor of [OrderStorage]
+		 * @para: 
+		 * [tableList] is a ordered list of tables
+		 * [expList] is a list of expressions corresponding to tables
+		 * [newOrderCost] is the cost of such join order
+		 */
 		public OrderStorage (List<String> tableList, List<Expression> expList, double newOrderCost) {
 			this.tableList = tableList;
 			this.expressionList = expList;
 			this.cost = newOrderCost;
 		}
 		
+		//get the table list
 		public List<String> getTableList() {
 			return tableList;
 		}
 		
+		//get the expression list
 		public List<Expression> getExpressionList(){
 			return expressionList;
 		}
 		
+		//get the cost
 		public double getScore() {
 			return cost;
 		}
