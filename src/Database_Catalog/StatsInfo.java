@@ -130,4 +130,19 @@ public class StatsInfo {
 			e.printStackTrace();
 		}
 	}
+	
+	public double getReductionFactorClosed(String table, String column, Long lowKey, Long highKey){
+		Boolean lowOpen = null;
+		Boolean highOpen = null;
+		if(lowKey != null) lowOpen = false;
+		if(highKey != null) highOpen = false;
+		return getReductionFactor(table, column, lowKey, highKey, lowOpen, highOpen);
+	}
+
+	private double getReductionFactor(String table, String column, Long lowKey,
+			Long highKey, Boolean lowOpen, Boolean highOpen) {
+		
+		return 0;
+	}
+	
 }

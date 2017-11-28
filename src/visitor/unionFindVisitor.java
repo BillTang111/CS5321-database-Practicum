@@ -240,7 +240,10 @@ public class unionFindVisitor implements ExpressionVisitor {
 				String rightNum = right.toString();
 				Long lower = Long.valueOf(rightNum);
 				Long oldLower = leftElement.getLowerBound();
-				lower = Math.max(lower, oldLower);
+				if(oldLower!=null){
+					lower = Math.max(lower, oldLower);	
+				}
+				
 				Long equal = leftElement.getEquality();
 				Long upper = leftElement.getUpperBound();
 				if(equal == null){
@@ -278,7 +281,9 @@ public class unionFindVisitor implements ExpressionVisitor {
 				Long lower = Long.valueOf(rightNum);
 				lower = lower-1;
 				Long oldLower = leftElement.getLowerBound();
-				lower = Math.max(lower, oldLower);
+				if(oldLower != null){
+					lower = Math.max(lower, oldLower);
+				}
 				Long equal = leftElement.getEquality();
 				Long upper = leftElement.getUpperBound();
 				if(equal == null){
@@ -334,7 +339,10 @@ public class unionFindVisitor implements ExpressionVisitor {
 				String rightNum = right.toString();
 				Long upper = Long.valueOf(rightNum);
 				Long oldUpper = leftElement.getUpperBound();
-				upper = Math.min(upper, oldUpper);
+				if(oldUpper!= null){
+					upper = Math.min(upper, oldUpper);
+				}
+				
 				Long equal = leftElement.getEquality();
 				Long lower = leftElement.getLowerBound();
 				if(equal == null){
@@ -372,7 +380,9 @@ public class unionFindVisitor implements ExpressionVisitor {
 				Long upper = Long.valueOf(rightNum);
 				upper = upper +1;
 				Long oldUpper = leftElement.getUpperBound();
-				upper = Math.min(upper, oldUpper);
+				if(oldUpper!= null){
+					upper = Math.min(upper, oldUpper);
+				}
 				Long equal = leftElement.getEquality();
 				Long lower = leftElement.getLowerBound();
 				if(equal == null){
