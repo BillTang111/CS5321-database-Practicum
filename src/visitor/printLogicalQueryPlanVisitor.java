@@ -4,10 +4,12 @@ import java.io.IOException;
 
 import logicalOperator.LogicalDuplicateEliminationOperators;
 import logicalOperator.LogicalJoinOperator;
+import logicalOperator.LogicalOperator;
 import logicalOperator.LogicalProjectOperator;
 import logicalOperator.LogicalScanOperator;
 import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
+import logicalOperator.LogicalUnionJoinOperator;
 
 
 /** Class used to visit each physical operator then
@@ -82,6 +84,17 @@ public class printLogicalQueryPlanVisitor {
 		numOfDash += 1;
 		loperator.getOutterChild().accept(this);
 		loperator.getInnerChild().accept(this);
+		numOfDash -= 1;
+	}
+
+	public void visit(LogicalUnionJoinOperator loperator) throws IOException {
+		result += prefix(numOfDash) + "Join"  + 
+				loperator.getJoinResidualExpressions().toString() + '\n';
+		result += loperator.getUnionFind().toString();
+		numOfDash += 1;
+		for(LogicalOperator child: loperator.getChildrenOperators()) {
+			child.accept(this);
+		}
 		numOfDash -= 1;
 	}
 	

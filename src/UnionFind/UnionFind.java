@@ -95,4 +95,18 @@ public class UnionFind {
 		unionFind.remove(e);
 		unionFind.add(updateElement);
 	}
+
+	public ArrayList<Element> getUFlist() {
+		return this.unionFind;
+	}
+	
+	@Override
+	public String toString() {
+		String result = "";
+		for(Element e: unionFind){
+			result += e.toString();
+		}
+		return result;
+	}
+	
 }

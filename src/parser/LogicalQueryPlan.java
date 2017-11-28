@@ -30,7 +30,9 @@ public class LogicalQueryPlan {
 	
 	/** logicalQueryPlan constructor
 	 * @param PlainSelect selectBody: the result parsed from Jsql parser 
-	 * @throws IOException */
+	 * @throws IOException 
+	 * 
+	 * Author: Hao Rong, hr335 */
 	public LogicalQueryPlan(PlainSelect selectBody) throws IOException {
 		// sortedTable: List of table names sorted by sequence appear in Join condtion
 		// selectConditionMap: Key: table name, Value: select conditions(>=1) related to table

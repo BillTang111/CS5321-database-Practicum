@@ -18,6 +18,7 @@ import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import parser.LogicalQueryPlan;
 import parser.Parser;
+import parser.newLogicalPlanBuilder;
 import parser.queryPlan;
 import physicalOperator.Operator;
 import physicalOperator.ScanOperator;
@@ -243,21 +244,23 @@ public class Interpreter {
 				catalog.setSelectResidual(selectResidual);
 				catalog.setJoinResidual(joinResidual);
 				
-				LogicalQueryPlan logPlan = new LogicalQueryPlan(eachQuerySelect);
+				//LogicalQueryPlan logPlan = new LogicalQueryPlan(eachQuerySelect);
+				newLogicalPlanBuilder logPlan = new newLogicalPlanBuilder(eachQuerySelect);
+				
 				PhysicalPlanBuilder builder = new PhysicalPlanBuilder();
 				
 				
 				LogicalOperator logicalPlanRoot = logPlan.getRoot();
-				logicalPlanRoot.accept(builder);
-				Operator physicalPlanRoot = builder.getRoot();
+				//logicalPlanRoot.accept(builder);
+				//Operator physicalPlanRoot = builder.getRoot();
 				
 				
 				//New function: print Tree
 				printLogicalQueryPlanVisitor lpv = new printLogicalQueryPlanVisitor();
 				logicalPlanRoot.accept(lpv);
 				
-				printPhysicalQueryPlanVisitor ppv = new printPhysicalQueryPlanVisitor();
-				physicalPlanRoot.accept(ppv);
+//				printPhysicalQueryPlanVisitor ppv = new printPhysicalQueryPlanVisitor();
+//				physicalPlanRoot.accept(ppv);
 				
 				
 				System.out.println("-----------------------------------------");
@@ -268,11 +271,11 @@ public class Interpreter {
 				System.out.println("-----------------------------------------");
 				
 				
-				System.out.println("---------Physical Query Plan Tree---------");
-				System.out.println(" ");
-				System.out.println(ppv.getResult());
-				System.out.println(" ");
-				System.out.println("-----------------------------------------");
+//				System.out.println("---------Physical Query Plan Tree---------");
+//				System.out.println(" ");
+//				System.out.println(ppv.getResult());
+//				System.out.println(" ");
+//				System.out.println("-----------------------------------------");
 				
 			// Option 1: dump result and see benchmark time
 //				long timeStart = System.currentTimeMillis();

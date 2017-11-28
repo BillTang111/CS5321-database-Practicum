@@ -58,5 +58,23 @@ public class Element {
 		return attribute;
 	}
 	
+	@Override
+	public String toString() {
+		String result;
+		String attrListString = "[";
+		for(Column c: attribute) {
+			attrListString += c.toString() + ", ";
+		}
+		int len = attrListString.length();
+		
+		String equalitySting = equality==null? "null": equality.toString();
+		String lowerSting = lowerBound==null? "null": lowerBound.toString();
+		String upperSting = upperBound==null? "null": upperBound.toString();
+		
+		attrListString = attrListString.substring(0, len-2);
+		result = "[" + attrListString + ", equals " + equalitySting + ", min " +
+				lowerSting + ", max " + upperSting +"]" + '\n';
+		return result;
+	}
 	
 }
