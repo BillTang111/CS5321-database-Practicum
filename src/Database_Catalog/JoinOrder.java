@@ -27,6 +27,8 @@ public class JoinOrder {
 	private Map<String, Expression> Table_Expres_Map = new HashMap<>();
 	private List<Element> union;
 	
+	//Question: expression? TableIndex? getJoinSize-> second for loop
+	
 	
 	/*
 	 * constructor of this class
@@ -34,10 +36,22 @@ public class JoinOrder {
 //	public JoinOrder(LogicalNewJoinOperator )
 	
 	
+
+	/*
+	 * getter methods for this class
+	 * return: list of tables with well arranged join order
+	 */
+	public List<String> getTables() {
+		return tables;
+	}
 	
-//	getter methods
-	
-	
+	/*
+	 * getter methods for this class
+	 * return: list of expressions
+	 */
+	public List<Expression> getExpressions() {
+		return expressions;
+	}
 	
 	/*
 	 * [calc_V_value] calculates the V-value for an attribute [column c] which takes
@@ -131,7 +145,6 @@ public class JoinOrder {
 		
 		for (int i=1; i<N; i++) {//not include the first row
 			for (int j=0; j<N; j++) { //loop the columns
-				
 				//costs of current run
 				double[] curCost = new double[N]; 
 				//require the last [OrderStorage] to store the current values (tables, expres, cost)
@@ -163,15 +176,23 @@ public class JoinOrder {
 				List<Expression> curExpList = new ArrayList<> (preStorage.getExpressionList());
 				curExpList.add(expressions.get(minCostIndex));
 				
-				//
+				//create data storage in the [tables]'s [ith,jth] row and column
 				OC_Table [i] [j] = new OrderStorage (curTableNames,curExpList,newOrderCost); 
 			}
 		}
 		
+		//get the best join order (lowest cost) from the last row of the matrix
+		//1. retrieve the cost array of the last in the [tables]
+		double [] lastRowCosts = new double [N]; 
+		for (int j=0; j< N; j++) {
+			lastRowCosts[j] = OC_Table [N-1] [j].getScore(); 
+		}
+		//2. get the lowest cost order's index
+		int lowestCostInx = minCost_Index(lastRowCosts);
+		//3. get the best join order & update field
+		tables = OC_Table [N-1] [lowestCostInx].getTableList();
+		expressions = OC_Table [N-1] [lowestCostInx].getExpressionList();
 	}
-	
-	
-	
 	
 	/**
 	 * @author benzhangtang
@@ -204,7 +225,6 @@ public class JoinOrder {
 			return cost;
 		}
 	}
-	
 	
 }
 
