@@ -46,15 +46,43 @@ public class StatsInfo {
 			File tableFile = new File(tablePath);
 			try {
 				BinaryTR btr = new BinaryTR(tableFile);
-				
+				String t;
+				while ((t = btr.ReadNextTuple()) != null) {
+					tableSize++;
+					String[] tupleField = t.split(",");
+					for(int k =0; k<tupleField.length; k++){
+						//update field and bound relation map
+						String fieldNow = fields.get(k).toString();
+						int fieldNumNow = Integer.parseInt(tupleField[k]);
+					}
+				}// end of while loop
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			//update table and size map
 			
-		}
+		}// end of for loop
+		
 		
 	}
+	
+	public List<String> getTableList(){
+		return tableList;
+	}
+	
+	public HashMap<String,ArrayList> getTableAndFieldMap(){
+		return tableAndFieldMap;
+	}
+	
+	public HashMap<String,Integer> getTableAndSizeMap(){
+		return tableAndSizeMap;
+	} 
+	
+	public HashMap<String,ArrayList> getFieldAndBound(){
+		return fieldAndBound;
+	}
+	
 	
 	public void writeStatsFile(){
 		
