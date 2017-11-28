@@ -117,6 +117,8 @@ public class StatsInfo {
 				ArrayList fields = tableAndFieldMap.get(table);
 				for(int k=0; k<fields.size(); k++){
 					String field = fields.get(k).toString();
+					int dotIndex = field.indexOf(".");
+					field = field.substring(dotIndex+1);
 					singleLine.append(field+",");
 					ArrayList<Integer> bound = fieldAndBound.get(field);
 					singleLine.append(bound.get(0)+","+bound.get(1)+" ");
@@ -141,8 +143,26 @@ public class StatsInfo {
 
 	private double getReductionFactor(String table, String column, Long lowKey,
 			Long highKey, Boolean lowOpen, Boolean highOpen) {
-		
-		return 0;
+		int low = fieldAndBound.get(column).get(0);
+		int high = fieldAndBound.get(column).get(1);
+		double range = (double) (high - low +1);
+		if(lowKey != null){
+			lowKey = lowOpen.booleanValue() ? (lowKey+1) : lowKey;
+			lowKey = Math.max(lowKey, low);
+		}
+		if(highKey != null){
+			highKey = highOpen.booleanValue() ? (highKey-1) : highKey;
+			highKey = Math.min(highKey, high);
+		}
+		if(lowKey == null && highKey != null){
+			return (highKey - low +1)/range;
+		}else if (lowKey == null && highKey == null){
+			return 1.0;
+		}else if(lowKey != null && highKey == null){
+			return (high - lowKey +1) / range;
+		}else{
+			return (highKey -  lowKey +1)/range;
+		}
 	}
 	
 }
