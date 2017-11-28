@@ -3,6 +3,8 @@ package UnionFind;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import net.sf.jsqlparser.schema.Column;
+
 /**
  * This class in the union find which store a collection of elements
  * 
@@ -27,7 +29,7 @@ public class UnionFind {
 				return e;
 			}
 		}
-		HashSet<String> attrList = new HashSet<String>();
+		HashSet<Column> attrList = new HashSet<Column>();
 		return new Element(attrList, null, null, null);
 	}
 	
@@ -38,15 +40,15 @@ public class UnionFind {
 	public void merge(Element e1, Element e2){
 		//build new element
 			//build new attrList
-		HashSet<String> e1Attr = e1.getattri();
-		HashSet<String> e2Attr = e2.getattri();
-		HashSet<String> mergeAttr = new HashSet<String>();
+		HashSet<Column> e1Attr = e1.getattri();
+		HashSet<Column> e2Attr = e2.getattri();
+		HashSet<Column> mergeAttr = new HashSet<Column>();
 		
-		for(String s: e1Attr){
+		for(Column s: e1Attr){
 			mergeAttr.add(s);
 		}
 		
-		for(String s: e2Attr){
+		for(Column s: e2Attr){
 			mergeAttr.add(s);
 		}
 		
@@ -88,7 +90,7 @@ public class UnionFind {
 	 * equality constraint
 	 * */
 	public void updateElement(Element e, Long lower, Long upper, Long equal){
-		HashSet<String> attr = e.getattri();
+		HashSet<Column> attr = e.getattri();
 		Element updateElement = new Element(attr, lower, upper, equal);
 		unionFind.remove(e);
 		unionFind.add(updateElement);

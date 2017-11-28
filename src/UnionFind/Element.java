@@ -2,18 +2,20 @@ package UnionFind;
 
 import java.util.HashSet;
 
+import net.sf.jsqlparser.schema.Column;
+
 /**
  * This class is the element which consists of union find
  * 
  * author: Lini Tan lt398
  * */
 public class Element {
-	private HashSet<String> attribute;
+	private HashSet<Column> attribute;
 	private Long lowerBound;
 	private Long upperBound;
 	private Long equality;
 	
-	public Element(HashSet<String>attri, Long lower, Long upper, Long equal){
+	public Element(HashSet<Column>attri, Long lower, Long upper, Long equal){
 		attribute = attri;
 		lowerBound = lower;
 		upperBound = upper;
@@ -32,11 +34,11 @@ public class Element {
 		equality = value;
 	}
 	
-	public void setAttri(HashSet<String> attr){
+	public void setAttri(HashSet<Column> attr){
 		attribute = attr;
 	}
 	
-	public void addAttr(String attr){
+	public void addAttr(Column attr){
 		attribute.add(attr);
 	}
 	
@@ -52,7 +54,7 @@ public class Element {
 		return equality;
 	}
 	
-	public HashSet<String> getattri(){
+	public HashSet<Column> getattri(){
 		return attribute;
 	}
 	

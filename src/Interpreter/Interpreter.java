@@ -188,16 +188,17 @@ public class Interpreter {
 		
 		catalog.setPairAlias(defaultAliasPair);
 		
-		
-		
-		
-		
+		//1.5 scan over different table to build stats.txt
+	//	catalog.getSchema().
 		
 		// if need to build index
 		if(buildIndex){
 			System.out.println("need to build index");
 			buildIndex(inputLocation);
 		}
+		
+		
+		
 		
 		// if we want to actually evaluate the SQL queries
 		if(evaluateOrNot){
