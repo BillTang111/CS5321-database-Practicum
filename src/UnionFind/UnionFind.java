@@ -25,8 +25,14 @@ public class UnionFind {
 		//loop the list of union find to find the element contains attr
 		
 		for(Element e: unionFind){
-			if(e.getattri().contains(attr)){
+			System.out.println("Iam the element: "+e.getattri().toString());
+			System.out.println("what is the attribute!! "+attr);
+			HashSet<Column> attrList = e.getattri();
+			for(Column c: attrList){
+				if(c.equals(attr)){
+				System.out.println("find you: " + e.getattri().toString());
 				return e;
+				}
 			}
 		}
 		HashSet<Column> attrList = new HashSet<Column>();
@@ -41,6 +47,9 @@ public class UnionFind {
 	public void merge(Element e1, Element e2){
 		//build new element
 			//build new attrList
+		System.out.println("I am merging");
+		System.out.println(e1.getattri().toString());
+		System.out.println(e2.getattri().toString());
 		HashSet<Column> e1Attr = e1.getattri();
 		HashSet<Column> e2Attr = e2.getattri();
 		HashSet<Column> mergeAttr = new HashSet<Column>();

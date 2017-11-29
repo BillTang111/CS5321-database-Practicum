@@ -144,8 +144,9 @@ public class StatsInfo {
 
 	private double getReductionFactor(String table, String column, Long lowKey,
 			Long highKey, Boolean lowOpen, Boolean highOpen) {
-		int low = fieldAndBound.get(column).get(0);
-		int high = fieldAndBound.get(column).get(1);
+		String fullName = table+"."+column;
+		int low = fieldAndBound.get(fullName).get(0);
+		int high = fieldAndBound.get(fullName).get(1);
 		double range = (double) (high - low +1);
 		if(lowKey != null){
 			lowKey = lowOpen.booleanValue() ? (lowKey+1) : lowKey;

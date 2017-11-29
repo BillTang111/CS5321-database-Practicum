@@ -199,7 +199,9 @@ public class unionFindVisitor implements ExpressionVisitor {
 		if (left instanceof Column){
 			if (right instanceof Column){
 				Element leftElement = unionFind.FindElement((Column)left);
+				//System.out.println("I am the left: "+leftElement.getattri().toString());
 				Element rightElement = unionFind.FindElement((Column)right);
+				
 				unionFind.merge(leftElement, rightElement);
 			}else{
 				Element leftElement = unionFind.FindElement((Column)left);
