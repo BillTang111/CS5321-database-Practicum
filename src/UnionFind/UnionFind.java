@@ -25,12 +25,13 @@ public class UnionFind {
 		//loop the list of union find to find the element contains attr
 		
 		for(Element e: unionFind){
-			System.out.println("Iam the element: "+e.getattri().toString());
-			System.out.println("what is the attribute!! "+attr);
+			//System.out.println("Iam the element: "+e.getattri().toString());
+			//System.out.println("what is the attribute!! "+attr);
 			HashSet<Column> attrList = e.getattri();
 			for(Column c: attrList){
-				if(c.equals(attr)){
-				System.out.println("find you: " + e.getattri().toString());
+				//System.out.println("I am the column looping: "+c.toString());
+				if(c.toString().equals(attr.toString())){
+				//System.out.println("find you: " + e.getattri().toString());
 				return e;
 				}
 			}
