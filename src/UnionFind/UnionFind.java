@@ -72,10 +72,24 @@ public class UnionFind {
 		}else{
 			Long e1Upper = e1.getUpperBound();
 			Long e2Upper = e2.getUpperBound();
-			mergeUpper = Math.min(e1Upper, e2Upper);
+			if(e1Upper == null){
+				mergeUpper = e2Upper;
+			}else if (e2Upper == null){
+				mergeUpper = e1Upper;
+			}else{
+				mergeUpper = Math.min(e1Upper, e2Upper);
+			}
+			
 			Long e1Lower = e1.getLowerBound();
 			Long e2Lower = e2.getLowerBound();
-			mergeLower = Math.max(e1Lower, e2Lower);
+			if(e1Lower == null){
+				mergeLower = e2Lower;
+			}else if (e2Lower == null){
+				mergeLower = e1Lower;
+			}else{
+				mergeLower = Math.max(e1Lower, e2Lower);
+			}
+			
 		}
 		Element mergeElement = new Element(mergeAttr,mergeLower,mergeUpper,mergeEqual);
 		
