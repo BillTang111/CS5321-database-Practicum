@@ -39,6 +39,7 @@ public class LogicalSelectOperator extends LogicalOperator {
 //		select = selectBody;
 //		e = selectBody.getWhere();
 		e = singleSelect;
+		System.out.println("debug: "+e);
 		childOp = op;
 	}
 

@@ -136,7 +136,8 @@ public class newLogicalPlanBuilder {
 									oneTableSelectExpr = addExpression(oneTableSelectExpr, greatEqExpr);
 								}
 								if(eBox.getUpperBound()!=null) { //R.A<=20
-									MinorThanEquals minorEqExpr = new MinorThanEquals(attr,new LongValue(eBox.getLowerBound()));
+									//System.out.println("debug: "+eBox);
+									MinorThanEquals minorEqExpr = new MinorThanEquals(attr,new LongValue(eBox.getUpperBound()));
 									oneTableSelectExpr = addExpression(oneTableSelectExpr, minorEqExpr);
 								}
 							}
@@ -146,21 +147,34 @@ public class newLogicalPlanBuilder {
 			}
 			for(Expression reSelectEx:residualSelectList){ //R.A<>20 or R.A>=R.B
 				if(deAlias(reSelectEx.toString()).equals(tableName)) {
+					//System.out.println("debugg: "+reSelectEx);
 					oneTableSelectExpr = addExpression(oneTableSelectExpr, reSelectEx);
 				}
 			}
-			LogicalSelectOperator select = new LogicalSelectOperator(oneTableSelectExpr, root);
-			root = select;
+			
+			if (oneTableSelectExpr!=null){
+				LogicalSelectOperator select = new LogicalSelectOperator(oneTableSelectExpr, root);
+				root = select;
+			}
+			
 			nodeBeforeJoin.put(tableName, root);
 		}
 		
-		LogicalUnionJoinOperator logicalUJ = new LogicalUnionJoinOperator(nodeBeforeJoin);
-		root = logicalUJ;
+		if(nodeBeforeJoin.size()==1){
+			ArrayList<LogicalOperator> nodes = new ArrayList<LogicalOperator>(nodeBeforeJoin.values());
+			root = nodes.get(0);
+			System.out.println("nodeBeforeJoin: only 1 table, skip join");
+		}
+		else{
+			LogicalUnionJoinOperator logicalUJ = new LogicalUnionJoinOperator(nodeBeforeJoin);
+			root = logicalUJ;
+		}
 					
 
 		// 4. Add projection node to current tree if there is project condition
 		System.out.println("Project? " + (selectBody.getSelectItems().get(0).equals("*")));
 		if (selectBody.getSelectItems()!=null) {
+			//System.out.println("add project!");
 			LogicalProjectOperator project = new LogicalProjectOperator(selectBody, root);
 			root = project;
 		}
