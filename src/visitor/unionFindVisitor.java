@@ -205,8 +205,10 @@ public class unionFindVisitor implements ExpressionVisitor {
 				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long equal = Long.valueOf(rightNum);
-				Long lower = leftElement.getLowerBound();
-				Long upper = leftElement.getUpperBound();
+				//Long lower = leftElement.getLowerBound();
+				//Long upper = leftElement.getUpperBound();
+				Long lower = equal;
+				Long upper = equal;
 				unionFind.updateElement(leftElement, lower, upper, equal);
 			}
 		}
@@ -238,7 +240,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 			}else{
 				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
-				Long lower = Long.valueOf(rightNum);
+				Long lower = Long.valueOf(rightNum)+1;
 				Long oldLower = leftElement.getLowerBound();
 				if(oldLower!=null){
 					lower = Math.max(lower, oldLower);	
@@ -279,7 +281,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long lower = Long.valueOf(rightNum);
-				lower = lower-1;
+				//lower = lower-1;
 				Long oldLower = leftElement.getLowerBound();
 				if(oldLower != null){
 					lower = Math.max(lower, oldLower);
@@ -337,7 +339,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 			}else{
 				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
-				Long upper = Long.valueOf(rightNum);
+				Long upper = Long.valueOf(rightNum)-1;
 				Long oldUpper = leftElement.getUpperBound();
 				if(oldUpper!= null){
 					upper = Math.min(upper, oldUpper);
@@ -378,7 +380,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long upper = Long.valueOf(rightNum);
-				upper = upper +1;
+				//upper = upper +1;
 				Long oldUpper = leftElement.getUpperBound();
 				if(oldUpper!= null){
 					upper = Math.min(upper, oldUpper);
