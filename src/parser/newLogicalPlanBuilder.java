@@ -39,7 +39,7 @@ public class newLogicalPlanBuilder {
 	public newLogicalPlanBuilder(PlainSelect selectBody) throws IOException {
 		// sortedTable: List of table names sorted by sequence appear in Join condtion
 		// nodeBeforeJoin: to store operator after scan and select
-		HashMap<String, LogicalOperator> nodeBeforeJoin = new HashMap<String, LogicalOperator>(); 
+		ArrayList<LogicalOperator> nodeBeforeJoin = new ArrayList<LogicalOperator>(); 
 		ArrayList<String> sortedTable = new ArrayList<String>(); 
 		HashMap<String, String> pairAlias = new HashMap<String, String>();
 		Catalog data = Catalog.getInstance();
@@ -88,13 +88,14 @@ public class newLogicalPlanBuilder {
 		
 		// new sortedTable
 		sortedTable = new ArrayList<String>(); 
-		sortedTable.add(selectBody.getFromItem().toString());
+		sortedTable.add(stripAStablename(selectBody.getFromItem().toString()));
 		List joinTableList = selectBody.getJoins();
 		if (joinTableList!=null){
 			for(Object t:joinTableList){
-				sortedTable.add(t.toString());
+				sortedTable.add(stripAStablename(t.toString()));
 			}
 		}
+		System.out.println("debug01: "+sortedTable.toString());
 		int tableNum = sortedTable.size(); // number of table involved in this query
 		
 		
@@ -157,12 +158,11 @@ public class newLogicalPlanBuilder {
 				root = select;
 			}
 			
-			nodeBeforeJoin.put(tableName, root);
+			nodeBeforeJoin.add(root);
 		}
 		
 		if(nodeBeforeJoin.size()==1){
-			ArrayList<LogicalOperator> nodes = new ArrayList<LogicalOperator>(nodeBeforeJoin.values());
-			root = nodes.get(0);
+			root = nodeBeforeJoin.get(0);
 			System.out.println("nodeBeforeJoin: only 1 table, skip join");
 		}
 		else{
@@ -198,6 +198,15 @@ public class newLogicalPlanBuilder {
 	}
 			
 			
+	private String stripAStablename(String string) {
+		int asIndex = string.indexOf(" AS ");
+		if(asIndex==-1){
+			return string;
+		}
+		return string.substring(0, asIndex);
+	}
+
+
 	/** Join Expression together */	
 	private Expression addExpression(Expression oldExpression, Expression newExpression) {
 		if(oldExpression == null) return newExpression;

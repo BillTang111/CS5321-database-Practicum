@@ -17,17 +17,15 @@ import visitor.printLogicalQueryPlanVisitor;
  * 	@para UF: UnionFind
  * 	@author Hao Rong, hr335 */
 public class LogicalUnionJoinOperator extends LogicalOperator{
-	private HashMap<String, LogicalOperator> TableMapChildOps;
 	private List<LogicalOperator> childOps;
 	private List<Expression> residualJoinExpressions;
 	private UnionFind UF;
 	
-	public LogicalUnionJoinOperator(HashMap<String, LogicalOperator> childs) {
+	public LogicalUnionJoinOperator(ArrayList<LogicalOperator> childs) {
 		Catalog data = Catalog.getInstance();
 		residualJoinExpressions = data.getJoinResidual();
 		UF = data.getUnionFind();
-		TableMapChildOps = childs;
-		childOps = (List<LogicalOperator>) new ArrayList<LogicalOperator>(childs.values());
+		childOps = (List<LogicalOperator>) childs;
 	}
 	
     /** Get all children operators.
