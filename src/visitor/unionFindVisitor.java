@@ -198,11 +198,11 @@ public class unionFindVisitor implements ExpressionVisitor {
 		Expression right = arg0.getRightExpression();
 		if (left instanceof Column){
 			if (right instanceof Column){
-				Element leftElement = unionFind.FindElement(left.toString());
-				Element rightElement = unionFind.FindElement(right.toString());
+				Element leftElement = unionFind.FindElement((Column)left);
+				Element rightElement = unionFind.FindElement((Column)right);
 				unionFind.merge(leftElement, rightElement);
 			}else{
-				Element leftElement = unionFind.FindElement(left.toString());
+				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long equal = Long.valueOf(rightNum);
 				Long lower = leftElement.getLowerBound();
@@ -236,7 +236,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 					joinResidual.add(arg0);
 				}
 			}else{
-				Element leftElement = unionFind.FindElement(left.toString());
+				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long lower = Long.valueOf(rightNum);
 				Long oldLower = leftElement.getLowerBound();
@@ -276,7 +276,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 					joinResidual.add(arg0);
 				}
 			}else{
-				Element leftElement = unionFind.FindElement(left.toString());
+				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long lower = Long.valueOf(rightNum);
 				lower = lower-1;
@@ -335,7 +335,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 					joinResidual.add(arg0);
 				}
 			}else{
-				Element leftElement = unionFind.FindElement(left.toString());
+				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long upper = Long.valueOf(rightNum);
 				Long oldUpper = leftElement.getUpperBound();
@@ -375,7 +375,7 @@ public class unionFindVisitor implements ExpressionVisitor {
 					joinResidual.add(arg0);
 				}
 			}else{
-				Element leftElement = unionFind.FindElement(left.toString());
+				Element leftElement = unionFind.FindElement((Column)left);
 				String rightNum = right.toString();
 				Long upper = Long.valueOf(rightNum);
 				upper = upper +1;

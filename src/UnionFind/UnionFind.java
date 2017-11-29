@@ -21,7 +21,7 @@ public class UnionFind {
 	 * given a particular attribute,
 	 * such element is found, create it and return it. nd and return the union-nd element containing that attribute; if no
 	 * */
-	public Element FindElement(String attr){
+	public Element FindElement(Column attr){
 		//loop the list of union find to find the element contains attr
 		
 		for(Element e: unionFind){
@@ -30,6 +30,7 @@ public class UnionFind {
 			}
 		}
 		HashSet<Column> attrList = new HashSet<Column>();
+		attrList.add(attr);
 		return new Element(attrList, null, null, null);
 	}
 	

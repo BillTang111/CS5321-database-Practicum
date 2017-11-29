@@ -123,6 +123,7 @@ public class StatsInfo {
 					ArrayList<Integer> bound = fieldAndBound.get(field);
 					singleLine.append(bound.get(0)+","+bound.get(1)+" ");
 				}
+				bw.write(singleLine.toString());
 				bw.write("\n");
 			}
 			bw.close();
