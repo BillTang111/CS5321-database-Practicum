@@ -12,6 +12,8 @@ import java.util.Stack;
 import BPlusTree.BPlusTree;
 import Database_Catalog.BPlusIndexInform;
 import Database_Catalog.Catalog;
+import Database_Catalog.JoinOrder;
+import UnionFind.Element;
 import logicalOperator.LogicalDuplicateEliminationOperators;
 import logicalOperator.LogicalJoinOperator;
 import logicalOperator.LogicalOperator;
@@ -19,6 +21,7 @@ import logicalOperator.LogicalProjectOperator;
 import logicalOperator.LogicalScanOperator;
 import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
+import logicalOperator.LogicalUnionJoinOperator;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import physicalOperator.BNLJOperator;
@@ -384,5 +387,19 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		catalog.setIndexInfo(indexConfigInfo);
 		System.out.println("##reloadIndexInfo" + indexConfigInfo);
 	}
+	
+	/*
+	 * visit method for LogicalUnionJoinOperator.
+	 * @para: A LogicalUnionJoinOperator
+	 */
+	public void visit(LogicalUnionJoinOperator UnionJoinOp) {
+		//gets the right ordering of the table by using [JoinOrder];
+		JoinOrder tableOrder = new JoinOrder (UnionJoinOp, UnionJoinOp.getUnionFind().getUFlist());
+		List<Integer> tableOrderInx = tableOrder.getTablesIndex();
+		List<LogicalOperator> UnionJoinOpChildren = UnionJoinOp.getChildrenOperators();
+		
+		
+	}
+	
 	
 }
