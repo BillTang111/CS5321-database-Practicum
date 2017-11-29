@@ -20,12 +20,14 @@ public class LogicalUnionJoinOperator extends LogicalOperator{
 	private List<LogicalOperator> childOps;
 	private List<Expression> residualJoinExpressions;
 	private UnionFind UF;
+	private ArrayList<String> sortedTable;
 	
-	public LogicalUnionJoinOperator(ArrayList<LogicalOperator> childs) {
+	public LogicalUnionJoinOperator(ArrayList<LogicalOperator> childs, ArrayList<String> sortedTableList) {
 		Catalog data = Catalog.getInstance();
 		residualJoinExpressions = data.getJoinResidual();
 		UF = data.getUnionFind();
 		childOps = (List<LogicalOperator>) childs;
+		sortedTable = sortedTableList;
 	}
 	
     /** Get all children operators.
@@ -48,6 +50,10 @@ public class LogicalUnionJoinOperator extends LogicalOperator{
     public UnionFind getUnionFind() {
         return UF;
     }
+    
+	public ArrayList<String> getSortedTableList(){
+		return sortedTable;
+	}
     
 	@Override
 	public void accept(printLogicalQueryPlanVisitor lpv) throws IOException {

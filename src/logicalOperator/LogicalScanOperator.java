@@ -46,7 +46,8 @@ public class LogicalScanOperator extends LogicalOperator {
 //		br = new BufferedReader(new FileReader(location + "/db/data/" + input));      
 		
 		}
-		
+	
+	
 	public String getTableName(){
 		return this.input;
 	}

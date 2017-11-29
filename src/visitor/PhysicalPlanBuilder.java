@@ -14,6 +14,7 @@ import Database_Catalog.BPlusIndexInform;
 import Database_Catalog.Catalog;
 import Database_Catalog.JoinOrder;
 import UnionFind.Element;
+import UnionFind.UnionFind;
 import logicalOperator.LogicalDuplicateEliminationOperators;
 import logicalOperator.LogicalJoinOperator;
 import logicalOperator.LogicalOperator;
@@ -23,6 +24,7 @@ import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
 import logicalOperator.LogicalUnionJoinOperator;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import physicalOperator.BNLJOperator;
 import physicalOperator.DuplicateEliminationOperators;
@@ -65,7 +67,6 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 
 	@Override
 	public void visit(LogicalDuplicateEliminationOperators logDistinct) throws IOException {
-		// TODO Auto-generated method stub
 		LogicalOperator logChild = logDistinct.getchildOperator();
 		logChild.accept(this);
 		
@@ -77,22 +78,121 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	
 	/**
 	 * visit method for LogicalUnionJoinOperator.
+	 * @throws IOException 
 	 * @para: A LogicalUnionJoinOperator
 	 */
-	public void visit(LogicalUnionJoinOperator UnionJoinOp) {
+	public void visit(LogicalUnionJoinOperator UnionJoinOp) throws IOException {
 		//gets the right ordering of the table by using [JoinOrder];
 		JoinOrder tableOrder = new JoinOrder (UnionJoinOp, UnionJoinOp.getUnionFind().getUFlist());
 		List<Integer> tableOrderInx = tableOrder.getTablesIndex();
 		List<LogicalOperator> UnionJoinOpChildren = UnionJoinOp.getChildrenOperators();
+		ArrayList<String> sortedTableList = UnionJoinOp.getSortedTableList();
 		
-		
+		ArrayList<String> outteredTableList = new ArrayList<String>();
+		Operator outter = null;
+		for(int i=0; i<tableOrderInx.size(); i++) {
+			LogicalOperator logCurrentChild = UnionJoinOpChildren.get(i);
+			logCurrentChild.accept(this);
+			Operator physicalCurrentChild = stackOp.pop();
+			
+			if(outter == null){
+				outter = physicalCurrentChild;
+				outteredTableList.add(sortedTableList.get(i));
+			}
+			else{
+				Operator inner = physicalCurrentChild;
+				String toJoinTableName = sortedTableList.get(i);
+				Expression joinCondition = findJoinCondition(outteredTableList, toJoinTableName);
+				
+				
+				
+				outteredTableList.add(toJoinTableName);
+			}
+		}
+		stackOp.push(outter);
 	}
 	
 	
+	/** find join condition for the current join order 
+	 *  @return current join condition expression */
+	private Expression findJoinCondition(ArrayList<String> outteredTableList,
+			String toJoinTableName) {
+		Catalog data = Catalog.getInstance();
+		List<Element> UF = data.getUnionFind().getUFlist();
+		List<Expression> resiJoinConditions = data.getJoinResidual();
+		
+		// Examine residual join conditions
+		for(Expression e: resiJoinConditions){
+			ArrayList<String> twoTableName = findTwoTable(e.toString());
+			if(twoTableName.contains(toJoinTableName)){
+				if(twoTableName.get(0)==toJoinTableName){
+					if(outteredTableList.contains(twoTableName.get(1))){
+						return e;
+					}
+				}
+				else{
+					if(outteredTableList.contains(twoTableName.get(0))){
+						return e;
+					}
+				}
+			}
+		}
+		
+		// Examine element box
+		for(Element eBox: UF) {
+			if(eBox.getattri().size()>1){
+				for(Column c: eBox.getattri()){
+					String tableName = deAlias(c.toString());
+				}
+			}
+		}
+			
+			
+		
+		return null;
+	}
 	
+	/** Find two table string in the join expression
+	 *  And deAlias two table name
+	 *  Input: R.A = S.B
+	 *  @return [Reserve, Sailors] */
+	private ArrayList<String> findTwoTable(String exprString) {
+		Catalog data = Catalog.getInstance();
+		HashMap<String, String> pairAlias = data.getPairAlias();
+		
+		int dot1Index = exprString.indexOf(".");
+		int space1Index = exprString.indexOf(" ");
+		String table1 = pairAlias.get(exprString.substring(0, dot1Index));
+		String remainExpr = exprString.substring(space1Index+1, exprString.length());
+		int space2Index = remainExpr.indexOf(" ");
+		int dot2Index = remainExpr.indexOf(".");		
+		String table2 = pairAlias.get(remainExpr.substring(space2Index+1, dot2Index));
+				
+		ArrayList<String> result = new ArrayList<String>();
+		result.add(table1);
+		result.add(table2);
+		return result;
+	}
+	
+	/** Find the string before the first dot(.) as input String
+	 *  Replace the Alias (If exist) to the original table name in the input String 
+	 *  Input: R.A or R 
+	 *  @return Reserve */
+	private String deAlias(String attr) {
+		Catalog data = Catalog.getInstance();
+		HashMap<String, String> pairAlias = data.getPairAlias();
+		int dotIndex = attr.indexOf(".");
+		if (dotIndex == -1){
+			return pairAlias.get(attr);
+		}
+				
+		String aliasTableName = attr.substring(0, dotIndex);
+		return pairAlias.get(aliasTableName);
+	}
+
+
 	@Override
 	public void visit(LogicalJoinOperator logJoin) throws IOException {
-		// TODO Auto-generated method stub
 //		PlainSelect selectBody = logJoin.getinnerOperator().;
 		Expression joinCondition = logJoin.getJoinCondition();
 		LogicalOperator logLeftChild = logJoin.getoutterOperator();
@@ -137,14 +237,6 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			}
 		}
 	}
-
-
-
-//	private ExternalSortOperator ExternalSortOperator(Operator leftChild,
-//			int sPara2, Expression joinCondition) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
 
 	@Override

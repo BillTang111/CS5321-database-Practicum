@@ -166,7 +166,7 @@ public class newLogicalPlanBuilder {
 			System.out.println("nodeBeforeJoin: only 1 table, skip join");
 		}
 		else{
-			LogicalUnionJoinOperator logicalUJ = new LogicalUnionJoinOperator(nodeBeforeJoin);
+			LogicalUnionJoinOperator logicalUJ = new LogicalUnionJoinOperator(nodeBeforeJoin, sortedTable);
 			root = logicalUJ;
 		}
 					

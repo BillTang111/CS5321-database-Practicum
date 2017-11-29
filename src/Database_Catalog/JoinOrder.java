@@ -95,6 +95,8 @@ public class JoinOrder {
 		StatsInfo statsInfo = Catalog.getInstance().getStatsInfo();
 		ArrayList<Integer> attri_stats = statsInfo.getFieldAndBound().get(c.toString());
 		String Tname = c.getTable().getName();
+		System.out.println("I am the table name "+ Tname);
+		System.out.println("I am the column name "+ c.getColumnName());
 		Expression e =Table_Expres_Map.get(Tname);
 		System.out.println("I ame the table name: "+Tname);
 		System.out.println("I am the column name:"+c.getColumnName());
