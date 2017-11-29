@@ -71,7 +71,10 @@ public class Element {
 		String lowerSting = lowerBound==null? "null": lowerBound.toString();
 		String upperSting = upperBound==null? "null": upperBound.toString();
 		
+		System.out.println("attribute: "+ attribute.toString());
+		System.out.println(attrListString);
 		attrListString = attrListString.substring(0, len-2);
+		
 		result = "[" + attrListString + ", equals " + equalitySting + ", min " +
 				lowerSting + ", max " + upperSting +"]" + '\n';
 		return result;

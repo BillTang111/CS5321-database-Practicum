@@ -90,8 +90,10 @@ public class newLogicalPlanBuilder {
 		sortedTable = new ArrayList<String>(); 
 		sortedTable.add(selectBody.getFromItem().toString());
 		List joinTableList = selectBody.getJoins();
-		for(Object t:joinTableList){
-			sortedTable.add(t.toString());
+		if (joinTableList!=null){
+			for(Object t:joinTableList){
+				sortedTable.add(t.toString());
+			}
 		}
 		int tableNum = sortedTable.size(); // number of table involved in this query
 		

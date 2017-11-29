@@ -27,7 +27,7 @@ public class LogicalUnionJoinOperator extends LogicalOperator{
 		residualJoinExpressions = data.getJoinResidual();
 		UF = data.getUnionFind();
 		TableMapChildOps = childs;
-		childOps = (List<LogicalOperator>) childs.values();
+		childOps = (List<LogicalOperator>) new ArrayList<LogicalOperator>(childs.values());
 	}
 	
     /** Get all children operators.
