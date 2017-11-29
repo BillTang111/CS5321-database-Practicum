@@ -93,9 +93,16 @@ public class JoinOrder {
 	private double calc_V_value(Column c) {
 		double V_value = 0.0;
 		StatsInfo statsInfo = Catalog.getInstance().getStatsInfo();
-		ArrayList<Integer> attri_stats = statsInfo.getFieldAndBound().get(c);
+		ArrayList<Integer> attri_stats = statsInfo.getFieldAndBound().get(c.toString());
 		String Tname = c.getTable().getName();
 		Expression e =Table_Expres_Map.get(Tname);
+		System.out.println("I ame the table name: "+Tname);
+		System.out.println("I am the column name:"+c.getColumnName());
+		System.out.println(c.toString());
+		String s = "Sailors.A";
+		System.out.println(statsInfo.getFieldAndBound().containsKey(s));
+		System.out.println((long) attri_stats.get(0));
+		System.out.println((long) attri_stats.get(1));
 		
 		if(e==null) { 	//if there is no selection
 			 V_value = attri_stats.get(1) - attri_stats.get(0) +1;

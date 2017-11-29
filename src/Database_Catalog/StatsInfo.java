@@ -56,6 +56,8 @@ public class StatsInfo {
 					for(int k =0; k<tupleField.length; k++){
 						//update field and bound relation map
 						String fieldNow = fields.get(k).toString();
+						fieldNow = table+"."+fieldNow;
+						//System.out.println(fieldNow);
 						int fieldNumNow = Integer.parseInt(tupleField[k]);
 						if(fieldAndBound.containsKey(fieldNow)){
 							ArrayList<Integer> bound = fieldAndBound.get(fieldNow);
@@ -66,6 +68,7 @@ public class StatsInfo {
 							ArrayList<Integer> newBound = new ArrayList<Integer>();
 							newBound.add(lowerBound);
 							newBound.add(upperBound);
+							//System.out.println("field: "+fieldNow);
 							fieldAndBound.put(fieldNow, newBound);
 						}else{
 							//if the field does not exists before, create it
@@ -117,9 +120,11 @@ public class StatsInfo {
 				ArrayList fields = tableAndFieldMap.get(table);
 				for(int k=0; k<fields.size(); k++){
 					String field = fields.get(k).toString();
-					int dotIndex = field.indexOf(".");
-					field = field.substring(dotIndex+1);
+					System.out.println(field);
+					//int dotIndex = field.indexOf(".");
+					//field = field.substring(dotIndex+1);
 					singleLine.append(field+",");
+					field = table+"."+field;
 					ArrayList<Integer> bound = fieldAndBound.get(field);
 					singleLine.append(bound.get(0)+","+bound.get(1)+" ");
 				}
