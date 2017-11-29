@@ -74,8 +74,22 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		stackOp.push(distinct);
 	}
 
-
-
+	
+	/**
+	 * visit method for LogicalUnionJoinOperator.
+	 * @para: A LogicalUnionJoinOperator
+	 */
+	public void visit(LogicalUnionJoinOperator UnionJoinOp) {
+		//gets the right ordering of the table by using [JoinOrder];
+		JoinOrder tableOrder = new JoinOrder (UnionJoinOp, UnionJoinOp.getUnionFind().getUFlist());
+		List<Integer> tableOrderInx = tableOrder.getTablesIndex();
+		List<LogicalOperator> UnionJoinOpChildren = UnionJoinOp.getChildrenOperators();
+		
+		
+	}
+	
+	
+	
 	@Override
 	public void visit(LogicalJoinOperator logJoin) throws IOException {
 		// TODO Auto-generated method stub
@@ -386,19 +400,6 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		catalog.setIndexList(indexConfigList);
 		catalog.setIndexInfo(indexConfigInfo);
 		System.out.println("##reloadIndexInfo" + indexConfigInfo);
-	}
-	
-	/*
-	 * visit method for LogicalUnionJoinOperator.
-	 * @para: A LogicalUnionJoinOperator
-	 */
-	public void visit(LogicalUnionJoinOperator UnionJoinOp) {
-		//gets the right ordering of the table by using [JoinOrder];
-		JoinOrder tableOrder = new JoinOrder (UnionJoinOp, UnionJoinOp.getUnionFind().getUFlist());
-		List<Integer> tableOrderInx = tableOrder.getTablesIndex();
-		List<LogicalOperator> UnionJoinOpChildren = UnionJoinOp.getChildrenOperators();
-		
-		
 	}
 	
 	

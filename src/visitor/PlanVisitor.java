@@ -8,6 +8,7 @@ import logicalOperator.LogicalProjectOperator;
 import logicalOperator.LogicalScanOperator;
 import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
+import logicalOperator.LogicalUnionJoinOperator;
 
 public interface PlanVisitor {
 	
@@ -22,5 +23,7 @@ public interface PlanVisitor {
 	void visit(LogicalSelectOperator logSelect) throws IOException;
 	
 	void visit(LogicalSortOperator logSort) throws IOException;
+
+	void visit(LogicalUnionJoinOperator logUnionJoin) throws IOException;
 	
 }

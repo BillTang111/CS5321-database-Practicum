@@ -56,8 +56,7 @@ public class LogicalUnionJoinOperator extends LogicalOperator{
 
 	@Override
 	public void accept(PhysicalPlanBuilder pplanbuilder) throws IOException {
-		// TODO Auto-generated method stub
-		
+		pplanbuilder.visit(this);
 	}
 
 }

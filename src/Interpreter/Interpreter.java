@@ -251,8 +251,8 @@ public class Interpreter {
 				
 				
 				LogicalOperator logicalPlanRoot = logPlan.getRoot();
-				//logicalPlanRoot.accept(builder);
-				//Operator physicalPlanRoot = builder.getRoot();
+				logicalPlanRoot.accept(builder);
+				Operator physicalPlanRoot = builder.getRoot();
 				
 				
 				//New function: print Tree
