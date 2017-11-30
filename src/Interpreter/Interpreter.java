@@ -2,12 +2,14 @@ package Interpreter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.io.*;
 import java.nio.*;
 import java.nio.channels.*;
 
 import Database_Catalog.Catalog;
+import Database_Catalog.IndexInfo;
 import Database_Catalog.StatsInfo;
 import Tuple.Tuple;
 import UnionFind.UnionFind;
@@ -195,6 +197,10 @@ public class Interpreter {
 		catalog.setStatsInfo(stats);
 		stats.writeStatsFile();
 		
+		//1.6 set indexMap
+		HashMap<String, List<IndexInfo>> indexMap = setindexMap(inputLocation);
+		catalog.setIndexMap(indexMap);
+		
 		// if need to build index
 		if(buildIndex){
 			System.out.println("need to build index");
@@ -370,37 +376,88 @@ public class Interpreter {
 	
 	/** Build index for a special column. */
 	public static void buildIndex(String input) throws IOException {
-		BufferedReader indexReader = new BufferedReader(new FileReader(input + "/db/index_info.txt"));
-		String config;
-		ArrayList<String> indexConfigList = new ArrayList<String>();
-		HashMap<String, ArrayList> indexConfigInfo = new HashMap<String, ArrayList>();
-		while((config = indexReader.readLine()) != null){
-			//split each line and build corresponding b+ tree
-			String[] configs = config.split("\\s+");
-			String tableName = configs[0];
-			String columnName = configs[1];
-			String clusterOrNotString = configs[2];
-			boolean clusterOrNot = configs[2].equals("1");
-			int order = Integer.parseInt(configs[3]);
-			
-			ArrayList<String> eachIndexInfo = new ArrayList<String>();
-			eachIndexInfo.add(configs[2]);
-			eachIndexInfo.add(configs[3]);
-			eachIndexInfo.add(input + "/db/indexes/" + tableName + "." + columnName);
-			
-			indexConfigList.add(tableName + "." + columnName);
-			indexConfigInfo.put(tableName + "." + columnName, eachIndexInfo);
-			
-			BPlusTree indexTree = new BPlusTree(clusterOrNot, tableName, columnName, order, input + "/db/");
+//		BufferedReader indexReader = new BufferedReader(new FileReader(input + "/db/index_info.txt"));
+//		String config;
+//		ArrayList<String> indexConfigList = new ArrayList<String>();
+//		HashMap<String, ArrayList> indexConfigInfo = new HashMap<String, ArrayList>();
+//		while((config = indexReader.readLine()) != null){
+//			//split each line and build corresponding b+ tree
+//			String[] configs = config.split("\\s+");
+//			String tableName = configs[0];
+//			String columnName = configs[1];
+//			String clusterOrNotString = configs[2];
+//			boolean clusterOrNot = configs[2].equals("1");
+//			int order = Integer.parseInt(configs[3]);
+//			
+//			ArrayList<String> eachIndexInfo = new ArrayList<String>();
+//			eachIndexInfo.add(configs[2]);
+//			eachIndexInfo.add(configs[3]);
+//			eachIndexInfo.add(input + "/db/indexes/" + tableName + "." + columnName);
+//			
+//			indexConfigList.add(tableName + "." + columnName);
+//			indexConfigInfo.put(tableName + "." + columnName, eachIndexInfo);
+//			
+//			BPlusTree indexTree = new BPlusTree(clusterOrNot, tableName, columnName, order, input + "/db/");
+//		}
+//		
+//		indexReader.close();
+//		
+//		Catalog catalog = Catalog.getInstance();
+//		catalog.setIndexList(indexConfigList);
+//		catalog.setIndexInfo(indexConfigInfo);
+		
+		for(List<IndexInfo> indexInfoList: Catalog.getInstance().getIndexInfoList()){
+			for(IndexInfo indexinfor: indexInfoList){
+				BPlusTree indexTree = new BPlusTree(indexinfor);
+			}
 		}
-		
-		indexReader.close();
-		
-		Catalog catalog = Catalog.getInstance();
-		catalog.setIndexList(indexConfigList);
-		catalog.setIndexInfo(indexConfigInfo);
 	}
 	
+	public static HashMap<String, List<IndexInfo>> setindexMap(String input){
+		HashMap<String, List<IndexInfo>> res = new HashMap<String, List<IndexInfo>>();
+		String indexPath = input + "/db/index_info.txt";
+		FileReader fr;
+		BufferedReader br;
+		//Initialize file reader
+		try {
+			 fr = new FileReader(indexPath);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			//System.out.println("Index info ");
+			fr = null;
+		}
+		
+		//Initialize index map
+		if(fr != null){
+			br = new BufferedReader(fr);
+			String curLine;
+			try {
+				while((curLine = br.readLine()) != null){
+					String[] line = curLine.split("\\s+");
+					Table t = new Table();
+					t.setName(line[0]);
+					Column c = new Column();
+					c.setColumnName(line[1]);
+					c.setTable(t);
+					
+					boolean isClustered = (line[2].equals("1"));
+					int order = Integer.parseInt(line[3]);
+					String dataPath = input + "/db/";
+					if (res.containsKey(line[0])) {
+						res.get(line[0]).add(new IndexInfo(c, isClustered, order, dataPath));
+					} else {
+						List<IndexInfo> indexList = new LinkedList<>();
+						indexList.add(new IndexInfo(c, isClustered, order, dataPath));
+						res.put(line[0], indexList);
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return res;
+	}
 	
 
 }

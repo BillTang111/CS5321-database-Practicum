@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import UnionFind.UnionFind;
@@ -38,7 +39,7 @@ public class Catalog implements Cloneable, Serializable {
 	private List<Expression> joinResidual;
 	private List<Expression> selectResidual;
 	private StatsInfo statsInfo;
-	
+	private HashMap<String, List<IndexInfo>> indexMap;
 
 	
 	/* Private Constructor prevents any other class from instantiating */
@@ -180,6 +181,26 @@ public class Catalog implements Cloneable, Serializable {
 	 * */
 	public StatsInfo getStatsInfo(){
 		return statsInfo;
+	}
+	
+	/**Get the indexmap with store the relationship of table and its index info
+	 * 
+	 * @return the index map
+	 * */
+	public HashMap<String, List<IndexInfo>> getIndexMap(){
+		return indexMap;
+	}
+	
+	public List<List<IndexInfo>> getIndexInfoList(){
+		return new LinkedList<>(indexMap.values());
+	}
+	
+	/**set the  indexmap with store the relationship of table and its index info
+	 * 
+	 * @param the index map
+	 * */
+	public void setIndexMap(HashMap<String, List<IndexInfo>> map){
+		indexMap = map;
 	}
 	
 	/**set the stats info

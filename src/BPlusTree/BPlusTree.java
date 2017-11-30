@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import Database_Catalog.Catalog;
+import Database_Catalog.IndexInfo;
 import Interpreter.BinaryTR;
 import Interpreter.BinaryTW;
 import Tuple.Tuple;
@@ -39,6 +40,21 @@ public class BPlusTree {
 		serializer = new Serializer(location+"indexes/"+column);
 		leafList = new ArrayList<LeafNode>();
 		leafList = buildLeafLayer(tableName, column, clusterOrNot);
+		root = buildIndexLayers();
+		serializer.writeNextNode(root);
+		serializer.writeHeadPage(countSize, leafList.size(), order);
+		serializer.close();
+	}
+	
+	public BPlusTree(IndexInfo indexInfo){
+		fileLocation = indexInfo.getFilePath();
+		this.order = indexInfo.getOrder();
+		column = indexInfo.toString();
+		tableName = indexInfo.getColumn().getTable().toString();
+		isCluster = indexInfo.isClustered();
+		serializer = new Serializer(fileLocation+"indexes/"+column);
+		leafList = new ArrayList<LeafNode>();
+		leafList = buildLeafLayer(tableName, column, indexInfo.isClustered());
 		root = buildIndexLayers();
 		serializer.writeNextNode(root);
 		serializer.writeHeadPage(countSize, leafList.size(), order);
