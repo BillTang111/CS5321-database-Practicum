@@ -225,7 +225,7 @@ public class newLogicalPlanBuilder {
 		if (dotIndex == -1){
 			return pairAlias.get(attr);
 		}
-				
+		
 		String aliasTableName = attr.substring(0, dotIndex);
 		return pairAlias.get(aliasTableName);
 	}

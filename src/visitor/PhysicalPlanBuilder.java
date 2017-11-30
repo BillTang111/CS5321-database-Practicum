@@ -24,6 +24,8 @@ import logicalOperator.LogicalSelectOperator;
 import logicalOperator.LogicalSortOperator;
 import logicalOperator.LogicalUnionJoinOperator;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.LongValue;
+import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import physicalOperator.BNLJOperator;
@@ -51,10 +53,14 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	private ArrayList<String> indexList;
 	private String tableName;
 	private String tableColumn;
+	private int defaultJPara;
+	private int defaultSPara;
 	
 	public PhysicalPlanBuilder() {
 		stackOp = new Stack<Operator>();
 		interpretConfig();
+		defaultJPara = 4;
+		defaultSPara = 5;
 	}
 	
 	
@@ -102,10 +108,21 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			else{
 				Operator inner = physicalCurrentChild;
 				String toJoinTableName = sortedTableList.get(i);
-				Expression joinCondition = findJoinCondition(outteredTableList, toJoinTableName);
+				analysisResult analysis = findJoinCondition(outteredTableList, toJoinTableName);
 				
-				
-				
+				if(analysis.getIsEqualEx()){
+					ArrayList<Column> outterOder = new ArrayList<Column>(); 
+					outterOder.add(analysis.getOutterAttr());
+					ArrayList<Column> innerOder = new ArrayList<Column>(); 
+					innerOder.add(analysis.getInnerAttr());
+					
+					ExternalSortOperator outterSorted = new ExternalSortOperator(outter, outterOder, defaultSPara);
+					ExternalSortOperator innerSorted = new ExternalSortOperator(inner, innerOder, defaultSPara);
+					outter  = new SMJOperator(outterSorted, innerSorted, analysis.getJoinCondition());
+				}
+				else{
+					outter = new BNLJOperator(outter, inner, analysis.getJoinCondition(), defaultJPara);
+				}
 				outteredTableList.add(toJoinTableName);
 			}
 		}
@@ -115,11 +132,13 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	
 	/** find join condition for the current join order 
 	 *  @return current join condition expression */
-	private Expression findJoinCondition(ArrayList<String> outteredTableList,
+	private analysisResult findJoinCondition(ArrayList<String> outteredTableList,
 			String toJoinTableName) {
 		Catalog data = Catalog.getInstance();
 		List<Element> UF = data.getUnionFind().getUFlist();
 		List<Expression> resiJoinConditions = data.getJoinResidual();
+		
+		analysisResult analysis = new analysisResult();
 		
 		// Examine residual join conditions
 		for(Expression e: resiJoinConditions){
@@ -127,12 +146,16 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			if(twoTableName.contains(toJoinTableName)){
 				if(twoTableName.get(0)==toJoinTableName){
 					if(outteredTableList.contains(twoTableName.get(1))){
-						return e;
+						analysis.setIsEqualEx(false);
+						analysis.setJoinCondition(e);
+						return analysis;
 					}
 				}
 				else{
 					if(outteredTableList.contains(twoTableName.get(0))){
-						return e;
+						analysis.setIsEqualEx(false);
+						analysis.setJoinCondition(e);
+						return analysis;
 					}
 				}
 			}
@@ -140,15 +163,44 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		
 		// Examine element box
 		for(Element eBox: UF) {
-			if(eBox.getattri().size()>1){
+			if(eBox.getattri().size()>1){ // If this is a join box
+				ArrayList<String> tableList = new ArrayList<String>();
+				ArrayList<Column> attrList = new ArrayList<Column>();
+				
 				for(Column c: eBox.getattri()){
-					String tableName = deAlias(c.toString());
+					tableList.add(deAlias(c.toString()));
+					attrList.add(c);
+				}
+//				ArrayList<String> nonDuplicateTableList = new ArrayList<String>();
+//				ArrayList<Column> nonDuplicateAttrList = new ArrayList<Column>();
+//				for(int i=0; i<tableList.size(); i++){
+//					String iName = tableList.get(i);
+//					Column iAttr = attrList.get(i);
+//					if(!nonDuplicateTableList.contains(iName)){
+//						nonDuplicateTableList.add(iName);
+//						nonDuplicateAttrList.add(iAttr);
+//					}
+//				}
+				if(tableList.indexOf(toJoinTableName)!=-1){
+					Column attrInner = attrList.get(tableList.indexOf(toJoinTableName));
+					Column attrOutter = null;
+					for(String baseTable: outteredTableList){
+						if(tableList.indexOf(baseTable)!=-1){
+							attrOutter = attrList.get(tableList.indexOf(baseTable));
+						}
+					}
+					if(attrOutter!=null){
+						EqualsTo eqExpr = new EqualsTo(attrOutter,attrInner);
+						analysis.setIsEqualEx(true);
+						analysis.setJoinCondition(eqExpr);
+						analysis.setOutterAttr(attrOutter);
+						analysis.setInnerAttr(attrInner);
+						return analysis;
+					}
 				}
 			}
 		}
 			
-			
-		
 		return null;
 	}
 	
@@ -495,4 +547,52 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	}
 	
 	
+}
+
+class analysisResult {
+	boolean isEqualEx;
+	Expression joinCondition;
+	Column outterAttr;
+	Column innerAttr;
+	
+	public analysisResult(boolean isE, Expression jExpr, Column outC, Column inC) {
+		isEqualEx = isE;
+		joinCondition = jExpr;
+		outterAttr = outC;
+		innerAttr = inC;
+	}
+	
+	public analysisResult() {}
+	
+	public boolean getIsEqualEx(){
+		return isEqualEx;
+	}
+	
+	public Expression getJoinCondition(){
+		return joinCondition;
+	}
+	
+	public Column getOutterAttr(){
+		return outterAttr;
+	}
+	
+	public Column getInnerAttr(){
+		return innerAttr;
+	}
+	
+	public void setIsEqualEx(boolean b){
+		isEqualEx = b;
+	}
+	
+	public void setJoinCondition(Expression e){
+		joinCondition = e;
+	}
+	
+	public void setOutterAttr(Column c){
+		outterAttr = c;
+	}
+	
+	public void setInnerAttr(Column c){
+		innerAttr = c;
+	}
 }

@@ -89,7 +89,7 @@ public class ExternalSortOperator extends Operator{
 	}
 
 
-	 /**
+	/**
      * @param this method self-sorted the tuple in a page and prepare for the merge pass.
      */
 	private void pass0() {
