@@ -147,7 +147,7 @@ public class StatsInfo {
 		return getReductionFactor(table, column, lowKey, highKey, lowOpen, highOpen);
 	}
 
-	private double getReductionFactor(String table, String column, Long lowKey,
+	public double getReductionFactor(String table, String column, Long lowKey,
 			Long highKey, Boolean lowOpen, Boolean highOpen) {
 		String fullName = table+"."+column;
 		int low = fieldAndBound.get(fullName).get(0);

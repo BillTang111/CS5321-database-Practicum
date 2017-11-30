@@ -195,6 +195,15 @@ public class Catalog implements Cloneable, Serializable {
 		return new LinkedList<>(indexMap.values());
 	}
 	
+	public int getLeaveNum(String tableName, String columnName){
+		for(IndexInfo indexinfo: indexMap.get(tableName)){
+			if(indexinfo.getColumn().toString().equals(columnName)){
+				return indexinfo.getNumLeaves();
+			}
+		}
+		return 0;
+	}
+	
 	/**set the  indexmap with store the relationship of table and its index info
 	 * 
 	 * @param the index map

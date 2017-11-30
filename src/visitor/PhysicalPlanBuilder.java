@@ -12,7 +12,9 @@ import java.util.Stack;
 import BPlusTree.BPlusTree;
 import Database_Catalog.BPlusIndexInform;
 import Database_Catalog.Catalog;
+import Database_Catalog.IndexInfo;
 import Database_Catalog.JoinOrder;
+import Database_Catalog.StatsInfo;
 import UnionFind.Element;
 import UnionFind.UnionFind;
 import logicalOperator.LogicalDuplicateEliminationOperators;
@@ -314,110 +316,151 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		stackOp.push(scan);
 	}
 
-
-
 	@Override
-	public void visit(LogicalSelectOperator logSelect) throws IOException {
-		Expression selectCondition = logSelect.getSelectCondition();
-		LogicalOperator logChild = logSelect.getchildOperator();
-		logChild.accept(this);
-		
-		Operator child = stackOp.pop();
-		
-		if (!useIndex){
-			SelectOperator select = new SelectOperator(selectCondition, child);
-			stackOp.push(select);
-		}
-		else {
-			if (!examineEligible(selectCondition, indexList)){
-				System.out.println("Using index, but this condition is not eligible");
-				SelectOperator select = new SelectOperator(selectCondition, child);
-				stackOp.push(select);
+	public void visit(LogicalSelectOperator logSelect) throws IOException{
+		String tableName = ((LogicalScanOperator)logSelect.getchildOperator()).getTableName();
+		Catalog catalog = Catalog.getInstance();
+		StatsInfo stats = catalog.getStatsInfo();
+		int tupleNum = stats.getTableAndSizeMap().get(tableName);
+		double tupleSize = stats.getTableAndFieldMap().get(tableName).size() * 4;
+		double scanCost =  Math.ceil((tupleSize*tupleNum)/4096);
+		double minCost = scanCost; // default setting
+		double r = 1.0; //default setting
+		List<IndexInfo> indexInfos = catalog.getIndexInfo().get(tableName);
+		int p = (int)scanCost;
+		int t = stats.getTableAndSizeMap().get(tableName);
+		IndexExprVisitor indexVisitor = null;
+		IndexInfo indexinfo = null;
+		for(IndexInfo index: indexInfos){
+			String columnName = index.getColumn().getColumnName();
+			IndexExprVisitor v = new IndexExprVisitor(columnName);
+			Expression selectionCondition = logSelect.getSelectCondition();
+			selectionCondition.accept(v);
+			
+			int l = catalog.getLeaveNum(tableName, columnName);
+			r = stats.getReductionFactor(tableName, columnName, v.getLowkey(), v.getHighkey(), v.isLowopen(), v.isHighopen());
+			double indexCost;
+			if(index.isClustered()){
+				indexCost = 3 + p*r;
+			}else{
+				indexCost = 3 + l*r + t*r;
 			}
-			else {
-				System.out.println("Using index, this condition attribute is eligible");
-				System.out.println(selectCondition);
-				System.out.println("Now check if there are multiple conditions on this attribute");
-				
-				Catalog catalog = Catalog.getInstance();
-				HashMap<String, ArrayList> indexInfo = catalog.getIndexInfo();
-				
-				if (!(child instanceof IndexScanOperator)){
-					System.out.println("//no multiple conditions");
-					//System.out.println(child.getClass());
-					boundVisitor bv = new boundVisitor();
-					selectCondition.accept(bv);
-					Long lowerBound = ((bv.getLower()==null)? null: ((Long)bv.getLower()-1));
-					Long upperBound = ((bv.getUpper()==null)? null: ((Long)bv.getUpper()+1));
-					System.out.println("lowKey: " + lowerBound + " | highKey: " + upperBound);
-					
-					
-					ArrayList<String> columnIndexInfo = indexInfo.get(tableColumn);
-					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;
-					int order = Integer.parseInt(columnIndexInfo.get(1));
-					String indexPath = columnIndexInfo.get(2);
-					
-					System.out.println("isClustered: " + isClustered + " | order: " + order + " | indexPath: " + indexPath);
-					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
-					System.out.println("BPlusIndexInform built.");
-					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, inform);
-					System.out.println("IndexScanOperator built.");
-					stackOp.push(iSelect);
-					
-				} else {
-					System.out.println("//yes multiple conditions");
-					IndexScanOperator indexChild= (IndexScanOperator) child;
-					Long lowerBound0 = indexChild.getLowKey();
-					Long upperBound0 = indexChild.getHighKey();
-					boundVisitor bv = new boundVisitor();
-					selectCondition.accept(bv);
-					Long lowerBound1 = ((bv.getLower()==null)? null: ((Long)bv.getLower()-1));
-					Long upperBound1 = ((bv.getUpper()==null)? null: ((Long)bv.getUpper()+1));
-					
-					Long lowerBound = null;
-					Long upperBound = null;
-					
-					if (lowerBound0==null || lowerBound1==null) {
-						if (lowerBound0==null && lowerBound1==null) {
-							lowerBound = null;
-						}
-						if (lowerBound0==null){
-							lowerBound = lowerBound1;
-						}
-						if (lowerBound1==null){
-							lowerBound = lowerBound0;
-						}
-					} else {
-						lowerBound = Math.max(lowerBound0, lowerBound1);
-					}
-					
-					if (upperBound0==null || upperBound1==null) {
-						if (upperBound0==null && upperBound1==null) {
-							upperBound = null;
-						}
-						if (upperBound0==null){
-							upperBound = upperBound1;
-						}
-						if (upperBound1==null){
-							upperBound = upperBound0;
-						}
-					} else {
-						upperBound = Math.min(upperBound0, upperBound1);
-					}
-					
-					System.out.println("lowKey: " + lowerBound + " | highKey: " + upperBound);
-					
-					ArrayList<String> columnIndexInfo = indexInfo.get(tableColumn);
-					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;
-					int order = Integer.parseInt(columnIndexInfo.get(1));
-					String indexPath = columnIndexInfo.get(2);
-					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
-					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, inform);
-					stackOp.push(iSelect);
-				}
+			
+			if(indexCost < minCost){
+				minCost = indexCost;
+				indexVisitor = v;
+				indexinfo = index;
 			}
 		}
+		if(indexVisitor != null){
+			// use index scan
+			
+		}
+		
 	}
+
+//	@Override
+//	public void visit(LogicalSelectOperator logSelect) throws IOException {
+//		Expression selectCondition = logSelect.getSelectCondition();
+//		LogicalOperator logChild = logSelect.getchildOperator();
+//		logChild.accept(this);
+//		
+//		Operator child = stackOp.pop();
+//		
+//		if (!useIndex){
+//			SelectOperator select = new SelectOperator(selectCondition, child);
+//			stackOp.push(select);
+//		}
+//		else {
+//			if (!examineEligible(selectCondition, indexList)){
+//				System.out.println("Using index, but this condition is not eligible");
+//				SelectOperator select = new SelectOperator(selectCondition, child);
+//				stackOp.push(select);
+//			}
+//			else {
+//				System.out.println("Using index, this condition attribute is eligible");
+//				System.out.println(selectCondition);
+//				System.out.println("Now check if there are multiple conditions on this attribute");
+//				
+//				Catalog catalog = Catalog.getInstance();
+//				HashMap<String, ArrayList> indexInfo = catalog.getIndexInfo();
+//				
+//				if (!(child instanceof IndexScanOperator)){
+//					System.out.println("//no multiple conditions");
+//					//System.out.println(child.getClass());
+//					boundVisitor bv = new boundVisitor();
+//					selectCondition.accept(bv);
+//					Long lowerBound = ((bv.getLower()==null)? null: ((Long)bv.getLower()-1));
+//					Long upperBound = ((bv.getUpper()==null)? null: ((Long)bv.getUpper()+1));
+//					System.out.println("lowKey: " + lowerBound + " | highKey: " + upperBound);
+//					
+//					
+//					ArrayList<String> columnIndexInfo = indexInfo.get(tableColumn);
+//					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;
+//					int order = Integer.parseInt(columnIndexInfo.get(1));
+//					String indexPath = columnIndexInfo.get(2);
+//					
+//					System.out.println("isClustered: " + isClustered + " | order: " + order + " | indexPath: " + indexPath);
+//					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
+//					System.out.println("BPlusIndexInform built.");
+//					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, inform);
+//					System.out.println("IndexScanOperator built.");
+//					stackOp.push(iSelect);
+//					
+//				} else {
+//					System.out.println("//yes multiple conditions");
+//					IndexScanOperator indexChild= (IndexScanOperator) child;
+//					Long lowerBound0 = indexChild.getLowKey();
+//					Long upperBound0 = indexChild.getHighKey();
+//					boundVisitor bv = new boundVisitor();
+//					selectCondition.accept(bv);
+//					Long lowerBound1 = ((bv.getLower()==null)? null: ((Long)bv.getLower()-1));
+//					Long upperBound1 = ((bv.getUpper()==null)? null: ((Long)bv.getUpper()+1));
+//					
+//					Long lowerBound = null;
+//					Long upperBound = null;
+//					
+//					if (lowerBound0==null || lowerBound1==null) {
+//						if (lowerBound0==null && lowerBound1==null) {
+//							lowerBound = null;
+//						}
+//						if (lowerBound0==null){
+//							lowerBound = lowerBound1;
+//						}
+//						if (lowerBound1==null){
+//							lowerBound = lowerBound0;
+//						}
+//					} else {
+//						lowerBound = Math.max(lowerBound0, lowerBound1);
+//					}
+//					
+//					if (upperBound0==null || upperBound1==null) {
+//						if (upperBound0==null && upperBound1==null) {
+//							upperBound = null;
+//						}
+//						if (upperBound0==null){
+//							upperBound = upperBound1;
+//						}
+//						if (upperBound1==null){
+//							upperBound = upperBound0;
+//						}
+//					} else {
+//						upperBound = Math.min(upperBound0, upperBound1);
+//					}
+//					
+//					System.out.println("lowKey: " + lowerBound + " | highKey: " + upperBound);
+//					
+//					ArrayList<String> columnIndexInfo = indexInfo.get(tableColumn);
+//					boolean isClustered = (columnIndexInfo.get(0)).equals("1")? true: false;
+//					int order = Integer.parseInt(columnIndexInfo.get(1));
+//					String indexPath = columnIndexInfo.get(2);
+//					BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
+//					IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, inform);
+//					stackOp.push(iSelect);
+//				}
+//			}
+//		}
+//	}
 
 
 
