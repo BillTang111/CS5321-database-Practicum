@@ -78,6 +78,14 @@ public class IndexExprVisitor implements ExpressionVisitor {
 	public Expression getNoIndexExpr() {
 		return this.NoIndexExpr;
 	}
+	
+	public boolean isLowopen() {
+		return this.lowopen;
+	}
+	
+	public boolean isHighopen() {
+		return this.highopen;
+	}
 
 	/*
 	 * [addNoIndexExpr] joins expressions with no index together with AND expression.
