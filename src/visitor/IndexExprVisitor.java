@@ -50,10 +50,51 @@ import net.sf.jsqlparser.statement.select.SubSelect;
  */
 public class IndexExprVisitor implements ExpressionVisitor {
 	
-	private String indexColName;
+	private String ColumnName;
 	private Long lowkey;
 	private Long highkey;
 	private Expression NoIndexExpr;
+	
+	/*
+	 * constructor of the class
+	 */
+	public IndexExprVisitor (String columnName) {
+		this.ColumnName = columnName;
+	}
+	
+	/*
+	 * Get methods for this class 
+	 */
+	public Long getLowkey() {
+		return this.lowkey;
+	}
+	
+	public Long getHighkey() {
+		return this.highkey;
+	}
+	
+	public Expression getNoIndexExpr() {
+		return this.NoIndexExpr;
+	}
+	
+	/*
+	 * [addNoIndexExpr] joins expressions with no index together with AND expression.
+	 */
+	public void addNoIndexExpr (Expression expr) {
+		if (this.NoIndexExpr == null) {
+			this.NoIndexExpr = expr;
+		}else {
+			this.NoIndexExpr = new AndExpression(this.NoIndexExpr, expr);
+		} 
+	}
+	
+	/*
+	 * [hasNoIndexColunm] returns true if one of the binary expressions has no index on it. 
+	 */
+	public boolean hasNoIndexColunm(Expression left, Expression right) {
+		return false;
+	}
+	
 
 	@Override
 	public void visit(NullValue arg0) {
@@ -148,7 +189,8 @@ public class IndexExprVisitor implements ExpressionVisitor {
 	@Override
 	public void visit(AndExpression arg0) {
 		// TODO Auto-generated method stub
-		
+		arg0.getLeftExpression().accept(this);
+		arg0.getRightExpression().accept(this);
 	}
 
 	@Override
@@ -166,7 +208,11 @@ public class IndexExprVisitor implements ExpressionVisitor {
 	@Override
 	public void visit(EqualsTo arg0) {
 		// TODO Auto-generated method stub
+		Expression leftExpr = arg0.getLeftExpression();
+		Expression rightExpr = arg0.getRightExpression();
 		
+		//check if those sub-expressions contain indexed attribute (column) or not.
+			
 	}
 
 	@Override
