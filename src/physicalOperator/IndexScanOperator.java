@@ -35,6 +35,7 @@ public class IndexScanOperator extends Operator{
 	private List<DataEntry> dataEntryList;
 	private ListIterator<DataEntry> lstIterator;
 	private boolean foundClusterEntry; 
+	private String columnName;
 
 
 	public IndexScanOperator(Long lowkey, Long highkey, String tableName, BPlusIndexInform indexinform) throws IOException {
@@ -44,6 +45,7 @@ public class IndexScanOperator extends Operator{
 		this.indexinform = indexinform;
 		this.deserializer = new BPlusTreeDeserializer(indexinform);
 		this.foundClusterEntry = false;
+		this.columnName = indexinform.getColumn();
 
 
 		if(!indexinform.isClustered()) {
@@ -171,6 +173,10 @@ public class IndexScanOperator extends Operator{
 
 	public Long getLowKey(){
 		return this.lowkey;
+	}
+	
+	public String getColumnName(){
+		return this.columnName;
 	}
 	
 	public String getLowString() {

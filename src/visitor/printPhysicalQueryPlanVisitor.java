@@ -42,8 +42,10 @@ public class printPhysicalQueryPlanVisitor {
 	
 	
 	public void visit(IndexScanOperator operator) {
+		System.out.println("What is the name? "+operator.getColumnName());
+		
 		result += prefix(numOfDash) + "IndexScan" + "[" 
-				+ operator.getOTName().replaceAll(".", ",") + "," 
+				+ operator.getColumnName().replace(".", ",") + "," 
 				+ operator.getLowString() + "," + operator.getHighString() 
 				+ "]" + '\n';
 	}

@@ -341,7 +341,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		int t = stats.getTableAndSizeMap().get(tableName);
 		IndexExprVisitor indexVisitor = null;
 		IndexInfo indexinfo = null;
-		if(indexInfos != null){
+		//if(indexInfos != null){
 		for(IndexInfo index: indexInfos){
 			String columnName = index.getColumn().getColumnName();
 			IndexExprVisitor v = new IndexExprVisitor(columnName);
@@ -356,14 +356,15 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			}else{
 				indexCost = 3 + l*r + t*r;
 			}
-			
+			System.out.println("Use index: "+indexCost);
+			System.out.println("Using plain select: "+scanCost);
 			if(indexCost < minCost){
 				minCost = indexCost;
 				indexVisitor = v;
 				indexinfo = index;
 			}
 		}
-		}
+	//	}
 		
 		if(indexVisitor != null){
 			// use index scan
