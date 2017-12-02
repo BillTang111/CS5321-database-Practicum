@@ -61,8 +61,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	public PhysicalPlanBuilder() {
 		stackOp = new Stack<Operator>();
 		//interpretConfig();
-		defaultJPara = 4;
-		defaultSPara = 5;
+		jPara = 4;
+		sPara = 5;
 		sMode = 1;
 	}
 	
@@ -121,8 +121,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 					ArrayList<Column> innerOder = new ArrayList<Column>(); 
 					innerOder.add(analysis.getInnerAttr());
 					
-					ExternalSortOperator outterSorted = new ExternalSortOperator(outter, outterOder, defaultSPara);
-					ExternalSortOperator innerSorted = new ExternalSortOperator(inner, innerOder, defaultSPara);
+					ExternalSortOperator outterSorted = new ExternalSortOperator(outter, outterOder, sPara);
+					ExternalSortOperator innerSorted = new ExternalSortOperator(inner, innerOder, sPara);
 					outter  = new SMJOperator(outterSorted, innerSorted, analysis.getJoinCondition());
 				}
 				else{
@@ -335,7 +335,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		double scanCost =  Math.ceil((tupleSize*tupleNum)/4096);
 		double minCost = scanCost; // default setting
 		double r = 1.0; //default setting
-		System.out.println("tableName: "+tableName);
+		System.out.println("Convert LS - tableName: "+tableName);
 		List<IndexInfo> indexInfos = catalog.getIndexMap().get(tableName);
 		int p = (int)scanCost;
 		int t = stats.getTableAndSizeMap().get(tableName);
@@ -364,6 +364,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			}
 		}
 		}
+		
 		if(indexVisitor != null){
 			// use index scan
 			LogicalScanOperator logScan = (LogicalScanOperator) logSelect.getchildOperator();
