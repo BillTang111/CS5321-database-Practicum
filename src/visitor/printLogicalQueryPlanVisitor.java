@@ -69,11 +69,14 @@ public class printLogicalQueryPlanVisitor {
 	}
 	
 	public void visit(LogicalSortOperator loperator) throws IOException {
-		result += prefix(numOfDash) + "Sort" + 
-				loperator.getSortField() + '\n';
-		numOfDash += 1;
+		if(loperator.getSortField()!=null){
+			result += prefix(numOfDash) + "Sort" + 
+					loperator.getSortField() + '\n';
+			numOfDash += 1;
+			loperator.getchildOperator().accept(this);
+			numOfDash -= 1;
+		}	
 		loperator.getchildOperator().accept(this);
-		numOfDash -= 1;
 	}
 	
 	

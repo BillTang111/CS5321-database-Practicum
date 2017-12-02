@@ -63,7 +63,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		//interpretConfig();
 		jPara = 4;
 		sPara = 5;
-		sMode = 1;
+		sMode = 0;
 	}
 	
 	

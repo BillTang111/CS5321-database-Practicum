@@ -61,6 +61,9 @@ public class LogicalSortOperator extends LogicalOperator {
 	}
 
 	public String getSortField() {
+		if(order==null){
+			return null;
+		}
 		return order.toString();
 	}
 }

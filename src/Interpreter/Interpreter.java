@@ -242,13 +242,16 @@ public class Interpreter {
 				
 				//for each query, build unionFind and redisualList
 				unionFindVisitor ufVisitor = new unionFindVisitor();
-				eachQuerySelect.getWhere().accept(ufVisitor);
-				UnionFind uf = ufVisitor.getUnionfind();
-				List<Expression> selectResidual = ufVisitor.getSelectResidual();
-				List<Expression> joinResidual = ufVisitor.getJoinResidual();
-				catalog.setUnionFind(uf);
-				catalog.setSelectResidual(selectResidual);
-				catalog.setJoinResidual(joinResidual);
+				if(eachQuerySelect.getWhere()!=null){
+					eachQuerySelect.getWhere().accept(ufVisitor);
+					UnionFind uf = ufVisitor.getUnionfind();
+					List<Expression> selectResidual = ufVisitor.getSelectResidual();
+					List<Expression> joinResidual = ufVisitor.getJoinResidual();
+					catalog.setUnionFind(uf);
+					catalog.setSelectResidual(selectResidual);
+					catalog.setJoinResidual(joinResidual);
+				}
+				
 				
 				//LogicalQueryPlan logPlan = new LogicalQueryPlan(eachQuerySelect);
 				newLogicalPlanBuilder logPlan = new newLogicalPlanBuilder(eachQuerySelect);

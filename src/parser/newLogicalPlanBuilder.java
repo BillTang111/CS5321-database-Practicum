@@ -45,9 +45,12 @@ public class newLogicalPlanBuilder {
 		Catalog data = Catalog.getInstance();
 		
 		// 0. collect unionFind data
-		UF = data.getUnionFind().getUFlist();
-		residualSelectList = data.getSelectResidual();
-		residualJoinList = data.getJoinResidual();
+		if(data.getUnionFind()!=null){
+			UF = data.getUnionFind().getUFlist();
+			residualSelectList = data.getSelectResidual();
+			residualJoinList = data.getJoinResidual();
+		}
+		
 		
 		
 		// 1. Set up sortedTable, pairAlias
@@ -110,46 +113,48 @@ public class newLogicalPlanBuilder {
 			
 			Expression oneTableSelectExpr = null; // All select expression related to one table
 			
-			for(Element eBox: UF) {
-				// Within one Table equal select without other bounds: R.A=R.B / R.A
-				if (eBox.getEquality()==null && eBox.getLowerBound()==null && eBox.getUpperBound()==null) {
-					Column firstAttr = null;
-					for (Column attr: eBox.getattri()) {
-						if (deAlias(attr.getTable().getName()).equals(tableName)) {
-							if (firstAttr==null) {
-								firstAttr = attr;
-							}
-							else {
-								oneTableSelectExpr = addExpression(oneTableSelectExpr, new EqualsTo(firstAttr, attr));
-							}
-						}
-					}
-				}
-				else { // Within one Table that Have some bounds: R.A=20 and R.B=20
-					for (Column attr: eBox.getattri()) {
-						if(deAlias(attr.getTable().getName()).equals(tableName)) {
-							if(eBox.getEquality()!=null) { //R.A=20 
-								EqualsTo eqExpr = new EqualsTo(attr,new LongValue(eBox.getEquality()));
-								oneTableSelectExpr = addExpression(oneTableSelectExpr, eqExpr);
-							} else {
-								if(eBox.getLowerBound()!=null) { //R.A>=20
-									GreaterThanEquals greatEqExpr = new GreaterThanEquals(attr,new LongValue(eBox.getLowerBound()));
-									oneTableSelectExpr = addExpression(oneTableSelectExpr, greatEqExpr);
+			if(UF!=null){
+				for(Element eBox: UF) {
+					// Within one Table equal select without other bounds: R.A=R.B / R.A
+					if (eBox.getEquality()==null && eBox.getLowerBound()==null && eBox.getUpperBound()==null) {
+						Column firstAttr = null;
+						for (Column attr: eBox.getattri()) {
+							if (deAlias(attr.getTable().getName()).equals(tableName)) {
+								if (firstAttr==null) {
+									firstAttr = attr;
 								}
-								if(eBox.getUpperBound()!=null) { //R.A<=20
-									//System.out.println("debug: "+eBox);
-									MinorThanEquals minorEqExpr = new MinorThanEquals(attr,new LongValue(eBox.getUpperBound()));
-									oneTableSelectExpr = addExpression(oneTableSelectExpr, minorEqExpr);
+								else {
+									oneTableSelectExpr = addExpression(oneTableSelectExpr, new EqualsTo(firstAttr, attr));
 								}
 							}
 						}
 					}
+					else { // Within one Table that Have some bounds: R.A=20 and R.B=20
+						for (Column attr: eBox.getattri()) {
+							if(deAlias(attr.getTable().getName()).equals(tableName)) {
+								if(eBox.getEquality()!=null) { //R.A=20 
+									EqualsTo eqExpr = new EqualsTo(attr,new LongValue(eBox.getEquality()));
+									oneTableSelectExpr = addExpression(oneTableSelectExpr, eqExpr);
+								} else {
+									if(eBox.getLowerBound()!=null) { //R.A>=20
+										GreaterThanEquals greatEqExpr = new GreaterThanEquals(attr,new LongValue(eBox.getLowerBound()));
+										oneTableSelectExpr = addExpression(oneTableSelectExpr, greatEqExpr);
+									}
+									if(eBox.getUpperBound()!=null) { //R.A<=20
+										//System.out.println("debug: "+eBox);
+										MinorThanEquals minorEqExpr = new MinorThanEquals(attr,new LongValue(eBox.getUpperBound()));
+										oneTableSelectExpr = addExpression(oneTableSelectExpr, minorEqExpr);
+									}
+								}
+							}
+						}
+					}
 				}
-			}
-			for(Expression reSelectEx:residualSelectList){ //R.A<>20 or R.A>=R.B
-				if(deAlias(reSelectEx.toString()).equals(tableName)) {
-					//System.out.println("debugg: "+reSelectEx);
-					oneTableSelectExpr = addExpression(oneTableSelectExpr, reSelectEx);
+				for(Expression reSelectEx:residualSelectList){ //R.A<>20 or R.A>=R.B
+					if(deAlias(reSelectEx.toString()).equals(tableName)) {
+						//System.out.println("debugg: "+reSelectEx);
+						oneTableSelectExpr = addExpression(oneTableSelectExpr, reSelectEx);
+					}
 				}
 			}
 			
