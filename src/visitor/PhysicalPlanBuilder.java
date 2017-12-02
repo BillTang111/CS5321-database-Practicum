@@ -93,8 +93,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	public void visit(LogicalUnionJoinOperator UnionJoinOp) throws IOException {
 		//gets the right ordering of the table by using [JoinOrder];
 		System.out.println("Converting LogicalUnionJoinOperator");
-		
 		JoinOrder tableOrder = new JoinOrder (UnionJoinOp, UnionJoinOp.getUnionFind().getUFlist());
+		System.out.println("Now join order is: " + tableOrder.getTables());
 		List<Integer> tableOrderInx = tableOrder.getTablesIndex();
 		List<LogicalOperator> UnionJoinOpChildren = UnionJoinOp.getChildrenOperators();
 		ArrayList<String> sortedTableList = UnionJoinOp.getSortedTableList();
@@ -114,7 +114,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 				Operator inner = physicalCurrentChild;
 				String toJoinTableName = sortedTableList.get(i);
 				analysisResult analysis = findJoinCondition(outteredTableList, toJoinTableName);
-				
+				System.out.println("Analysis Item" + analysis);
 				if(analysis.getIsEqualEx()){
 					ArrayList<Column> outterOder = new ArrayList<Column>(); 
 					outterOder.add(analysis.getOutterAttr());
@@ -211,7 +211,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 				}
 			}
 		}
-			
+		
+		System.out.println("Do not have join condition between these two tables.");
 		return null;
 	}
 	
@@ -344,6 +345,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		//if(indexInfos != null){
 		for(IndexInfo index: indexInfos){
 			String columnName = index.getColumn().getColumnName();
+			System.out.println("Testing Index: " + columnName);
+			
 			IndexExprVisitor v = new IndexExprVisitor(columnName);
 			Expression selectionCondition = logSelect.getSelectCondition();
 			selectionCondition.accept(v);
@@ -362,6 +365,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 				minCost = indexCost;
 				indexVisitor = v;
 				indexinfo = index;
+				System.out.println("Smallest Index: " + columnName);
 			}
 		}
 	//	}
