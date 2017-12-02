@@ -80,10 +80,16 @@ public class IndexExprVisitor implements ExpressionVisitor {
 	}
 	
 	public boolean isLowopen() {
+		if(this.lowopen==null){
+			return false;
+		}
 		return this.lowopen;
 	}
 	
 	public boolean isHighopen() {
+		if(this.highopen==null){
+			return false;
+		}
 		return this.highopen;
 	}
 

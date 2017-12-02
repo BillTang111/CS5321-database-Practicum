@@ -369,8 +369,12 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 //			IndexScanOperator iSelect = new IndexScanOperator(lowerBound, upperBound, this.tableName, inform);
 			Long lowerBound = indexVisitor.getLowkey();
 			Long upperBound = indexVisitor.getHighkey();
-			if(indexVisitor.isHighopen()==false) upperBound = upperBound+1;
-			if(indexVisitor.isLowopen() == false) lowerBound = lowerBound-1;
+			if(upperBound!=null){
+				if(indexVisitor.isHighopen()==false) upperBound = upperBound+1;
+			}
+			if(lowerBound!=null){
+				if(indexVisitor.isLowopen() ==false) lowerBound = lowerBound-1;
+			}
 //			BPlusIndexInform inform = new BPlusIndexInform(tableColumn, isClustered, order, indexPath);
 			BPlusIndexInform inform = new BPlusIndexInform(indexinfo.getColumn().toString(), indexinfo.isClustered(), indexinfo.getOrder(), indexinfo.getIndexPath());
 			IndexScanOperator scan = new IndexScanOperator(lowerBound,upperBound,tableName,inform);
