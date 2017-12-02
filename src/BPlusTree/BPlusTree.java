@@ -49,11 +49,12 @@ public class BPlusTree {
 	public BPlusTree(IndexInfo indexInfo){
 		fileLocation = indexInfo.getFilePath();
 		this.order = indexInfo.getOrder();
-		column = indexInfo.toString();
+		column = indexInfo.getColumn().toString();
 		tableName = indexInfo.getColumn().getTable().toString();
 		isCluster = indexInfo.isClustered();
 		serializer = new Serializer(fileLocation+"indexes/"+column);
 		leafList = new ArrayList<LeafNode>();
+		//System.out.println(column);
 		leafList = buildLeafLayer(tableName, column, indexInfo.isClustered());
 		root = buildIndexLayers();
 		serializer.writeNextNode(root);
