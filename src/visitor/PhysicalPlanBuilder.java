@@ -340,6 +340,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		int t = stats.getTableAndSizeMap().get(tableName);
 		IndexExprVisitor indexVisitor = null;
 		IndexInfo indexinfo = null;
+		if(indexInfos != null){
 		for(IndexInfo index: indexInfos){
 			String columnName = index.getColumn().getColumnName();
 			IndexExprVisitor v = new IndexExprVisitor(columnName);
@@ -360,6 +361,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 				indexVisitor = v;
 				indexinfo = index;
 			}
+		}
 		}
 		if(indexVisitor != null){
 			// use index scan
