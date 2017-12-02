@@ -553,9 +553,12 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		System.out.println(child);
 		System.out.println("Sort Mode: " + sMode);
 		if (sMode==0) {
+			//System.out.println("uu");
+		
 			SortOperator sort = new SortOperator(child, selectBody);
 			System.out.println("hello");
 			stackOp.push(sort);
+			//System.out.println("jj");
 		}
 		else if (sMode==1){
 			ExternalSortOperator sort = new ExternalSortOperator(child, selectItem, sPara);

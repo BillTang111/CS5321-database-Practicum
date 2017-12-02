@@ -200,6 +200,7 @@ public class ExternalSortOperator extends Operator{
 		TupleComparator tCompare = new TupleComparator(order);
 		
 		if(isBinary){
+			System.out.println("pagenum: "+pagenum);
 			PriorityQueue<BinaryTR> rQueue = new PriorityQueue<BinaryTR>(pagenum-1, 
 					new Comparator<BinaryTR>() {
 		              	public int compare(BinaryTR i, BinaryTR j) {

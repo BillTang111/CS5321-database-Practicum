@@ -78,7 +78,7 @@ public class SortOperator extends Operator {
 					
 				}
 				
-				//System.out.println(order);
+				System.out.println(order);
 			}
 			a=childOp.getNextTuple();
 			//System.out.println(a.getTuple().toString());
