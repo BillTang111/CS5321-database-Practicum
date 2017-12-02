@@ -334,7 +334,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		double scanCost =  Math.ceil((tupleSize*tupleNum)/4096);
 		double minCost = scanCost; // default setting
 		double r = 1.0; //default setting
-		List<IndexInfo> indexInfos = catalog.getIndexInfo().get(tableName);
+		System.out.println("tableName: "+tableName);
+		List<IndexInfo> indexInfos = catalog.getIndexMap().get(tableName);
 		int p = (int)scanCost;
 		int t = stats.getTableAndSizeMap().get(tableName);
 		IndexExprVisitor indexVisitor = null;
