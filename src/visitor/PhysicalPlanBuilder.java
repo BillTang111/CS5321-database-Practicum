@@ -63,6 +63,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		//interpretConfig();
 		defaultJPara = 4;
 		defaultSPara = 5;
+		sMode = 1;
 	}
 	
 	
@@ -548,9 +549,11 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		List selectItem = selectBody.getOrderByElements();
 		
 		Operator child = stackOp.pop();
+		System.out.println(child);
 		System.out.println("Sort Mode: " + sMode);
 		if (sMode==0) {
 			SortOperator sort = new SortOperator(child, selectBody);
+			System.out.println("hello");
 			stackOp.push(sort);
 		}
 		else if (sMode==1){

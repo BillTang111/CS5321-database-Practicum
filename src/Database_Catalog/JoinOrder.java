@@ -129,8 +129,8 @@ public class JoinOrder {
 		
 		for (String t : tempTableList) {
 			StatsInfo statsInfo = Catalog.getInstance().getStatsInfo();
-			System.out.println("String: " + t);
-			System.out.println("why null: " + statsInfo.getTableAndSizeMap());
+			//System.out.println("String: " + t);
+			//System.out.println("why null: " + statsInfo.getTableAndSizeMap());
 			Join_Cost = Join_Cost * statsInfo.getTableAndSizeMap().get(t);
 		}
 		

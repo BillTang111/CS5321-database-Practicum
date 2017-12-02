@@ -42,8 +42,9 @@ public class SortOperator extends Operator {
 		Catalog catalog = Catalog.getInstance();
 		PairAlias = catalog.getPairAlias();
 		index = 0;
+		System.out.println("Where is bug1");
 		BuildList();
-		
+		System.out.println("Where is bug2");
 	}
 	
 	/**constructor for sort operator which take in orderlist as input*/
