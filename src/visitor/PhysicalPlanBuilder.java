@@ -91,6 +91,8 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	 */
 	public void visit(LogicalUnionJoinOperator UnionJoinOp) throws IOException {
 		//gets the right ordering of the table by using [JoinOrder];
+		System.out.println("Converting LogicalUnionJoinOperator");
+		
 		JoinOrder tableOrder = new JoinOrder (UnionJoinOp, UnionJoinOp.getUnionFind().getUFlist());
 		List<Integer> tableOrderInx = tableOrder.getTablesIndex();
 		List<LogicalOperator> UnionJoinOpChildren = UnionJoinOp.getChildrenOperators();
@@ -129,6 +131,12 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 			}
 		}
 		stackOp.push(outter);
+		System.out.println("Converting LogicalUnionJoinOperator Finished");
+		System.out.println("=== Part of the Tree ===");
+		printPhysicalQueryPlanVisitor ppv = new printPhysicalQueryPlanVisitor();
+		outter.accept(ppv);
+		System.out.println(ppv.getResult());
+		System.out.println("========================");
 	}
 	
 	
