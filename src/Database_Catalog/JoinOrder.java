@@ -91,7 +91,7 @@ public class JoinOrder {
 	 * @return: corresponding V_value
 	 */
 	private double calc_V_value(Column c) {
-		double V_value = 0.0;
+		double V_value = 1;
 		StatsInfo statsInfo = Catalog.getInstance().getStatsInfo();
 		ArrayList<Integer> attri_stats = statsInfo.getFieldAndBound().get(c.toString());
 		String Tname = c.getTable().getName();
