@@ -160,7 +160,7 @@ public class JoinOrder {
 	private int minCost_Index(double [] costLst) {
 		int index=0; double minCost = Double.MAX_VALUE;
 		for (int i=0; i<costLst.length; i++) {
-			if (minCost < costLst [i]) {
+			if (minCost > costLst [i]) {
 				minCost = costLst [i];
 				index = i;
 			}
@@ -182,6 +182,7 @@ public class JoinOrder {
 			List<Expression> expressionName = new ArrayList<>();
 			expressionName.add(expressions.get(i));
 			OC_Table [0] [i] = new OrderStorage (tableName,expressionName, 0); 
+			System.out.println("i am getting table" + OC_Table[0][i].tableList);
 		}
 		
 		for (int i=1; i<N; i++) {//not include the first row
@@ -196,12 +197,14 @@ public class JoinOrder {
 					Expression expToAdd = expressions.get(k);
 					List<String> PreTableList = new ArrayList<> (preStorage.getTableList());
 					List<Expression> preExpList = new ArrayList<> (preStorage.getExpressionList());
+					
 					if(!PreTableList.contains(tableToAdd)) { //if a table has not been ordered
 						PreTableList.add(tableToAdd);
 						preExpList.add(expToAdd);
 						curCost[k] = calc_JoinCost(PreTableList); //calc cost of current order
 				} else {//table is ordered; diagonal in the matrix; set to a large value -> no effect
 						curCost[k] = Double.MAX_VALUE;
+						
 					}
 				}
 
@@ -218,7 +221,10 @@ public class JoinOrder {
 				curExpList.add(expressions.get(minCostIndex));
 				
 				//create data storage in the [tables]'s [ith,jth] row and column
-				OC_Table [i] [j] = new OrderStorage (curTableNames,curExpList,newOrderCost); 
+				System.out.println("the loop id is" + i +" and " + j);
+				OC_Table [i] [j] = new OrderStorage (curTableNames,curExpList,newOrderCost);
+				System.out.println("i am adding table in loop" + OC_Table[i][j].tableList);
+				System.out.println("this order's cost is: " + OC_Table[i][j].cost);
 			}
 		}
 		
@@ -226,12 +232,18 @@ public class JoinOrder {
 		//1. retrieve the cost array of the last in the [tables]
 		double [] lastRowCosts = new double [N]; 
 		for (int j=0; j< N; j++) {
-			lastRowCosts[j] = OC_Table [N-1] [j].getScore(); 
+			lastRowCosts[j] = OC_Table [N-1] [j].getScore();
+			System.out.println("last row order is: " + OC_Table [N-1] [j].tableList);
+			System.out.println("last row cost is: " + lastRowCosts[j]);
 		}
+		
+
+		
 		//2. get the lowest cost order's index
 		int lowestCostInx = minCost_Index(lastRowCosts);
 		//3. get the best join order & update field
 		tables = OC_Table [N-1] [lowestCostInx].getTableList();
+		System.out.println("right order is: " + tables);
 		expressions = OC_Table [N-1] [lowestCostInx].getExpressionList();
 		
 		//set tableIndex

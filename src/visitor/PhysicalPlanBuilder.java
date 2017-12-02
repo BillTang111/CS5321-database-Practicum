@@ -95,6 +95,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		System.out.println("Converting LogicalUnionJoinOperator");
 		JoinOrder tableOrder = new JoinOrder (UnionJoinOp, UnionJoinOp.getUnionFind().getUFlist());
 		System.out.println("Now join order is: " + tableOrder.getTables());
+		System.out.println("Now join order index is: " + tableOrder.getTablesIndex());
 		List<Integer> tableOrderInx = tableOrder.getTablesIndex();
 		List<LogicalOperator> UnionJoinOpChildren = UnionJoinOp.getChildrenOperators();
 		ArrayList<String> sortedTableList = UnionJoinOp.getSortedTableList();
