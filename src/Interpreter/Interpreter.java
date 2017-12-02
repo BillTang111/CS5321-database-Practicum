@@ -207,6 +207,9 @@ public class Interpreter {
 			buildIndex(inputLocation);
 		}
 		
+		indexMap = setindexMap(inputLocation);
+		catalog.setIndexMap(indexMap);
+		
 		
 		
 		

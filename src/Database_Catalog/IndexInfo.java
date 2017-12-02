@@ -1,5 +1,6 @@
 package Database_Catalog;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -24,15 +25,21 @@ public class IndexInfo {
 		String fullName = column.getTable().getName() + "." + column.getColumnName();
 		this.indexPath = filePath + "indexes/" + fullName;
 		try {
-			FileInputStream fin = new FileInputStream(indexPath);
-            FileChannel fc = fin.getChannel();
-            ByteBuffer bb = ByteBuffer.allocate(SIZE);
-    		bb.clear();
-    		fc.read(bb); // Read header page which stores metadata about the BPlusTree.
-    		bb.flip();
-    		numLeaves = bb.getInt(4);    		
-    		fc.close();
-    		fin.close();
+			File testExsit = new File(indexPath);
+			if(testExsit.exists()){
+				System.out.println(indexPath + " exist");
+				FileInputStream fin = new FileInputStream(indexPath);
+	            FileChannel fc = fin.getChannel();
+	            ByteBuffer bb = ByteBuffer.allocate(SIZE);
+	    		bb.clear();
+	    		fc.read(bb); // Read header page which stores metadata about the BPlusTree.
+	    		bb.flip();
+	    		numLeaves = bb.getInt(4);    		
+	    		fc.close();
+	    		fin.close();
+			}else{
+				System.out.println(indexPath + " not exist");
+			}
         } catch (IOException e) {
             e.printStackTrace();
         }
