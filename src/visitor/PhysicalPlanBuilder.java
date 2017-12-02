@@ -60,7 +60,7 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	
 	public PhysicalPlanBuilder() {
 		stackOp = new Stack<Operator>();
-		interpretConfig();
+		//interpretConfig();
 		defaultJPara = 4;
 		defaultSPara = 5;
 	}
