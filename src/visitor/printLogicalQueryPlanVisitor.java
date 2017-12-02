@@ -75,8 +75,10 @@ public class printLogicalQueryPlanVisitor {
 			numOfDash += 1;
 			loperator.getchildOperator().accept(this);
 			numOfDash -= 1;
-		}	
-		loperator.getchildOperator().accept(this);
+		}
+		else{
+			loperator.getchildOperator().accept(this);
+		}
 	}
 	
 	
