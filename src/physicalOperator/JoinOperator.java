@@ -68,6 +68,8 @@ public class JoinOperator extends Operator {
 					if (l.contains(bb.get(i))) continue;
 					l.add(bb.get(i));
 				}
+				//System.out.println("tupleList: "+l.toString());
+				//System.out.println("tuple: "+s.toString());
 				Tuple tt = new Tuple(s,l);
 				//System.out.println(tt.getTuple().toString());
 				// build new visitor

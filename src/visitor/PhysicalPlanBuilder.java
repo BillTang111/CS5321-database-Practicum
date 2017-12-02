@@ -27,6 +27,7 @@ import logicalOperator.LogicalSortOperator;
 import logicalOperator.LogicalUnionJoinOperator;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
+import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.PlainSelect;
@@ -102,51 +103,102 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		
 		ArrayList<String> outteredTableList = new ArrayList<String>();
 		Operator outter = null;
+		
 		for(int i=0; i<tableOrderInx.size(); i++) {
-			LogicalOperator logCurrentChild = UnionJoinOpChildren.get(i);
+			//int indexInSortedTable = i;
+			int indexInSortedTable = tableOrderInx.get(i);
+			
+			LogicalOperator logCurrentChild = UnionJoinOpChildren.get(indexInSortedTable);
 			logCurrentChild.accept(this);
 			Operator physicalCurrentChild = stackOp.pop();
 			
-			if(outter == null){
+			if(outter == null){ //Assign First Outter
 				outter = physicalCurrentChild;
-				outteredTableList.add(sortedTableList.get(i));
+				outteredTableList.add(sortedTableList.get(indexInSortedTable));
 			}
 			else{
 				Operator inner = physicalCurrentChild;
-				String toJoinTableName = sortedTableList.get(i);
-				analysisResult analysis = findJoinCondition(outteredTableList, toJoinTableName);
-				System.out.println("Analysis Item" + analysis);
-				if(analysis.getIsEqualEx()){
-					ArrayList<Column> outterOder = new ArrayList<Column>(); 
-					outterOder.add(analysis.getOutterAttr());
-					ArrayList<Column> innerOder = new ArrayList<Column>(); 
-					innerOder.add(analysis.getInnerAttr());
-					
-					ExternalSortOperator outterSorted = new ExternalSortOperator(outter, outterOder, sPara);
-					ExternalSortOperator innerSorted = new ExternalSortOperator(inner, innerOder, sPara);
-					outter  = new SMJOperator(outterSorted, innerSorted, analysis.getJoinCondition());
+				String toJoinTableName = sortedTableList.get(indexInSortedTable);
+				
+				ArrayList<analysisResult> analysisList = new ArrayList<analysisResult>();
+				
+				for(String oneOfOutterTable:outteredTableList){
+					analysisResult a = findJoinCondition(oneOfOutterTable, toJoinTableName);
+					if(a!=null){
+						analysisList.add(a);
+					}
 				}
-				else{
-					outter = new BNLJOperator(outter, inner, analysis.getJoinCondition(), defaultJPara);
+				
+				if (analysisList.size()==1){
+					analysisResult analysis = analysisList.get(0);
+					if(analysis!=null){
+						if(analysis.getIsEqualEx()){
+							ArrayList<Column> outterOder = new ArrayList<Column>(); 
+							outterOder.add(analysis.getOutterAttr());
+							ArrayList<Column> innerOder = new ArrayList<Column>(); 
+							innerOder.add(analysis.getInnerAttr());
+							
+							ExternalSortOperator outterSorted = new ExternalSortOperator(outter, outterOder, sPara);
+							ExternalSortOperator innerSorted = new ExternalSortOperator(inner, innerOder, sPara);
+							outter  = new SMJOperator(outterSorted, innerSorted, analysis.getJoinCondition());
+						}
+						else{
+							outter = new JoinOperator(outter, inner, analysis.getJoinCondition());
+						}
+					}
 				}
+				
+				if (analysisList.size()>1){
+					Expression multipleJoinOnTwoTable = null;
+					for(analysisResult aElement: analysisList){
+						if(multipleJoinOnTwoTable==null){
+							multipleJoinOnTwoTable = aElement.getJoinCondition();
+						}
+						else{
+							multipleJoinOnTwoTable = new AndExpression(multipleJoinOnTwoTable, aElement.getJoinCondition());
+						}
+					}
+					outter = new JoinOperator(outter, inner, multipleJoinOnTwoTable);
+				}
+					//System.out.println("Analysis Item" + analysis);
+//					if(analysis!=null){
+//						if(analysis.getIsEqualEx()){
+//							ArrayList<Column> outterOder = new ArrayList<Column>(); 
+//							outterOder.add(analysis.getOutterAttr());
+//							ArrayList<Column> innerOder = new ArrayList<Column>(); 
+//							innerOder.add(analysis.getInnerAttr());
+//							
+//							ExternalSortOperator outterSorted = new ExternalSortOperator(outter, outterOder, sPara);
+//							ExternalSortOperator innerSorted = new ExternalSortOperator(inner, innerOder, sPara);
+//							outter  = new SMJOperator(outterSorted, innerSorted, analysis.getJoinCondition());
+//						}
+//						else{
+//							outter = new JoinOperator(outter, inner, analysis.getJoinCondition());
+//						}
+//					}
+				
+				
+				
+				
 				outteredTableList.add(toJoinTableName);
 			}
 		}
 		stackOp.push(outter);
 		System.out.println("Converting LogicalUnionJoinOperator Finished");
-		System.out.println("=== Part of the Tree ===");
-		printPhysicalQueryPlanVisitor ppv = new printPhysicalQueryPlanVisitor();
-		outter.accept(ppv);
-		System.out.println(ppv.getResult());
-		System.out.println("========================");
+//		System.out.println("=== Part of the Tree ===");
+//		printPhysicalQueryPlanVisitor ppv = new printPhysicalQueryPlanVisitor();
+//		outter.accept(ppv);
+//		System.out.println(ppv.getResult());
+//		System.out.println("========================");
 	}
 	
 	
 	/** find join condition for the current join order 
 	 *  @return current join condition expression */
-	private analysisResult findJoinCondition(ArrayList<String> outteredTableList,
+	private analysisResult findJoinCondition(String oneOfOutterTableName,
 			String toJoinTableName) {
 		Catalog data = Catalog.getInstance();
+		String oneOfOutterTable = data.getPairAlias().get(oneOfOutterTableName);
 		List<Element> UF = data.getUnionFind().getUFlist();
 		List<Expression> resiJoinConditions = data.getJoinResidual();
 		
@@ -155,18 +207,22 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 		// Examine residual join conditions
 		for(Expression e: resiJoinConditions){
 			ArrayList<String> twoTableName = findTwoTable(e.toString());
+			System.out.println("Check residual condtion: "+twoTableName.toString());
+			System.out.println("Check residual condtion: t1 " + oneOfOutterTable + " t2 " + toJoinTableName);
 			if(twoTableName.contains(toJoinTableName)){
-				if(twoTableName.get(0)==toJoinTableName){
-					if(outteredTableList.contains(twoTableName.get(1))){
+				if(twoTableName.get(0).equals(toJoinTableName)){
+					if(oneOfOutterTable.equals(twoTableName.get(1))){
 						analysis.setIsEqualEx(false);
 						analysis.setJoinCondition(e);
+						System.out.println("Residual condition is used");
 						return analysis;
 					}
 				}
 				else{
-					if(outteredTableList.contains(twoTableName.get(0))){
+					if(oneOfOutterTable.equals(twoTableName.get(0))){
 						analysis.setIsEqualEx(false);
 						analysis.setJoinCondition(e);
+						System.out.println("Residual condition is used");
 						return analysis;
 					}
 				}
@@ -196,11 +252,16 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 				if(tableList.indexOf(toJoinTableName)!=-1){
 					Column attrInner = attrList.get(tableList.indexOf(toJoinTableName));
 					Column attrOutter = null;
-					for(String baseTable: outteredTableList){
-						if(tableList.indexOf(baseTable)!=-1){
-							attrOutter = attrList.get(tableList.indexOf(baseTable));
-						}
+//					for(String baseTable: oneOfOutterTable){
+//						if(tableList.indexOf(baseTable)!=-1){
+//							attrOutter = attrList.get(tableList.indexOf(baseTable));
+//						}
+//					}
+					
+					if(tableList.indexOf(oneOfOutterTable)!=-1){
+						attrOutter = attrList.get(tableList.indexOf(oneOfOutterTable));
 					}
+						
 					if(attrOutter!=null){
 						EqualsTo eqExpr = new EqualsTo(attrOutter,attrInner);
 						analysis.setIsEqualEx(true);

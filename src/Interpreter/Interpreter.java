@@ -111,14 +111,16 @@ public class Interpreter {
 			String tempLocation = configReader.readLine();
 			//whether the interpreter should build indexes
 			boolean buildIndex = false;
-			if(Integer.parseInt(configReader.readLine())==1){
-				buildIndex = true;
-			}
+//			if(Integer.parseInt(configReader.readLine())==1){
+//				buildIndex = true;
+//			}
 			//whether the interpreter should actually evaluate the SQL queries
 			boolean evaluateOrNot = false;
-			if(Integer.parseInt(configReader.readLine())==1){
-				evaluateOrNot = true;
-			}
+//			if(Integer.parseInt(configReader.readLine())==1){
+//				evaluateOrNot = true;
+//			}
+			buildIndex = true;
+			evaluateOrNot = true;
 			configReader.close();
 			
 			
@@ -289,6 +291,37 @@ public class Interpreter {
 				System.out.println(" ");
 				System.out.println("-----------------------------------------");
 				
+				
+				// Save two trees to file
+				String logTreePath = outputLocation + "/query" + i + "_logicalplan";
+				File fileLogTree = new File(logTreePath);
+				if (!fileLogTree.exists()) {
+					fileLogTree.createNewFile();
+				}
+				String logTreeResult = lpv.getResult();
+				FileWriter fw = new FileWriter(logTreePath);
+				BufferedWriter writeLog = new BufferedWriter(fw);
+				writeLog.write(logTreeResult);
+				writeLog.close();	
+				
+				
+				String phyTreePath = outputLocation + "/query" + i + "_physicalplan";
+				File filePhyTree = new File(phyTreePath);
+				if (!filePhyTree.exists()) {
+					filePhyTree.createNewFile();
+				}
+				String phyTreeResult = ppv.getResult();
+				FileWriter fw2 = new FileWriter(phyTreePath);
+				BufferedWriter writePhy = new BufferedWriter(fw2);
+				writePhy.write(phyTreeResult);
+				writePhy.close();	
+				
+				
+		
+				
+				
+				
+				
 			// Option 1: dump result and see benchmark time
 //				long timeStart = System.currentTimeMillis();
 //				System.out.print("Current Time in milliseconds = ");
@@ -303,12 +336,12 @@ public class Interpreter {
 
 			
 				
-//				String outputPath = outputLocation + "/query" + i;
-//				File file = new File(outputPath);
-//				System.out.println(outputLocation + "/query" + i);
-//				if (!file.exists()) {
-//					file.createNewFile();
-//				}
+				String outputPath = outputLocation + "/query" + i;
+				File file = new File(outputPath);
+				System.out.println(outputLocation + "/query" + i);
+				if (!file.exists()) {
+					file.createNewFile();
+				}
 				
 			// Option 2: Project 2 Write to file	
 				
@@ -337,13 +370,13 @@ public class Interpreter {
 			
 				
 			// Option 4: Binary TW
-//				BinaryTW binaryWriter = new BinaryTW(outputPath);
-//				Tuple resultT = physicalPlanRoot.getNextTuple();
-//				while (resultT!=null) {
-//					binaryWriter.WriteTuple(resultT);
-//					resultT = physicalPlanRoot.getNextTuple();
-//				}
-//				binaryWriter.close();
+				BinaryTW binaryWriter = new BinaryTW(outputPath);
+				Tuple resultT = physicalPlanRoot.getNextTuple();
+				while (resultT!=null) {
+					binaryWriter.WriteTuple(resultT);
+					resultT = physicalPlanRoot.getNextTuple();
+				}
+				binaryWriter.close();
 				
 				
 				
