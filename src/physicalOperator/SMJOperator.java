@@ -99,15 +99,17 @@ public class SMJOperator extends Operator {
 		while(Tleft!=null&&currentPartiTuple!=null) {
 			while(joinCompare.compare(Tleft, currentPartiTuple)<0) { //Tleft < currentPartiTuple
 				Tleft=leftOp.getNextTuple();
-				if (Tleft == null) break;
+				//if (Tleft == null) break;
+				if (Tleft == null) return null;
 			} //Tleft >= currentPartiTuple
-			if (Tleft == null) break;
+			//if (Tleft == null) break;
 			while(joinCompare.compare(Tleft, currentPartiTuple)>0) { //Tleft > currentPartiTuple
 				currentPartiTuple = rightOp.getNextTuple();
 				this.lastPartiIndex++;
-				if (currentPartiTuple == null) break;
+				//if (currentPartiTuple == null) break;
+				if (currentPartiTuple == null) return null;
 			} //Tleft <= currentPartiTuple
-			if (currentPartiTuple == null) break;
+			//if (currentPartiTuple == null) break;
 			Tright=currentPartiTuple;
 			if(joinCompare.compare(Tleft, Tright)==0) { // //Tleft = currentPartiTuple
 				lastLeftTuple=Tleft;
