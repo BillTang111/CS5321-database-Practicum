@@ -11,6 +11,11 @@ import java.util.Set;
 
 import Interpreter.BinaryTR;
 
+/**
+ * This class is to store table and filed, filed and bound's relationship
+ * 
+ * @author Lini Tan lt398
+ * */
 public class StatsInfo {
 	//store table
 	//store table and field relation
@@ -90,23 +95,46 @@ public class StatsInfo {
 		
 	}
 	
+	
+	/**
+	 * This method is to get the table list
+	 * 
+	 * @return table list
+	 * */
 	public List<String> getTableList(){
 		return tableList;
 	}
 	
+	/**
+	 * This method is to get the table and field relationship
+	 * 
+	 * @return the hashmap of table and field relation
+	 * */
 	public HashMap<String,ArrayList> getTableAndFieldMap(){
 		return tableAndFieldMap;
 	}
 	
+	/**
+	 * This method is to get the table and size relationship
+	 * 
+	 * @return the hashmap of table and size relationship
+	 * */
 	public HashMap<String,Integer> getTableAndSizeMap(){
 		return tableAndSizeMap;
 	} 
 	
+	/**
+	 * This method is to get the field and bound relationship
+	 * 
+	 * @return the hashmap of field and bound relationship
+	 * */
 	public HashMap<String,ArrayList<Integer>> getFieldAndBound(){
 		return fieldAndBound;
 	}
 	
-	
+	/**
+	 * This method is to write the stat.txt file
+	 * */
 	public void writeStatsFile(){
 		try {
 			FileWriter fw = new FileWriter(inputLocation + "/db/stats.txt");
@@ -139,6 +167,11 @@ public class StatsInfo {
 		}
 	}
 	
+	/**
+	 * This method is used to get the reduction factor(when the bound is closed).
+	 * 
+	 * @return the reduction factor number.
+	 * */
 	public double getReductionFactorClosed(String table, String column, Long lowKey, Long highKey){
 		Boolean lowOpen = null;
 		Boolean highOpen = null;
@@ -146,7 +179,12 @@ public class StatsInfo {
 		if(highKey != null) highOpen = false;
 		return getReductionFactor(table, column, lowKey, highKey, lowOpen, highOpen);
 	}
-
+	
+	/**
+	 * This method is used to get the reduction factor.
+	 * 
+	 * @return the reduction factor number.
+	 * */
 	public double getReductionFactor(String table, String column, Long lowKey,
 			Long highKey, Boolean lowOpen, Boolean highOpen) {
 		String fullName = table+"."+column;

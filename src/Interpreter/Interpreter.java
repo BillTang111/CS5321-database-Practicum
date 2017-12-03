@@ -46,12 +46,12 @@ public class Interpreter {
 	public static void main(String[] args) throws IOException {
 		// 1.1 Get input&output directory from command line argument
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	    String command = reader.readLine();
-	    int start = command.indexOf(".jar")+5;
-
-
-		String configLocation = command.substring(start);
+//		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//	    String command = reader.readLine();
+//	    int start = command.indexOf(".jar")+5;
+//
+//
+//		String configLocation = command.substring(start);
 
 		
 //		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -100,7 +100,7 @@ public class Interpreter {
 		
 		
 	// submission start here
-		//String configLocation = args[0];
+		String configLocation = args[0];
 //		String inputLocation = args[0];
 //		String outputLocation = args[1];
 //		String tempLocation = args[2];
@@ -181,7 +181,7 @@ public class Interpreter {
 		 //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2copy/input /Users/LukerRong/Desktop/project2copy/output /Users/LukerRong/Desktop/project2copy/temp
 	     //test java -jar cs4321_p2.jar /Users/LukerRong/Desktop/project2/input /Users/LukerRong/Desktop/project2/output /Users/LukerRong/Desktop/project2/temp
 	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/project2/interpreter_config_file.txt
-	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/project4test/interpreter_config_file.txt
+	    //test java -jar cs4321_p5.jar /Users/LukerRong/Desktop/project4test/interpreter_config_file.txt
 	    //test java -jar cs4321_p3.jar /Users/LukerRong/Desktop/test_cases/2/interpreter_config_file.txt
 		Catalog catalog = Catalog.getInstance();
 		catalog.setinputLocation(inputLocation);
