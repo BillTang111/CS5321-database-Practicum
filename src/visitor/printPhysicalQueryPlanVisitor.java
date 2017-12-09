@@ -51,18 +51,36 @@ public class printPhysicalQueryPlanVisitor {
 	}
 	
 	public void visit(ScanOperator operator) {
+		String tname = operator.getOTName();
+		if (tname.indexOf('*')!=-1){
+			int pos = tname.indexOf('*');
+			tname = tname.substring(0, pos) + tname.substring(pos + 1);
+		}
+		
 		result += prefix(numOfDash) + "TableScan" + "[" 
-				+ operator.getOTName() + "]" + '\n';
+				+ tname + "]" + '\n';
 	}
 	
 	public void visit(ScanOperatorBinary operator) {
+		String tname = operator.getOTName();
+		if (tname.indexOf('*')!=-1){
+			int pos = tname.indexOf('*');
+			tname = tname.substring(0, pos) + tname.substring(pos + 1);
+		}
+		
 		result += prefix(numOfDash) + "TableScan" + "[" 
-				+ operator.getOTName() + "]" + '\n';
+				+ tname + "]" + '\n';
 	}
 
 	public void visit(ScanOperatorHuman operator) {
+		String tname = operator.getOTName();
+		if (tname.indexOf('*')!=-1){
+			int pos = tname.indexOf('*');
+			tname = tname.substring(0, pos) + tname.substring(pos + 1);
+		}
+		
 		result += prefix(numOfDash) + "TableScan" + "[" 
-				+ operator.getOTName() + "]" + '\n';
+				+ tname + "]" + '\n';
 	}
 	
 	

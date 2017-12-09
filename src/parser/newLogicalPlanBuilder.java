@@ -91,11 +91,13 @@ public class newLogicalPlanBuilder {
 		
 		// new sortedTable
 		sortedTable = new ArrayList<String>(); 
-		sortedTable.add(stripAStablename(selectBody.getFromItem().toString()));
+		System.out.println(stripAStablename(selectBody.getFromItem().toString()));
+		
+		sortedTable.add(pairAlias.get(stripAStablename(selectBody.getFromItem().toString())));
 		List joinTableList = selectBody.getJoins();
 		if (joinTableList!=null){
 			for(Object t:joinTableList){
-				sortedTable.add(stripAStablename(t.toString()));
+				sortedTable.add(pairAlias.get(stripAStablename(t.toString())));
 			}
 		}
 		System.out.println("debug01: "+sortedTable.toString());
@@ -208,7 +210,8 @@ public class newLogicalPlanBuilder {
 		if(asIndex==-1){
 			return string;
 		}
-		return string.substring(0, asIndex);
+		//return string.substring(0, asIndex);
+		return string.substring(asIndex+4, string.length());
 	}
 
 

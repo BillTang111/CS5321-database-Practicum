@@ -36,6 +36,7 @@ public class SMJOperator extends Operator {
 	private Comparator<Tuple> joinCompare;
 	private Comparator<Tuple>  leftCompare;
 	private Comparator<Tuple>  rightCompare;
+	private HashMap<String,String> PairAlias;
 
 	public SMJOperator(Operator leftOp, Operator rightOp, Expression joinExpr) {
 		this.leftOp = leftOp;
@@ -49,6 +50,8 @@ public class SMJOperator extends Operator {
 		this.joinCompare = new EqulJoinTupleComparator(visitor.getLeftAttr(), visitor.getRightAttr());
 		this.leftCompare = new EqulJoinTupleComparator(visitor.getLeftAttr(), visitor.getLeftAttr());
 		this.rightCompare = new EqulJoinTupleComparator(visitor.getRightAttr(), visitor.getRightAttr());
+		Catalog cata = Catalog.getInstance();
+		this.PairAlias = cata.getPairAlias();
 	}
 
 	// get method to get the next SM joined tuple
@@ -135,6 +138,10 @@ public class SMJOperator extends Operator {
 		ArrayList l = new ArrayList();
 		List aa = a.getNameList();
 		List bb = b.getNameList();
+		
+		//System.out.println("aa: " + aa);
+		//System.out.println("bb: " + bb);
+		
 		for (int i = 0; i < aa.size(); i++) {
 			// if (l.contains(aa.get(i))) continue;
 			l.add(aa.get(i));
@@ -145,6 +152,10 @@ public class SMJOperator extends Operator {
 			l.add(bb.get(i));
 		}
 		//System.out.println("new filds: "+l.toString());
+		//System.out.println("s: " + s);
+		//System.out.println("l: " + l);
+		//System.out.println("PA:" + PairAlias);
+		
 		Tuple tt = new Tuple(s, l);
 		//System.out.println("new tuple: "+tt.getTuple().toString());
 

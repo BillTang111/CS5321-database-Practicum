@@ -39,8 +39,14 @@ public class printLogicalQueryPlanVisitor {
 	}
 	
 	public void visit(LogicalScanOperator loperator) {
+		String tname = loperator.getTableName();
+		if (tname.indexOf('*')!=-1){
+			int pos = tname.indexOf('*');
+			tname = tname.substring(0, pos) + tname.substring(pos + 1);
+		}
+		
 		result += prefix(numOfDash) + "Leaf" + "[" 
-				+ loperator.getTableName() + "]" + '\n';
+				+ tname + "]" + '\n';
 	}
 	
 	

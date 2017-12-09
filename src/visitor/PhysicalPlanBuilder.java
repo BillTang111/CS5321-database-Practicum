@@ -391,6 +391,11 @@ public class PhysicalPlanBuilder implements PlanVisitor {
 	@Override
 	public void visit(LogicalSelectOperator logSelect) throws IOException{
 		String tableName = ((LogicalScanOperator)logSelect.getchildOperator()).getTableName();
+		if (tableName.indexOf('*')!=-1){
+			int pos = tableName.indexOf('*');
+			tableName = tableName.substring(0, pos) + tableName.substring(pos + 1);
+		}
+		
 		Catalog catalog = Catalog.getInstance();
 		StatsInfo stats = catalog.getStatsInfo();
 		int tupleNum = stats.getTableAndSizeMap().get(tableName);
