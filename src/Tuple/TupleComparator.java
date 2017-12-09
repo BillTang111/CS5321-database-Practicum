@@ -45,7 +45,15 @@ public class TupleComparator implements Comparator<Tuple> {
     		String aliasCondition = condition.get(i).toString();
     		int dot = aliasCondition.indexOf(".");
     		String aliasT = aliasCondition.substring(0, dot);
-    		aliasCondition = PairAlias.get(aliasT) + "." + aliasCondition.substring(dot+1, aliasCondition.length());
+    		
+    		//System.out.println("Alias: " + aliasT);
+    		if(PairAlias.get(aliasT)!=null){
+    			aliasCondition = PairAlias.get(aliasT) + "." + aliasCondition.substring(dot+1, aliasCondition.length());
+    		}
+    		else{
+    			aliasCondition = aliasT + "." + aliasCondition.substring(dot+1, aliasCondition.length());
+    		}
+    		
     		
     		
     		//System.out.println(aliasCondition);
