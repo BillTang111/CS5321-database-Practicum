@@ -121,31 +121,37 @@ public class newLogicalPlanBuilder {
 					if (eBox.getEquality()==null && eBox.getLowerBound()==null && eBox.getUpperBound()==null) {
 						Column firstAttr = null;
 						for (Column attr: eBox.getattri()) {
-							if (deAlias(attr.getTable().getName()).equals(tableName)) {
-								if (firstAttr==null) {
-									firstAttr = attr;
-								}
-								else {
-									oneTableSelectExpr = addExpression(oneTableSelectExpr, new EqualsTo(firstAttr, attr));
+							if(deAlias(attr.getTable().getName())!=null){
+								//System.out.println("deAlias: " + deAlias(attr.getTable().getName()));
+								//System.out.println("tableName: " + tableName);
+								if (deAlias(attr.getTable().getName()).equals(tableName)) {
+									if (firstAttr==null) {
+										firstAttr = attr;
+									}
+									else {
+										oneTableSelectExpr = addExpression(oneTableSelectExpr, new EqualsTo(firstAttr, attr));
+									}
 								}
 							}
 						}
 					}
 					else { // Within one Table that Have some bounds: R.A=20 and R.B=20
 						for (Column attr: eBox.getattri()) {
-							if(deAlias(attr.getTable().getName()).equals(tableName)) {
-								if(eBox.getEquality()!=null) { //R.A=20 
-									EqualsTo eqExpr = new EqualsTo(attr,new LongValue(eBox.getEquality()));
-									oneTableSelectExpr = addExpression(oneTableSelectExpr, eqExpr);
-								} else {
-									if(eBox.getLowerBound()!=null) { //R.A>=20
-										GreaterThanEquals greatEqExpr = new GreaterThanEquals(attr,new LongValue(eBox.getLowerBound()));
-										oneTableSelectExpr = addExpression(oneTableSelectExpr, greatEqExpr);
-									}
-									if(eBox.getUpperBound()!=null) { //R.A<=20
-										//System.out.println("debug: "+eBox);
-										MinorThanEquals minorEqExpr = new MinorThanEquals(attr,new LongValue(eBox.getUpperBound()));
-										oneTableSelectExpr = addExpression(oneTableSelectExpr, minorEqExpr);
+							if(deAlias(attr.getTable().getName())!=null){
+								if(deAlias(attr.getTable().getName()).equals(tableName)) {
+									if(eBox.getEquality()!=null) { //R.A=20 
+										EqualsTo eqExpr = new EqualsTo(attr,new LongValue(eBox.getEquality()));
+										oneTableSelectExpr = addExpression(oneTableSelectExpr, eqExpr);
+									} else {
+										if(eBox.getLowerBound()!=null) { //R.A>=20
+											GreaterThanEquals greatEqExpr = new GreaterThanEquals(attr,new LongValue(eBox.getLowerBound()));
+											oneTableSelectExpr = addExpression(oneTableSelectExpr, greatEqExpr);
+										}
+										if(eBox.getUpperBound()!=null) { //R.A<=20
+											//System.out.println("debug: "+eBox);
+											MinorThanEquals minorEqExpr = new MinorThanEquals(attr,new LongValue(eBox.getUpperBound()));
+											oneTableSelectExpr = addExpression(oneTableSelectExpr, minorEqExpr);
+										}
 									}
 								}
 							}
@@ -231,10 +237,12 @@ public class newLogicalPlanBuilder {
 		HashMap<String, String> pairAlias = data.getPairAlias();
 		int dotIndex = attr.indexOf(".");
 		if (dotIndex == -1){
+			//System.out.println(attr);
 			return pairAlias.get(attr);
 		}
 		
 		String aliasTableName = attr.substring(0, dotIndex);
+		//System.out.println(pairAlias);
 		return pairAlias.get(aliasTableName);
 	}
 

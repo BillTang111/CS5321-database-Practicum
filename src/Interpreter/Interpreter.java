@@ -358,25 +358,25 @@ public class Interpreter {
 //				bw.close();
 				
 			// Option 3: Human TW
-//				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
-//				
-//				HumanTW humanWriter = new HumanTW(file);
-//				
-//				for(Tuple oneLine: result){
-//					humanWriter.WriteTuple(oneLine);
-//				}
-//				
-//				humanWriter.close();
+				ArrayList<Tuple> result = physicalPlanRoot.getAllTuple();  //Out-of-Bond Method
+				
+				HumanTW humanWriter = new HumanTW(file);
+				
+				for(Tuple oneLine: result){
+					humanWriter.WriteTuple(oneLine);
+				}
+				
+				humanWriter.close();
 			
 				
 			// Option 4: Binary TW
-				BinaryTW binaryWriter = new BinaryTW(outputPath);
-				Tuple resultT = physicalPlanRoot.getNextTuple();
-				while (resultT!=null) {
-					binaryWriter.WriteTuple(resultT);
-					resultT = physicalPlanRoot.getNextTuple();
-				}
-				binaryWriter.close();
+//				BinaryTW binaryWriter = new BinaryTW(outputPath);
+//				Tuple resultT = physicalPlanRoot.getNextTuple();
+//				while (resultT!=null) {
+//					binaryWriter.WriteTuple(resultT);
+//					resultT = physicalPlanRoot.getNextTuple();
+//				}
+//				binaryWriter.close();
 				
 				
 				
