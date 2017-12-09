@@ -15,6 +15,7 @@ import physicalOperator.ProjectOperator;
 import physicalOperator.ScanOperator;
 import physicalOperator.SelectOperator;
 import physicalOperator.SortOperator;
+import physicalOperator.ExternalSortOperator;
 import visitor.joinVisitor;
 import net.sf.jsqlparser.expression.Expression;
 
@@ -186,6 +187,31 @@ public class queryPlan {
 			DuplicateEliminationOperators distinct = new DuplicateEliminationOperators(root);
 			root = distinct;
 		}
+		
+		//try to change the order
+		//project is the last
+		//if we have distinct, sort then eliminate
+		//if we don't have distinct sort then project
+//		if (selectBody.getOrderByElements()!=null) {
+//			SortOperator Sort = new SortOperator(root, selectBody);
+//			root = Sort;
+//		}
+//		
+//		if (selectBody.getDistinct()!=null) {
+//			if (selectBody.getOrderByElements()==null){
+//				SortOperator Sort = new SortOperator(root,selectBody);
+//				//System.out.println("hh");
+//				root = Sort;
+//			}
+//			DuplicateEliminationOperators distinct = new DuplicateEliminationOperators(root);
+//			root = distinct;
+//		}
+//		
+//		if (selectBody.getSelectItems().get(0)!="*") {
+//			ProjectOperator project = new ProjectOperator(selectBody, root);
+//			root = project;
+//		}
+		
 		
 		
 	}

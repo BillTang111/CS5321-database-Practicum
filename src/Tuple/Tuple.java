@@ -36,6 +36,11 @@ public class Tuple {
 		}
 		
 		String[] s = input.split(",");
+		while(mapKey.size()<s.length){
+			System.out.println("it may out of bound");
+			mapKey.add("Z.Z");
+		}
+		
 		for(int i=0; i<s.length; i++){
 			//System.out.println(s[i]);
 			tuple.add(s[i]);
