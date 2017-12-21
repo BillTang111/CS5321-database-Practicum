@@ -56,6 +56,7 @@ public class TupleComparator implements Comparator<Tuple> {
     		
     		
     		
+    		//System.out.println(amap);
     		//System.out.println(aliasCondition);
     		int index = (int) amap.get(aliasCondition);
     		int anum = Integer.parseInt((String) alist.get(index));
